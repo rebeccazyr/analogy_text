@@ -30,7 +30,7 @@ CACHE_ROOT = (
     / "artifacts/mapping_strength_evidence/cache/original_prompt"
     / "openai_gpt_oss_120b"
 )
-FROZEN_TEST = REPO / "artifacts/frozen/mapping_strength_predictions.csv"
+ARCHIVED_TEST = REPO / "artifacts/frozen/mapping_strength_predictions.csv"
 VALIDATION_AUDIT = (
     REPO / "artifacts/frozen/original_pipeline_validation_scores.json"
 )
@@ -69,8 +69,8 @@ def verify_cache_metadata(
         )
 
 
-def frozen_test_scores() -> dict[int, int]:
-    with FROZEN_TEST.open("r", encoding="utf-8-sig", newline="") as handle:
+def archived_test_scores() -> dict[int, int]:
+    with ARCHIVED_TEST.open("r", encoding="utf-8-sig", newline="") as handle:
         return {
             int(row["id"]): int(row["MS"])
             for row in csv.DictReader(handle)
@@ -83,7 +83,7 @@ def validation_scores() -> list[int]:
 
 
 def verify_mapping_strength_archive() -> dict[str, Any]:
-    test_expected = frozen_test_scores()
+    test_expected = archived_test_scores()
     validation_expected = validation_scores()
     mapping_matches = 0
     judge_matches = 0
@@ -143,7 +143,7 @@ def verify_mapping_strength_archive() -> dict[str, Any]:
         for example_id, score in enumerate(predictions["test"])
     }
     if test_from_cache != test_expected:
-        raise AssertionError("Archived test MS predictions differ from frozen CSV")
+        raise AssertionError("Replayed test MS predictions differ from archived scores")
 
     return {
         "examples": 74,
@@ -154,7 +154,7 @@ def verify_mapping_strength_archive() -> dict[str, Any]:
         "ms_prompt_hash_matches": judge_matches,
         "schema_validations": schema_validated,
         "validation_predictions_match": True,
-        "test_predictions_match_frozen_submission": True,
+        "test_predictions_match_archived_scores": True,
     }
 
 

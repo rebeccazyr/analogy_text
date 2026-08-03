@@ -1,1 +1,1 @@
-"""Command-line and programmatic entry points for the frozen submission."""
+"""Command-line and programmatic entry points for metric evaluation."""

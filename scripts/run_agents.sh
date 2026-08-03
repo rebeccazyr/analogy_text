@@ -55,9 +55,8 @@ fi
   --output-dir "${RUN_DIR}/metaphoricity" \
   "${EXTRA_ARGS[@]}"
 
-"${PYTHON_BIN}" "${SCRIPT_DIR}/build_submission.py" \
+"${PYTHON_BIN}" "${SCRIPT_DIR}/combine_recomputed_metrics.py" \
   --tcc "${RUN_DIR}/target_coverage/test_target_coverage_predictions.csv" \
-  --ms-base "${RUN_DIR}/mapping_strength/test_mapping_strength_predictions.csv" \
-  --m "${RUN_DIR}/metaphoricity/test_metaphoricity_predictions.csv" \
-  --output "${RUN_DIR}/submission.csv" \
-  --audit "${RUN_DIR}/build_audit.json"
+  --ms "${RUN_DIR}/mapping_strength/test_mapping_strength_predictions.csv" \
+  --metaphoricity "${RUN_DIR}/metaphoricity/test_metaphoricity_predictions.csv" \
+  --output "${RUN_DIR}/submission.csv"

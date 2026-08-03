@@ -1,7 +1,6 @@
-# Method snapshot
+# Metric method snapshot
 
-The submitted text score is the average of three independently predicted
-ordinal metrics. Video metrics are fixed to zero.
+The text evaluation uses three independently predicted ordinal metrics.
 
 ## TCC
 
@@ -59,7 +58,7 @@ otherwise                                             -> 2
 Validation uses physical leave-one-out calibration anchors. Test inference
 uses all 12 validation anchors.
 
-## Frozen output distributions
+## Archived output distributions
 
 | Metric | 0 | 1 | 2 |
 | --- | ---: | ---: | ---: |

@@ -31,9 +31,5 @@
       "path": "artifacts/frozen/metaphoricity_predictions.csv",
       "sha256": "74df2cada4f490ac6e50c02e1672fb67d1bbaa4821aea63e43d2190b9c4b597a"
     }
-  },
-  "known_good_submission": {
-    "path": "artifacts/frozen/known_good_submission.csv",
-    "sha256": "eaaed257e856be97f59601dd17ae41f3bccba9356cb140bdd862efe7a38293ee"
   }
 }

@@ -6,7 +6,7 @@
 - Example IDs are used for cache addressing and validation leave-one-out only.
 - The active TCC correction is one sample-agnostic `1 -> 2` policy.
 - M is converted to `0/1/2` by a fixed Python rule with no manual overrides.
-- Frozen component hashes and final submission hash are verified at build time.
+- Archived per-metric predictions are retained for audit comparisons.
 
 ## Evidence
 
@@ -28,6 +28,6 @@
    but a fresh model call can still differ because inference is not guaranteed
    to be deterministic.
 
-The frozen file is suitable as the current competition baseline. It should not
-be presented as proof of out-of-distribution performance on new datasets.
-Further public-leaderboard tuning should be avoided.
+The archived per-metric results are a competition baseline. They should not be
+presented as proof of out-of-distribution performance on new datasets. Further
+public-leaderboard tuning should be avoided.

@@ -1,28 +1,20 @@
 # rrrrr1030 best text submission
 
-This repository is a self-contained, reproducible snapshot of the best known
-text-only submission for `rrrrr1030`.
+This repository contains the three text-metric methods used by the best known
+`rrrrr1030` run, together with their prompts, scoring rules, archived evidence,
+and runnable agent pipeline.
 
 | Text Kendall | Text Spearman | Video Kendall | Video Spearman |
 | ---: | ---: | ---: | ---: |
 | 0.4109 | 0.4267 | 0 | 0 |
 
-The submitted file combines:
+The run used:
 
 - TCC: `tcc_v1_facet_conservative_v1`
 - MS: hash-verified original-v1 MappingExtractor + MSJudge
 - M: `v7_1_role_audit_loo`
-- VC, VA, VE: all zero
-
-## Choose the run you need
-
-There are two different workflows:
-
-1. **Reproduce the submitted CSV** from frozen, audited predictions. This is
-   deterministic, free, and does not call an API.
-2. **Run the model agents again** for TCC, MS, and M. This needs a Together API key,
-   incurs API cost, and may differ because model inference is not guaranteed to
-   be deterministic.
+- VC, VA, VE: all zero in the leaderboard run; video processing is outside this
+  repository's scope.
 
 Run all commands below from the repository root. Python 3.10 or newer is
 recommended.
@@ -30,9 +22,9 @@ recommended.
 ## How the three text metrics are calculated
 
 Every row has the same three inputs: `TARGET`, its reference `DESCRIPTION`, and
-the generated `ANALOGY`. TCC, MS, and M are predicted independently and remain
-three separate columns in the submission; their raw ordinal values are not
-averaged together by this repository.
+the generated `ANALOGY`. TCC, MS, and M are predicted independently. Each agent
+writes its own prediction CSV; the full rerun script then combines those newly
+generated files into the submission format.
 
 ### TCC — Target Concept Coverage
 
@@ -66,7 +58,7 @@ else:
 ```
 
 Therefore this policy can only promote `1 -> 2`. It never demotes a score,
-changes `0`, or uses an example-ID override. Frozen test distribution:
+changes `0`, or uses an example-ID override. Archived test distribution:
 `0: 0`, `1: 32`, `2: 30`.
 
 ### MS — Mapping Strength
@@ -123,9 +115,9 @@ Replay the archived test run without an API call:
 
 This recreates
 `runs/mapping_strength_replay/test_mapping_strength_predictions.csv`, which
-matches the frozen MS column for all 62 rows. Adding `--refresh-cache` with a
+matches the archived MS predictions for all 62 rows. Adding `--refresh-cache` with a
 writable cache such as `.agent_cache` makes fresh Together calls; fresh
-inference can differ despite identical prompts. Frozen test distribution:
+inference can differ despite identical prompts. Archived test distribution:
 `0: 0`, `1: 12`, `2: 50`.
 
 ### M — Metaphoricity
@@ -164,49 +156,9 @@ Interpretation:
 - `2`: understanding requires cross-domain projection or multiple central
   role-type changes.
 
-Frozen test distribution: `0: 8`, `1: 10`, `2: 44`.
+Archived test distribution: `0: 8`, `1: 10`, `2: 44`.
 
-### Final CSV assembly
-
-The deterministic builder joins the three predictions by `id` and sets the
-unused video metrics to zero:
-
-```text
-id,TCC,MS,M,VC,VA,VE
-...,tcc_score,ms_score,m_score,0,0,0
-```
-
-## 1. Reproduce the exact submitted CSV
-
-No virtual environment, API key, or third-party package is required:
-
-```bash
-python3 scripts/build_submission.py
-```
-
-Equivalent shortcut:
-
-```bash
-make reproduce
-```
-
-The command reads the three frozen text components, joins them by `id`, and
-creates:
-
-```text
-output/submission.csv       final 62-row competition file
-output/build_audit.json     source hashes, distributions, and verification result
-```
-
-The builder checks the ID set, columns, score ranges, zero video fields, and
-value-for-value equality with the known-good submission. The expected SHA-256
-of `output/submission.csv` is:
-
-```text
-eaaed257e856be97f59601dd17ae41f3bccba9356cb140bdd862efe7a38293ee
-```
-
-## 2. Install dependencies and run tests
+## 1. Install dependencies and run tests
 
 The model pipeline and policy tests need the packages in `requirements.txt`:
 
@@ -223,10 +175,9 @@ make test
 ```
 
 The tests check the active TCC/M decision boundaries, all 148 archived MS prompt
-and response records, validation leave-one-out behavior, dataset row counts,
-and exact frozen-submission reproduction.
+and response records, validation leave-one-out behavior, and dataset row counts.
 
-## 3. Run the active model agents again
+## 2. Run the active model agents
 
 First complete the dependency installation above, then configure your own
 Together API key:
@@ -246,8 +197,11 @@ This script:
 1. runs `tcc-v1-facet-conservative` on all 62 test examples;
 2. replays the exact archived `ms-v1` path on all 62 test examples;
 3. runs `m` (`v7_1_role_audit_loo`) on all 62 test examples;
-4. combines the three prediction files;
-5. compares the result with the known-good submission.
+4. combines the three newly generated metric files into `submission.csv`.
+
+The combiner is intentionally part of this full rerun. It has no default paths
+to archived predictions, so the repository no longer exposes a separate command
+for rebuilding a submission from previously saved metric files.
 
 New model outputs are written under:
 
@@ -255,13 +209,10 @@ New model outputs are written under:
 runs/recomputed/target_coverage/ TCC details and predictions
 runs/recomputed/mapping_strength/ MS mapping/judge details and predictions
 runs/recomputed/metaphoricity/   M details and predictions
-runs/recomputed/submission.csv   recomputed combined submission
-runs/recomputed/build_audit.json recomputed verification report
+runs/recomputed/submission.csv   combined result of this full rerun
 ```
 
-The rerun never overwrites `artifacts/frozen/`. If new model calls produce
-different labels, the final comparison exits with an error by design; the new
-files remain under `runs/recomputed/` for inspection. To force fresh calls
+The rerun never overwrites the archived metric results. To force fresh calls
 instead of reusing `.agent_cache/`:
 
 ```bash
@@ -274,40 +225,37 @@ the archived evidence under `artifacts/mapping_strength_evidence/`.
 
 ## What is actually required?
 
-Not every tracked file participates in the final score. The repository keeps
-three layers so that the result can be reproduced and audited honestly:
+The repository keeps two layers:
 
 | Layer | Purpose | Main files |
 | --- | --- | --- |
-| Exact submission | Required to rebuild the leaderboard CSV without an API | `artifacts/frozen/*.csv`, `scripts/build_submission.py` |
-| Active model rerun | Required to call the active TCC, MS, and M agents again | `run_text_agents.py`, `analogy_agents/`, `challenge-dataset/data/`, `requirements.txt`, `scripts/run_agents.sh` |
-| Audit and traceability | Not needed to construct the CSV, but records why the snapshot is trustworthy and where it is limited | `tests/`, `docs/`, `manifest.json`, validation-score JSON files |
+| Active model rerun | Calls TCC, MS, and M, then combines only those newly generated outputs | `run_text_agents.py`, `analogy_agents/`, `challenge-dataset/data/`, `requirements.txt`, `scripts/run_agents.sh`, `scripts/combine_recomputed_metrics.py` |
+| Audit and traceability | Records the archived per-metric outputs, why the methods are trustworthy, and where they are limited | `artifacts/`, `tests/`, `docs/`, `manifest.json` |
 
 Some source files under `analogy_agents/`, such as
 `metaphoricity_pairwise.py` and the old taxonomy utilities, support earlier
 experimental modes exposed by the shared runner. They do not determine the
-frozen best submission and are retained only for source traceability.
+active metric outputs and are retained only for source traceability.
 
 ## Repository contents
 
 ```text
 README.md
-    Setup, reproduction, rerun, and repository guide.
+    Setup, metric definitions, run instructions, and repository guide.
 
 Makefile
-    Shortcuts: `make reproduce`, `make test`,
-    `make verify-mapping-strength`, and `make check`.
+    Shortcuts: `make test`, `make verify-mapping-strength`, and `make check`.
 
 requirements.txt
-    Python dependencies for model inference and tests. The deterministic CSV
-    builder itself uses only the Python standard library.
+    Python dependencies for model inference and tests. The small post-run
+    combiner itself uses only the Python standard library.
 
 .env.example
     API-key template. Copy it to the ignored `.env`; never commit a real key.
 
 manifest.json
     Snapshot metadata, leaderboard values, component versions, and SHA-256
-    hashes for the frozen artifacts.
+    hashes for the archived per-metric predictions.
 
 run_text_agents.py
     CLI entry point for loading a split, selecting a scoring mode, running
@@ -320,14 +268,14 @@ analogy_agents/
     prompts.py / schemas.py
         Current model prompts and their strict structured-output schemas.
     original_target_coverage_prompts.py / original_target_coverage_schemas.py
-        Recovered, frozen original-v1 TCC prompt and schema definitions used by
+        Recovered original-v1 TCC prompt and schema definitions used by
         the active TCC path.
     original_mapping_strength_prompts.py / original_mapping_strength_schemas.py
         Hash-verified original-v1 MappingExtractor/MSJudge prompts and their
         structured-output contracts.
     metaphoricity_taxonomy.py / metaphoricity_pairwise.py
         Supporting utilities for earlier M experiments; they are retained for
-        source traceability but are not part of the final frozen build.
+        source traceability but are not part of the active metric paths.
 
 challenge-dataset/data/
     The 12-row validation and 62-row test text Parquet files. Videos are
@@ -340,8 +288,6 @@ artifacts/frozen/
         Frozen original Mapping Strength predictions.
     metaphoricity_predictions.csv
         Frozen active M predictions.
-    known_good_submission.csv
-        Exact leaderboard submission used as the reproduction oracle.
     *_validation_scores.json
         Preserved validation audit summaries.
 
@@ -350,21 +296,20 @@ artifacts/mapping_strength_evidence/
     and 62 test rows, plus provenance and replay instructions.
 
 scripts/
-    build_submission.py
-        Deterministically merges and validates the three frozen components.
-    reproduce.sh
-        Shell wrapper for the deterministic builder.
     run_agents.sh
-        Runs the active TCC, MS, and M paths, then verifies the combined file.
+        Runs the active TCC, MS, and M paths, then combines the new outputs.
+    combine_recomputed_metrics.py
+        Validates and combines only explicitly supplied, newly computed metric
+        files; it has no archived-input defaults.
     verify_mapping_strength_archive.py
         Recomputes all v1 MS prompt hashes, validates archived schemas, and
-        checks both validation and test predictions against frozen records.
+        checks both validation and test predictions against archived records.
 
 tests/
     test_pipeline.py
         Tests the active scoring policies and validation/data invariants.
-    test_reproduction.py
-        Tests byte-stable reconstruction of the known-good submission.
+    test_combine_recomputed_metrics.py
+        Tests ID-based assembly of newly generated metric outputs.
 
 docs/
     METHOD.md
@@ -378,7 +323,7 @@ output/, runs/, .agent_cache/
 
 ## Scope and limitations
 
-The frozen file is the current competition baseline, not proof of performance
+The archived metric outputs are a competition baseline, not proof of performance
 on a new distribution. In particular, active TCC has no complete independent
 validation run, M uses 12 validation anchors, and a fresh MS model call may
 differ even though its archived run and prompt source are reproducible. See
