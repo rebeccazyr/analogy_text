@@ -1,0 +1,2 @@
+artifacts/frozen/*.csv binary
+challenge-dataset/data/*.parquet binary

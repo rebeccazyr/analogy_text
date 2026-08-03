@@ -1,0 +1,32 @@
+{
+  "name": "rrrrr1030-best-text-submission",
+  "snapshot_date": "2026-08-03",
+  "model": "openai/gpt-oss-120b",
+  "leaderboard": {
+    "text_kendall_avg": 0.4109,
+    "text_spearman_avg": 0.4267,
+    "video_kendall_avg": 0.0,
+    "video_spearman_avg": 0.0
+  },
+  "components": {
+    "TCC": {
+      "method": "tcc_v1_facet_conservative_v1",
+      "path": "artifacts/frozen/tcc_predictions.csv",
+      "sha256": "66d02f0f9163cae5b618c10d699a5e1f45c159e8a380b56d238a2667aa61c0b1"
+    },
+    "MS": {
+      "method": "original_v1_frozen_prediction",
+      "path": "artifacts/frozen/ms_v1_base_submission.csv",
+      "sha256": "391e4e878c939b2af7737aceb8e021962801e5becb131d7376a8bf87e526823e"
+    },
+    "M": {
+      "method": "v7_1_role_audit_loo",
+      "path": "artifacts/frozen/m_v7_1_predictions.csv",
+      "sha256": "74df2cada4f490ac6e50c02e1672fb67d1bbaa4821aea63e43d2190b9c4b597a"
+    }
+  },
+  "known_good_submission": {
+    "path": "artifacts/frozen/known_good_submission.csv",
+    "sha256": "eaaed257e856be97f59601dd17ae41f3bccba9356cb140bdd862efe7a38293ee"
+  }
+}
