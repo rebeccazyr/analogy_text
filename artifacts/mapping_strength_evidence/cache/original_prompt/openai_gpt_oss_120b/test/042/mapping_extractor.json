@@ -1,0 +1,55 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "0adf185019655fa6",
+  "created_at": "2026-07-29T09:47:19.475601+00:00",
+  "usage": {
+    "completion_tokens": 1134,
+    "prompt_tokens": 793,
+    "total_tokens": 1927,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Bookshelf organization (physically arranging books by height)",
+    "target_concept": "Quicksort algorithm",
+    "mappings": [
+      {
+        "source_element": "Choosing a book as the \"pivot\"",
+        "target_element": "Selecting a pivot element in the array",
+        "relation": "Both serve as a reference point for partitioning",
+        "evidence": "You pick one book as the \"pivot\" (like a reference point)."
+      },
+      {
+        "source_element": "Splitting books into two piles: shorter than the pivot and taller than the pivot",
+        "target_element": "Partitioning the array into elements less than and greater than the pivot",
+        "relation": "Both create two subproblems based on comparison to the pivot",
+        "evidence": "You then split the books into two piles: one pile with books shorter than the pivot and another with books taller than the pivot."
+      },
+      {
+        "source_element": "Recursively applying the same process to each pile",
+        "target_element": "Recursively sorting each partition",
+        "relation": "Both use recursion to handle smaller subproblems",
+        "evidence": "Repeat the same process for each pile: pick a new pivot, split the books into smaller piles, and so on."
+      },
+      {
+        "source_element": "Base case when a pile has one or no books",
+        "target_element": "Base case when a subarray has size 0 or 1",
+        "relation": "Both define a termination condition for recursion",
+        "evidence": "Each pile becomes so small (just one book or none) that no more sorting is needed."
+      },
+      {
+        "source_element": "Combining the piles back together in order",
+        "target_element": "Concatenating the sorted subarrays after recursion",
+        "relation": "Both produce the final sorted sequence by joining the results of subproblems",
+        "evidence": "Finally, you combine all the piles back together in order."
+      }
+    ],
+    "process_summary": "Both the bookshelf organizer and quicksort follow a divide‑and‑conquer process: select a pivot (reference book or array element), partition the set into two groups based on the pivot, recursively apply the same steps to each group until they are trivially small, and then assemble the sorted groups to obtain the final ordered collection.",
+    "potential_breaks": [
+      "The analogy mentions an explicit \"combine\" step, which may suggest a merging operation not present in quicksort (quicksort simply concatenates the sorted partitions).",
+      "The bookshelf scenario sorts by physical height, whereas quicksort can sort any comparable key.",
+      "Physical constraints of a bookshelf (e.g., spatial layout) do not map to the abstract array representation used by quicksort."
+    ]
+  }
+}

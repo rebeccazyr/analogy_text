@@ -1,0 +1,64 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "c12f1a9b569c62e5",
+  "created_at": "2026-07-29T09:43:33.544883+00:00",
+  "usage": {
+    "completion_tokens": 1113,
+    "prompt_tokens": 758,
+    "total_tokens": 1871,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 527
+    }
+  },
+  "result": {
+    "source_concept": "Occupied but Ignored Chair (a chair that is sat in once but never utilized)",
+    "target_concept": "singleton variable",
+    "mappings": [
+      {
+        "source_element": "Chair",
+        "target_element": "Variable",
+        "relation": "Both serve as a location that can be occupied once",
+        "evidence": "The analogy describes a special chair that can only be sat in once, mirroring a variable that is assigned a value exactly once."
+      },
+      {
+        "source_element": "Student sitting in the chair",
+        "target_element": "Assigning a value to the variable",
+        "relation": "Action of occupying the location",
+        "evidence": "\"When a student sits in this chair (the variable is assigned a value)\""
+      },
+      {
+        "source_element": "Name written on the clipboard",
+        "target_element": "Stored value in the variable",
+        "relation": "Representation of the data held in the location",
+        "evidence": "\"they write their name on a clipboard (the value is stored)\""
+      },
+      {
+        "source_element": "Nobody checking the clipboard or calling on the student",
+        "target_element": "Variable never read or used",
+        "relation": "Lack of subsequent access to the stored data",
+        "evidence": "\"if nobody ever calls on that student or checks the clipboard ... the variable is never read or used\""
+      },
+      {
+        "source_element": "Teacher placing a sticky note warning on the chair",
+        "target_element": "Compiler or linter issuing a warning about the singleton variable",
+        "relation": "Observer detecting wasteful occupancy and signaling a warning",
+        "evidence": "\"teacher (compiler or linter) notices this inefficiency and puts a yellow sticky note on the chair as a warning\""
+      },
+      {
+        "source_element": "Unused chair taking up space in the classroom",
+        "target_element": "Singleton variable occupying memory without functional benefit",
+        "relation": "Both represent wasted resources",
+        "evidence": "\"Just like that unused chair takes up space ... a singleton variable occupies memory ... without contributing to its functionality\""
+      }
+    ],
+    "process_summary": "In both the chair scenario and the singleton variable case, an entity is occupied/assigned once, stores a piece of information, but is never accessed again. An external observer (teacher or compiler/linter) detects this inefficiency and issues a warning, highlighting that the occupied resource consumes space without providing benefit.",
+    "potential_breaks": [
+      "A physical chair can be removed without affecting the classroom, whereas removing a variable may require code changes; the analogy glosses over this difference."
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "a4f8eb2cf28b880d",
+  "created_at": "2026-07-29T09:44:37.845475+00:00",
+  "usage": {
+    "completion_tokens": 791,
+    "prompt_tokens": 675,
+    "total_tokens": 1466,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 200
+    }
+  },
+  "result": {
+    "source_concept": "Library",
+    "target_concept": "Database",
+    "mappings": [
+      {
+        "source_element": "books",
+        "target_element": "records/files/data",
+        "relation": "corresponds to",
+        "evidence": "Analogy says \"those same books are systematically arranged...\" referring to records in a database."
+      },
+      {
+        "source_element": "shelves",
+        "target_element": "storage structures (tables, indexes)",
+        "relation": "corresponds to",
+        "evidence": "Books are placed on shelves by topic; databases store records in tables/indexes organized by logical categories."
+      },
+      {
+        "source_element": "labels/catalog cards",
+        "target_element": "metadata/indexes",
+        "relation": "corresponds to",
+        "evidence": "Analogy mentions books are \"clearly labeled\" for easy finding, mirroring database indexing."
+      },
+      {
+        "source_element": "unified library",
+        "target_element": "integrated database",
+        "relation": "corresponds to",
+        "evidence": "Analogy contrasts scattered books with a \"unified library\" just as databases consolidate separate files into a common pool."
+      },
+      {
+        "source_element": "visitor",
+        "target_element": "user/application",
+        "relation": "corresponds to",
+        "evidence": "Analogy states \"Whenever a visitor needs information...\" analogous to applications querying a database."
+      },
+      {
+        "source_element": "searching for books",
+        "target_element": "querying for records",
+        "relation": "corresponds to",
+        "evidence": "Analogy describes retrieving exactly what is needed, matching database query retrieval."
+      },
+      {
+        "source_element": "different piles in homes",
+        "target_element": "separate files",
+        "relation": "corresponds to",
+        "evidence": "Analogy begins with books scattered in homes, mirroring data stored in disparate files before integration."
+      }
+    ],
+    "process_summary": "Both the library and the database consolidate previously scattered items (books or data files) into a single, organized collection. Items are systematically arranged, labeled, and indexed by logical categories, enabling users or applications to locate and retrieve needed information efficiently through search or query.",
+    "potential_breaks": [
+      "Physical books vs digital records (material vs electronic nature)",
+      "Library browsing is manual and visual; database access is mediated by query languages and software",
+      "Libraries typically support single-user access to a physical copy, whereas databases support concurrent transactions and complex consistency guarantees",
+      "Libraries lack built‑in mechanisms for automated updates or transaction rollback that databases provide"
+    ]
+  }
+}

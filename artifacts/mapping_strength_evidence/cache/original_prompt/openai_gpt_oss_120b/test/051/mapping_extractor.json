@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "2d021eb44ffa147f",
+  "created_at": "2026-07-29T09:51:09.643607+00:00",
+  "usage": {
+    "completion_tokens": 1208,
+    "prompt_tokens": 744,
+    "total_tokens": 1952,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 607
+    }
+  },
+  "result": {
+    "source_concept": "Labeled storage box placed in a location containing a piece of paper",
+    "target_concept": "Variable (symbol bound to a memory location/value)",
+    "mappings": [
+      {
+        "source_element": "Label on the box",
+        "target_element": "Variable name (symbol name)",
+        "relation": "represents",
+        "evidence": "The label on the outside, like 'Guest Count', is its name (the symbol's name)."
+      },
+      {
+        "source_element": "Location of the box (e.g., kitchen)",
+        "target_element": "Variable scope",
+        "relation": "determines visibility/access",
+        "evidence": "This box might be kept in the kitchen (the scope). This means you can only see or change the number inside it while you are in the kitchen."
+      },
+      {
+        "source_element": "Piece of paper with a number inside the box",
+        "target_element": "Variable's stored value",
+        "relation": "holds",
+        "evidence": "Inside the box, you place a piece of paper with a number on it, say '12' (the value)."
+      },
+      {
+        "source_element": "Replacing the paper with a new number",
+        "target_element": "Updating the variable's value",
+        "relation": "changes",
+        "evidence": "If another guest arrives, you can open the box, take out the paper that says '12', and replace it with a new one that says '13'."
+      },
+      {
+        "source_element": "Box being designated as 'Numbers Only' based on what is placed inside",
+        "target_element": "Variable type",
+        "relation": "defines allowed value kind",
+        "evidence": "This act of replacing one number with another is what establishes that this is a 'Numbers Only' box (the type). Because you updated it with a number, you couldn't put a piece of paper with the word 'twelve' in it."
+      }
+    ],
+    "process_summary": "Both the storage box and a variable act as named containers located within a bounded region; the container holds a value that can be replaced, and the container's type restricts what kinds of values may be stored. The analogy maps naming, scoping, value storage, updating, and type enforcement to physical attributes of a labeled box.",
+    "potential_breaks": [
+      "A box's label is usually immutable, whereas a variable's identifier can be shadowed or renamed in some languages.",
+      "Physical location as scope oversimplifies lexical vs dynamic scope and does not capture compile‑time visibility rules.",
+      "The analogy suggests a single, simple type enforcement mechanism, which may not reflect static typing, polymorphism, or runtime type checking in programming languages."
+    ]
+  }
+}

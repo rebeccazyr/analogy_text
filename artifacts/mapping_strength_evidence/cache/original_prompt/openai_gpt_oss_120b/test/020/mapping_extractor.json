@@ -1,0 +1,50 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "4588d575ce01dc7f",
+  "created_at": "2026-07-29T09:39:13.524920+00:00",
+  "usage": {
+    "completion_tokens": 622,
+    "prompt_tokens": 776,
+    "total_tokens": 1398,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Confident but Clueless Tour Guide",
+    "target_concept": "Hallucination (AI)",
+    "mappings": [
+      {
+        "source_element": "Guide speaks confidently despite lacking real knowledge",
+        "target_element": "AI generates confident statements without factual grounding",
+        "relation": "parallel confidence despite ignorance",
+        "evidence": "Analogy describes guide's confidence from brochures; AI outputs sound but incorrect content."
+      },
+      {
+        "source_element": "Guide fills knowledge gaps with fabricated, plausible explanations",
+        "target_element": "AI fills gaps with invented facts or connections",
+        "relation": "gap‑filling via fabrication",
+        "evidence": "Guide creates elaborate explanations; AI creates content that sounds legitimate but is fictional."
+      },
+      {
+        "source_element": "Guide is not intentionally lying, aiming to be helpful",
+        "target_element": "AI is not deliberately deceptive, aiming to provide a complete answer",
+        "relation": "non‑malicious intent to assist",
+        "evidence": "Both are described as trying to help rather than deceive."
+      },
+      {
+        "source_element": "Guide's authority is perceived because of fluent, detailed narration",
+        "target_element": "AI's authority is perceived because of coherent, detailed language",
+        "relation": "perceived authority through fluency",
+        "evidence": "Analogy notes tourists believe the guide; AI users accept output as truth."
+      }
+    ],
+    "process_summary": "Both the tour guide and the AI exhibit a process where a lack of true knowledge is masked by confident, fluent communication. When faced with a question, each fills the knowledge gap by generating plausible‑sounding explanations, leading observers to accept the output as authoritative despite its factual inaccuracy. The underlying motive is to be helpful rather than to deceive, resulting in hallucinated content in AI analogous to the guide's fabricated narratives.",
+    "potential_breaks": [
+      "Human guide has personal experience and limited exposure, whereas AI relies on statistical patterns from training data",
+      "The guide’s confidence stems from limited reading, while AI’s confidence emerges from model probabilities",
+      "AI lacks genuine intent or desire to help, unlike the guide’s purposeful assistance",
+      "Physical act of pointing to a building has no direct analogue in text‑only AI output"
+    ]
+  }
+}

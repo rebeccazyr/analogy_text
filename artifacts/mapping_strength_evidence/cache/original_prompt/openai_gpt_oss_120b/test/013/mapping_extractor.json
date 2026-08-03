@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "8cbee2dfa6c378e6",
+  "created_at": "2026-07-29T09:36:52.163492+00:00",
+  "usage": {
+    "completion_tokens": 893,
+    "prompt_tokens": 705,
+    "total_tokens": 1598,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 441
+    }
+  },
+  "result": {
+    "source_concept": "traffic light system",
+    "target_concept": "if‑then statements",
+    "mappings": [
+      {
+        "source_element": "sensor detecting a car waiting at the red light",
+        "target_element": "condition in an if statement",
+        "relation": "represents",
+        "evidence": "Analogy states: IF the sensor detects a car (condition)"
+      },
+      {
+        "source_element": "turning the light green",
+        "target_element": "action executed when the condition is true",
+        "relation": "corresponds to",
+        "evidence": "THEN you turn the light green (action)"
+      },
+      {
+        "source_element": "keeping the light red (no change)",
+        "target_element": "no action when the condition is false (or omitted else branch)",
+        "relation": "maps to",
+        "evidence": "If no car is detected (condition is false), you do nothing and keep the light red"
+      },
+      {
+        "source_element": "switching to a pedestrian crossing signal",
+        "target_element": "ELSE‑branch action",
+        "relation": "corresponds to",
+        "evidence": "Optionally, you might have an ELSE rule: IF no car is detected, THEN you switch to a pedestrian crossing signal instead"
+      }
+    ],
+    "process_summary": "Both the traffic‑light scenario and an if‑then statement involve evaluating a condition (sensor detection) and then performing one of two possible actions: a primary action when the condition holds (turn green) or an alternative/no action when it does not (stay red or activate a pedestrian signal). The causal flow—condition check → branch decision → action—is shared.",
+    "potential_breaks": [
+      "Real traffic lights often follow timed cycles rather than purely condition‑driven changes.",
+      "A traffic light may consider multiple sensors or phases, whereas the analogy presents a single binary condition.",
+      "The ELSE example (pedestrian signal) assumes a mutually exclusive alternative that may not reflect typical else branches in code."
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "c92e7c998b477b4b",
+  "created_at": "2026-07-29T09:33:38.241360+00:00",
+  "usage": {
+    "completion_tokens": 793,
+    "prompt_tokens": 684,
+    "total_tokens": 1477,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 325
+    }
+  },
+  "result": {
+    "source_concept": "Tour guide telling tall tales",
+    "target_concept": "AI hallucination",
+    "mappings": [
+      {
+        "source_element": "Tour guide",
+        "target_element": "AI system",
+        "relation": "acts as the primary information provider to an audience",
+        "evidence": "Analogy states \"the guide (AI)\" provides explanations to visitors (users)."
+      },
+      {
+        "source_element": "Tall tales (made‑up stories)",
+        "target_element": "Hallucinated content (fabricated output)",
+        "relation": "produces false but seemingly plausible information",
+        "evidence": "Analogy describes the guide \"making up stories that sound convincing but are completely untrue\" analogous to AI generating factually incorrect content."
+      },
+      {
+        "source_element": "Visitors who trust the guide",
+        "target_element": "Users who trust the AI",
+        "relation": "audience places trust in the authority of the provider",
+        "evidence": "Analogy notes \"The visitors (users) trust you because you're the guide (AI)\"."
+      },
+      {
+        "source_element": "Stories sound plausible yet do not match reality",
+        "target_element": "Hallucinations sound plausible yet are factually incorrect",
+        "relation": "plausibility masks inaccuracy, leading to misinformation",
+        "evidence": "Analogy says \"The stories might sound plausible, but they don't match reality\" mirroring AI hallucinations."
+      }
+    ],
+    "process_summary": "Both the tour guide and the AI serve as authoritative narrators for an audience. In each case the narrator may generate information that appears credible (tall tales or plausible‑sounding output) but is actually false, causing the audience to be misled.",
+    "potential_breaks": [
+      "A human tour guide can intentionally lie, whereas AI hallucinations are typically unintended errors.",
+      "The guide operates in a physical museum context with limited scope, while AI can produce hallucinations across any domain.",
+      "A guide can be corrected in real time by the audience or other staff; AI may lack immediate feedback mechanisms."
+    ]
+  }
+}

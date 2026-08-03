@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "28164ff9f2b47b4d",
+  "created_at": "2026-07-29T09:30:38.893773+00:00",
+  "usage": {
+    "completion_tokens": 813,
+    "prompt_tokens": 667,
+    "total_tokens": 1480,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 266
+    }
+  },
+  "result": {
+    "source_concept": "Shopping Cart",
+    "target_concept": "List (ordered data structure)",
+    "mappings": [
+      {
+        "source_element": "product placed into the cart",
+        "target_element": "element added to the list",
+        "relation": "corresponds to insertion of an element",
+        "evidence": "Analogy: \"Each product you drop into it is a piece of information you want to keep. You place the products in one by one...\""
+      },
+      {
+        "source_element": "order in which products are placed",
+        "target_element": "order of elements in the list",
+        "relation": "preserves sequential ordering",
+        "evidence": "Analogy: \"keep track of the exact order they went in—first, second, third...\""
+      },
+      {
+        "source_element": "cart’s ability to hold an arbitrary number of items",
+        "target_element": "list’s dynamic, unbounded size",
+        "relation": "both have no fixed capacity limit",
+        "evidence": "Analogy: \"There’s no strict limit on how many products your cart can hold; it can grow as big as you need.\""
+      },
+      {
+        "source_element": "checking the items in the cart",
+        "target_element": "iterating over the list",
+        "relation": "allows viewing elements in stored order",
+        "evidence": "Analogy: \"At any time, you can check the items in the order they were placed...\""
+      },
+      {
+        "source_element": "removing or adding items while keeping sequence",
+        "target_element": "removing or inserting elements while preserving order",
+        "relation": "supports mutable operations that maintain order",
+        "evidence": "Analogy: \"remove some, or add new ones, all while maintaining that original sequence.\""
+      }
+    ],
+    "process_summary": "Both the shopping cart and a list involve sequentially adding items, preserving the order of insertion, allowing the collection to expand without a preset size limit, and supporting later inspection, removal, or insertion of items while keeping the original ordering intact.",
+    "potential_breaks": [
+      "A physical cart may be limited by weight or space, whereas a list’s size is only limited by memory.",
+      "In a cart, items can be rearranged arbitrarily by hand, while a list’s order changes only through explicit operations.",
+      "A cart does not support random access by index, whereas many list implementations allow direct indexing."
+    ]
+  }
+}

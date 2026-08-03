@@ -17,7 +17,7 @@ from pydantic import BaseModel
 from scipy.stats import kendalltau, spearmanr
 from together import AsyncTogether
 
-from .m_taxonomy import (
+from .metaphoricity_taxonomy import (
     M_CONCEPTUAL_DISTANCE_CACHE_NAMESPACE,
     M_CONCEPTUAL_DISTANCE_CRITIC_CACHE_NAMESPACE,
     M_CONCEPTUAL_DISTANCE_CRITIC_VERSION,
@@ -108,12 +108,21 @@ from .schemas import (
     TCCJudgment,
     TopicImportanceJudgment,
 )
-from .v1_prompts import (
+from .original_target_coverage_prompts import (
     PROMPT_VERSION as V1_PROMPT_VERSION,
     concept_decomposer_prompt as v1_concept_decomposer_prompt,
     tcc_judge_prompt as v1_tcc_judge_prompt,
 )
-from .v1_schemas import (
+from .original_mapping_strength_prompts import (
+    PROMPT_VERSION as ORIGINAL_MS_PROMPT_VERSION,
+    mapping_extractor_prompt as original_mapping_extractor_prompt,
+    ms_judge_prompt as original_mapping_strength_judge_prompt,
+)
+from .original_mapping_strength_schemas import (
+    MappingAnalysis as OriginalMappingAnalysis,
+    MSJudgment as OriginalMappingStrengthJudgment,
+)
+from .original_target_coverage_schemas import (
     ConceptDecomposition as V1ConceptDecomposition,
     TCCJudgment as V1TCCJudgment,
 )
@@ -130,6 +139,7 @@ TCC_FULL_COVERAGE_THRESHOLD = 0.80
 TCC_V1_AUTO_CONSERVATIVE_POLICY_VERSION = "tcc_v1_auto_conservative_v3"
 TCC_V1_FACET_CONSERVATIVE_POLICY_VERSION = "tcc_v1_facet_conservative_v1"
 TCC_V1_EXACT_CACHE_NAMESPACE = "tcc_v1_exact_prompt"
+ORIGINAL_MS_CACHE_NAMESPACE = "original_prompt"
 
 
 @dataclass(frozen=True)
@@ -245,11 +255,8 @@ def _usage_dict(response: Any) -> dict[str, Any]:
 class SixAgentPipeline:
     def __init__(self, config: PipelineConfig):
         self.config = config
-        if not os.environ.get("TOGETHER_API_KEY"):
-            raise RuntimeError(
-                "TOGETHER_API_KEY is not set. Put it in .env or export it in the shell."
-            )
-        self.client = AsyncTogether(api_key=os.environ["TOGETHER_API_KEY"])
+        api_key = os.environ.get("TOGETHER_API_KEY")
+        self.client = AsyncTogether(api_key=api_key) if api_key else None
         self.semaphore = asyncio.Semaphore(config.max_concurrency)
 
     def _cache_path(
@@ -300,6 +307,12 @@ class SixAgentPipeline:
                     pass
                 else:
                     return cached_result
+
+        if self.client is None:
+            raise RuntimeError(
+                "TOGETHER_API_KEY is not set and no matching cached response "
+                "was found. Put the key in .env or export it in the shell."
+            )
 
         schema = output_model.model_json_schema()
         schema_instruction = (
@@ -776,6 +789,72 @@ class SixAgentPipeline:
             },
             "v1_facet_conservative_policy": correction,
             "agents": agents,
+        }
+
+    async def evaluate_original_mapping_strength(
+        self,
+        example: dict[str, Any],
+        split: str,
+    ) -> dict[str, Any]:
+        """Run the hash-verified original MappingExtractor and MSJudge."""
+        example_id = int(example["id"])
+        target = example["target"]
+        description = example["description"]
+        analogy = example["analogy"]
+
+        mapping_messages = original_mapping_extractor_prompt(
+            target,
+            description,
+            analogy,
+        )
+        mapping = await self._call_structured(
+            split=split,
+            example_id=example_id,
+            agent_name="mapping_extractor",
+            output_model=OriginalMappingAnalysis,
+            system=mapping_messages[0],
+            user=mapping_messages[1],
+            cache_namespace=ORIGINAL_MS_CACHE_NAMESPACE,
+            prompt_version=ORIGINAL_MS_PROMPT_VERSION,
+        )
+
+        ms_messages = original_mapping_strength_judge_prompt(
+            target,
+            description,
+            analogy,
+            mapping.model_dump(),
+        )
+        judgment = await self._call_structured(
+            split=split,
+            example_id=example_id,
+            agent_name="ms_judge",
+            output_model=OriginalMappingStrengthJudgment,
+            system=ms_messages[0],
+            user=ms_messages[1],
+            cache_namespace=ORIGINAL_MS_CACHE_NAMESPACE,
+            prompt_version=ORIGINAL_MS_PROMPT_VERSION,
+        )
+        return {
+            "id": example_id,
+            "target": target,
+            "prediction": {"MS": int(judgment.recommended_score)},
+            "latent_scores": {
+                "MS": judgment.score_probabilities.expected_score()
+            },
+            "confidence": {"MS": judgment.confidence},
+            "v1_prompt_execution": {
+                "prompt_version": ORIGINAL_MS_PROMPT_VERSION,
+                "cache_namespace": ORIGINAL_MS_CACHE_NAMESPACE,
+                "source": "74_of_74_archived_hashes_verified",
+                "mapping_extractor_prompt_hash": _prompt_hash(
+                    *mapping_messages
+                ),
+                "ms_judge_prompt_hash": _prompt_hash(*ms_messages),
+            },
+            "agents": {
+                "original_mapping_extractor": mapping.model_dump(),
+                "original_mapping_strength_judge": judgment.model_dump(),
+            },
         }
 
     async def evaluate_tcc(
@@ -2658,8 +2737,8 @@ def write_tcc_outputs(
     results: list[dict[str, Any]], output_dir: Path, split: str
 ) -> tuple[Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    jsonl_path = output_dir / f"{split}_tcc_details.jsonl"
-    csv_path = output_dir / f"{split}_tcc_predictions.csv"
+    jsonl_path = output_dir / f"{split}_target_coverage_details.jsonl"
+    csv_path = output_dir / f"{split}_target_coverage_predictions.csv"
 
     with jsonl_path.open("w", encoding="utf-8") as handle:
         for result in sorted(results, key=lambda item: item["id"]):
@@ -2675,12 +2754,33 @@ def write_tcc_outputs(
     return jsonl_path, csv_path
 
 
+def write_ms_outputs(
+    results: list[dict[str, Any]], output_dir: Path, split: str
+) -> tuple[Path, Path]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    jsonl_path = output_dir / f"{split}_mapping_strength_details.jsonl"
+    csv_path = output_dir / f"{split}_mapping_strength_predictions.csv"
+
+    with jsonl_path.open("w", encoding="utf-8") as handle:
+        for result in sorted(results, key=lambda item: item["id"]):
+            handle.write(json.dumps(result, ensure_ascii=False) + "\n")
+
+    with csv_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["id", "MS"])
+        writer.writeheader()
+        for result in sorted(results, key=lambda item: item["id"]):
+            writer.writerow(
+                {"id": result["id"], "MS": result["prediction"]["MS"]}
+            )
+    return jsonl_path, csv_path
+
+
 def write_m_outputs(
     results: list[dict[str, Any]], output_dir: Path, split: str
 ) -> tuple[Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    jsonl_path = output_dir / f"{split}_m_details.jsonl"
-    csv_path = output_dir / f"{split}_m_predictions.csv"
+    jsonl_path = output_dir / f"{split}_metaphoricity_details.jsonl"
+    csv_path = output_dir / f"{split}_metaphoricity_predictions.csv"
 
     with jsonl_path.open("w", encoding="utf-8") as handle:
         for result in sorted(results, key=lambda item: item["id"]):
@@ -2740,6 +2840,32 @@ def score_tcc_validation(
         rho = float(spearmanr(y_true, y_pred).statistic)
     return {
         "TCC": {
+            "kendall": 0.0 if tau != tau else tau,
+            "spearman": 0.0 if rho != rho else rho,
+            "accuracy": sum(
+                prediction == gold
+                for prediction, gold in zip(y_pred, y_true)
+            )
+            / len(y_true),
+            "gold": y_true,
+            "predicted": y_pred,
+        }
+    }
+
+
+def score_ms_validation(
+    results: list[dict[str, Any]], validation_rows: list[dict[str, Any]]
+) -> dict[str, Any]:
+    gold_by_id = {row["id"]: row for row in validation_rows}
+    y_true = [gold_by_id[result["id"]]["MS"] for result in results]
+    y_pred = [result["prediction"]["MS"] for result in results]
+    if len(y_true) < 2:
+        tau = rho = float("nan")
+    else:
+        tau = float(kendalltau(y_true, y_pred).statistic)
+        rho = float(spearmanr(y_true, y_pred).statistic)
+    return {
+        "MS": {
             "kendall": 0.0 if tau != tau else tau,
             "spearman": 0.0 if rho != rho else rho,
             "accuracy": sum(

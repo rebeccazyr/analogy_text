@@ -1,0 +1,61 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "d6c46f62ba3c5dae",
+  "created_at": "2026-07-29T09:40:13.073946+00:00",
+  "usage": {
+    "completion_tokens": 987,
+    "prompt_tokens": 765,
+    "total_tokens": 1752,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 317
+    }
+  },
+  "result": {
+    "source_concept": "Recipe ingredient counting (ingredients placed in jars and tallied)",
+    "target_concept": "Bag‑of‑words model",
+    "mappings": [
+      {
+        "source_element": "Ingredient type (e.g., flour, eggs, sugar)",
+        "target_element": "Word type (e.g., \"flour\", \"egg\", \"sugar\")",
+        "relation": "One‑to‑one correspondence of basic units",
+        "evidence": "Analogy states that each ingredient corresponds to a word in the document."
+      },
+      {
+        "source_element": "Number of cups/units of each ingredient",
+        "target_element": "Word frequency (count of each word)",
+        "relation": "Quantitative mapping of occurrence counts",
+        "evidence": "Analogy counts how many cups of flour, eggs, etc., mirroring word frequency retention."
+      },
+      {
+        "source_element": "Ignoring cooking steps and order of adding ingredients",
+        "target_element": "Ignoring grammar and word order",
+        "relation": "Both discard sequential information",
+        "evidence": "Analogy explicitly says the chef does not care about the order of adding ingredients, just like bag‑of‑words discards word order."
+      },
+      {
+        "source_element": "Collecting ingredients into separate jars (unordered multiset)",
+        "target_element": "Representing a document as an unordered multiset of words",
+        "relation": "Structural equivalence of unordered collection",
+        "evidence": "Analogy describes dumping ingredients into jars, analogous to the bag‑of‑words representation."
+      },
+      {
+        "source_element": "Classifying a recipe based on ingredient composition (e.g., dessert vs. Indian dish)",
+        "target_element": "Classifying a document based on word‑frequency profile",
+        "relation": "Use of the unordered count representation for categorization",
+        "evidence": "Analogy mentions the chef makes judgments about the recipe type from ingredient jars, mirroring text classification."
+      }
+    ],
+    "process_summary": "Both the source and target processes reduce a complex, ordered sequence (a recipe's instructions or a document's sentences) to an unordered collection of basic elements with associated counts. The reduction discards sequential and relational information, retaining only the presence and frequency of each element, which can then be used for coarse‑grained classification or similarity assessment.",
+    "potential_breaks": [
+      "Recipes often rely on the order of steps or cooking methods for the final flavor, a nuance lost when ignoring order—parallel to syntax and phrase structure lost in bag‑of‑words.",
+      "Ingredient interactions (e.g., leavening agents reacting with acids) are not captured by simple counts, similar to word collocations or n‑gram dependencies missing in bag‑of‑words.",
+      "Some ingredients have hierarchical categories (spices vs. main ingredients) that may affect classification; bag‑of‑words treats all words uniformly, ignoring semantic hierarchies.",
+      "The analogy assumes each ingredient is independent, whereas in language words can have polysemy or context‑dependent meanings that simple counts cannot resolve."
+    ]
+  }
+}

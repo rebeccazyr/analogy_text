@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "f6d2a545d016c43a",
+  "created_at": "2026-07-29T09:34:13.428217+00:00",
+  "usage": {
+    "completion_tokens": 952,
+    "prompt_tokens": 746,
+    "total_tokens": 1698,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 454
+    }
+  },
+  "result": {
+    "source_concept": "Puppy training with treats",
+    "target_concept": "Reinforcement learning",
+    "mappings": [
+      {
+        "source_element": "Puppy (the learner)",
+        "target_element": "RL agent",
+        "relation": "Both are the decision‑making entity that selects actions",
+        "evidence": "The puppy (the agent) is in a park (the environment)..."
+      },
+      {
+        "source_element": "Park (the setting)",
+        "target_element": "Environment",
+        "relation": "Both provide the context in which actions are taken and outcomes observed",
+        "evidence": "The puppy ... is in a park (the environment)"
+      },
+      {
+        "source_element": "Treat (positive feedback)",
+        "target_element": "Reward signal",
+        "relation": "Both serve as positive reinforcement that increases the likelihood of the preceding action",
+        "evidence": "you give it a treat (a reward)"
+      },
+      {
+        "source_element": "No treat (absence of reward or penalty)",
+        "target_element": "Penalty or lack of reward",
+        "relation": "Both signal that an action was undesirable, reducing its future selection",
+        "evidence": "you don't give it a treat (a penalty or no reward)"
+      },
+      {
+        "source_element": "Repeated fetch attempts over time",
+        "target_element": "Iterative interaction and learning to maximize cumulative reward",
+        "relation": "Both involve trial‑and‑error learning where behavior is adjusted to increase total reward",
+        "evidence": "Over time, the puppy learns ... maximize the number of treats it gets"
+      }
+    ],
+    "process_summary": "In both the puppy‑training scenario and reinforcement learning, an agent repeatedly interacts with an environment, takes actions, receives feedback (reward or penalty), and updates its behavior so that actions leading to higher cumulative reward become more frequent.",
+    "potential_breaks": [
+      "The analogy treats the absence of a treat as a penalty, conflating no reward with negative reward, which are distinct in RL.",
+      "Puppy learning often involves innate motivations and shaping, whereas RL agents rely purely on algorithmic updates.",
+      "Rewards in the analogy are immediate, while RL can involve delayed or sparse rewards."
+    ]
+  }
+}

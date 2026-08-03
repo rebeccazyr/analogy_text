@@ -1,0 +1,73 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "717cef66daf9c009",
+  "created_at": "2026-07-29T09:38:32.287515+00:00",
+  "usage": {
+    "completion_tokens": 905,
+    "prompt_tokens": 798,
+    "total_tokens": 1703,
+    "prompt_tokens_details": {
+      "cached_tokens": 576
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 204
+    }
+  },
+  "result": {
+    "source_concept": "Busy restaurant kitchen",
+    "target_concept": "Concurrency",
+    "mappings": [
+      {
+        "source_element": "chef",
+        "target_element": "thread",
+        "relation": "represents",
+        "evidence": "Each chef works on a different dish simultaneously, analogous to each thread executing a separate task."
+      },
+      {
+        "source_element": "dish",
+        "target_element": "task (or unit of work)",
+        "relation": "corresponds to",
+        "evidence": "Chefs prepare dishes independently, just as threads perform independent tasks."
+      },
+      {
+        "source_element": "kitchen resources (refrigerator, stove, cutting board)",
+        "target_element": "shared memory / data structures",
+        "relation": "maps to",
+        "evidence": "Chefs share these resources and must coordinate access, mirroring threads sharing memory and requiring synchronization."
+      },
+      {
+        "source_element": "waiting for a resource (e.g., refrigerator)",
+        "target_element": "synchronization / blocking",
+        "relation": "illustrates",
+        "evidence": "When two chefs need the same resource, one waits briefly, similar to a thread blocking on a lock."
+      },
+      {
+        "source_element": "non‑deterministic order of dishes reaching the dining room",
+        "target_element": "non‑deterministic execution order of threads",
+        "relation": "parallels",
+        "evidence": "Customers receive complete meals regardless of order, just as a program’s final result is unchanged despite varied thread interleavings."
+      },
+      {
+        "source_element": "head chef (operating system)",
+        "target_element": "scheduler / OS",
+        "relation": "acts as",
+        "evidence": "The head chef assigns more cooks to busy stations, akin to an OS assigning CPU time to threads for load balancing."
+      },
+      {
+        "source_element": "multiple chefs working at once",
+        "target_element": "parallel execution on multi‑core or distributed systems",
+        "relation": "enables",
+        "evidence": "Parallel work in the kitchen speeds service, just as concurrency improves performance on multi‑core hardware."
+      }
+    ],
+    "process_summary": "In the analogy, many chefs (threads) independently prepare dishes (tasks) while sharing limited kitchen resources (memory). They coordinate via brief waiting when a resource is contested (synchronization). The order in which dishes reach the dining room is nondeterministic, yet each customer receives a complete meal, mirroring how concurrent threads may interleave arbitrarily but still produce the correct final program state. A head chef (operating system) balances workload across stations, analogous to a scheduler distributing work across cores.",
+    "potential_breaks": [
+      "Physical kitchen resources have spatial constraints that differ from abstract memory models in concurrency.",
+      "Chefs can communicate verbally in ways threads cannot, potentially overstating the ease of coordination.",
+      "The head chef’s authority is more hierarchical than typical OS scheduling, which is often preemptive and automated.",
+      "In a kitchen, some dishes have inherent ordering dependencies (e.g., sauce before plating) that the analogy does not address, whereas concurrency may involve explicit task dependencies."
+    ]
+  }
+}

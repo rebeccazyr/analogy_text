@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "65b5e660dad6465f",
+  "created_at": "2026-07-29T09:48:31.141151+00:00",
+  "usage": {
+    "completion_tokens": 1316,
+    "prompt_tokens": 703,
+    "total_tokens": 2019,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 684
+    }
+  },
+  "result": {
+    "source_concept": "Developer testing a mock service against a real production service by sending identical requests and comparing responses",
+    "target_concept": "Turing test",
+    "mappings": [
+      {
+        "source_element": "developer (judge)",
+        "target_element": "human judge",
+        "relation": "acts as the evaluator who attempts to distinguish the two participants",
+        "evidence": "Analogy: \"Think of a developer interacting... The developer sends identical requests... If the developer... can successfully identify which endpoint is the mock...\" mirrors the judge’s role in the Turing test."
+      },
+      {
+        "source_element": "real production service and mock service",
+        "target_element": "human participant and machine participant",
+        "relation": "pair of entities where one is authentic and the other is an imitation",
+        "evidence": "Analogy describes one endpoint as the real service and the other as a mock designed to imitate it, analogous to the human and machine players."
+      },
+      {
+        "source_element": "identical requests sent to both endpoints",
+        "target_element": "natural‑language questions posed to both participants",
+        "relation": "identical inputs used to probe each participant’s behavior",
+        "evidence": "Analogy: \"developer sends identical requests to both and checks the responses\" parallels the judge’s blind conversation with both players."
+      },
+      {
+        "source_element": "comparing responses to see if they can be distinguished",
+        "target_element": "judge attempting to determine which participant is the machine",
+        "relation": "evaluation criterion based on distinguishability of the two responses",
+        "evidence": "Analogy: \"checks the responses... can successfully identify which endpoint is the mock\" reflects the judge’s task of distinguishing human from machine."
+      },
+      {
+        "source_element": "mock service considered successful when it imitates the real service",
+        "target_element": "machine considered to have passed when it imitates human behavior",
+        "relation": "success condition defined by effective imitation",
+        "evidence": "Analogy: \"mock service is considered a success because its behavior is designed to imitate the real one\" mirrors the Turing test’s pass condition."
+      }
+    ],
+    "process_summary": "Both the source and target involve an evaluator presenting identical inputs to two entities—one authentic, one designed to imitate—and judging whether the imitation is indistinguishable based on the responses.",
+    "potential_breaks": [
+      "In the analogy the developer knows which endpoint is the mock, whereas in the Turing test the judge is blind to which participant is the machine.",
+      "The analogy treats successful identification of the mock as evidence of effective imitation, which reverses the Turing test’s criterion (the test is passed when the judge cannot identify the machine).",
+      "The source uses API requests, a technical, non‑linguistic interaction, while the Turing test relies on natural‑language conversation."
+    ]
+  }
+}

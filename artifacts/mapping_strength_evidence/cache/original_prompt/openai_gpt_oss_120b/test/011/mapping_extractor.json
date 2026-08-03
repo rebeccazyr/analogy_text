@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "6f93c1eac9a48869",
+  "created_at": "2026-07-29T09:36:14.925862+00:00",
+  "usage": {
+    "completion_tokens": 755,
+    "prompt_tokens": 717,
+    "total_tokens": 1472,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 329
+    }
+  },
+  "result": {
+    "source_concept": "waiter responding to a restaurant bell",
+    "target_concept": "event handler in event‑driven programming",
+    "mappings": [
+      {
+        "source_element": "bell ringing",
+        "target_element": "event occurrence",
+        "relation": "triggers",
+        "evidence": "When a bell rings (the event), you (the event handler) immediately go to that table"
+      },
+      {
+        "source_element": "waiter",
+        "target_element": "event handler (callback/subroutine)",
+        "relation": "acts as",
+        "evidence": "you (the event handler) immediately go to that table to see what they need"
+      },
+      {
+        "source_element": "table that rang the bell",
+        "target_element": "event source (specific component)",
+        "relation": "provides the source of the trigger",
+        "evidence": "Each bell corresponds to a specific table (event source)"
+      },
+      {
+        "source_element": "specific request from the table (water, check, dessert)",
+        "target_element": "event details / parameters",
+        "relation": "supplies contextual data for handling",
+        "evidence": "Your response depends on what that table needs (the event's details)"
+      }
+    ],
+    "process_summary": "In both the restaurant and the program, an external signal (bell or event) originates from a specific source (table or component). The signal triggers a designated agent (waiter or event handler) to become active and respond, using the contextual information attached to the signal to decide the appropriate action.",
+    "potential_breaks": [
+      "A waiter physically moves to a location, whereas an event handler executes code without spatial movement.",
+      "A bell is a simple binary signal, while events can carry complex data structures.",
+      "A waiter may handle multiple tables concurrently, but many event handlers run sequentially in a single‑threaded event loop."
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "f0bfdbc0d9ca19c5",
+  "created_at": "2026-07-29T09:35:23.225301+00:00",
+  "usage": {
+    "completion_tokens": 995,
+    "prompt_tokens": 724,
+    "total_tokens": 1719,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 492
+    }
+  },
+  "result": {
+    "source_concept": "Packing a suitcase by tossing items in without regard to order, while counting each type of item",
+    "target_concept": "Bag-of-words model",
+    "mappings": [
+      {
+        "source_element": "individual clothing items (e.g., t‑shirts, jeans, jackets)",
+        "target_element": "individual words in a document",
+        "relation": "corresponds to the basic units being represented",
+        "evidence": "Analogy states \"individual items\" map to \"words\""
+      },
+      {
+        "source_element": "lack of concern for the order in which items are placed in the suitcase",
+        "target_element": "ignoring word order and grammar in the document representation",
+        "relation": "both discard sequential ordering",
+        "evidence": "Analogy says \"you don't care about the order\" just as bag‑of‑words ignores word order"
+      },
+      {
+        "source_element": "count of each clothing type (e.g., 5 t‑shirts)",
+        "target_element": "frequency count of each word",
+        "relation": "both retain quantitative information about each element",
+        "evidence": "Analogy notes \"you do keep track of how many of each item you packed\" analogous to word frequencies"
+      },
+      {
+        "source_element": "the suitcase as a collection of items",
+        "target_element": "the document as an unordered multiset of words",
+        "relation": "overall representation as a bag/multiset",
+        "evidence": "Analogy equates \"the suitcase (the document) is now just a collection of items (words) with their quantities\""
+      }
+    ],
+    "process_summary": "Both the suitcase‑packing scenario and the bag‑of‑words model represent a whole (document/suitcase) as an unordered collection of basic elements (words/clothing items) where the only retained information is the count of each element, discarding any ordering or structural relationships.",
+    "potential_breaks": [
+      "The suitcase analogy introduces a physical space limitation (capacity of the suitcase) that has no counterpart in the abstract bag‑of‑words representation.",
+      "Treating items as completely independent may understate that bag‑of‑words also ignores semantic relationships between words, a limitation not explicitly highlighted by the analogy."
+    ]
+  }
+}

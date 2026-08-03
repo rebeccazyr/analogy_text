@@ -1,0 +1,47 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "205512f2da0a29d0",
+  "created_at": "2026-07-29T09:46:39.331407+00:00",
+  "usage": {
+    "completion_tokens": 804,
+    "prompt_tokens": 661,
+    "total_tokens": 1465,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 422
+    }
+  },
+  "result": {
+    "source_concept": "Droste effect (recursive artwork)",
+    "target_concept": "Recursion in programming",
+    "mappings": [
+      {
+        "source_element": "artist includes a tiny version of themselves in the painting",
+        "target_element": "function calls itself",
+        "relation": "self‑reference",
+        "evidence": "The analogy describes the artist painting a smaller copy of themselves, mirroring a function invoking itself."
+      },
+      {
+        "source_element": "each smaller painter repeats what the larger painter does on a smaller scale",
+        "target_element": "each recursive call performs the same operation on a reduced problem",
+        "relation": "repetition of the same process on a reduced instance",
+        "evidence": "The analogy notes that every smaller painter copies the larger painter’s actions, just at a smaller size."
+      },
+      {
+        "source_element": "painters become so small that another version cannot fit, ending the picture",
+        "target_element": "base case where recursion stops",
+        "relation": "termination condition",
+        "evidence": "The analogy states that when the painters are too tiny to contain another, the painting is complete, analogous to reaching a base case."
+      }
+    ],
+    "process_summary": "Both the artwork and recursion involve an entity that contains a smaller copy of itself, each copy performing the same action on a reduced scale, and the process halts when a minimal size or base condition is reached.",
+    "potential_breaks": [
+      "The analogy uses physical space limits as the stopping condition, whereas recursion stops due to a logical base case, not size.",
+      "The visual metaphor does not capture aspects like stack depth, return values, or side effects that are part of programming recursion."
+    ]
+  }
+}

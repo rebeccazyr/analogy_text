@@ -1,0 +1,52 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "aec04a798542cccf",
+  "created_at": "2026-07-29T09:28:33.739907+00:00",
+  "usage": {
+    "completion_tokens": 944,
+    "prompt_tokens": 751,
+    "total_tokens": 1695,
+    "prompt_tokens_details": {
+      "cached_tokens": 68
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 409
+    }
+  },
+  "result": {
+    "source_concept": "Memorizing a textbook versus understanding underlying concepts in studying",
+    "target_concept": "Overfitting in machine‑learning models",
+    "mappings": [
+      {
+        "source_element": "Student",
+        "target_element": "Machine‑learning model",
+        "relation": "Both act as the learner/agent that processes information",
+        "evidence": "The analogy explicitly says \"The student (the model) has 'memorized' the textbook...\""
+      },
+      {
+        "source_element": "Memorizing the textbook word‑for‑word (including irrelevant wording and examples)",
+        "target_element": "Fitting noise and spurious patterns in the training data",
+        "relation": "Both involve learning overly specific details that are not essential to the underlying structure",
+        "evidence": "The student \"learned not just the important concepts but also irrelevant details like specific wording and examples (the noise).\""
+      },
+      {
+        "source_element": "Test questions that match the textbook exactly",
+        "target_element": "Performance on the training data",
+        "relation": "Both yield high accuracy when the evaluation data is identical to what was memorized",
+        "evidence": "\"When test questions match the textbook exactly (like the training data), they excel.\""
+      },
+      {
+        "source_element": "Test questions that require applying concepts in new situations",
+        "target_element": "Performance on unseen examples / generalization",
+        "relation": "Both result in poor performance because the learner relied on memorization rather than abstraction",
+        "evidence": "\"But for questions that require understanding and application (like new, unseen examples), they perform poorly because they've memorized rather than understood.\""
+      }
+    ],
+    "process_summary": "In both the study scenario and machine‑learning, the learner first ingests data. When the learner focuses on exact memorization of every detail, it captures both the signal (important concepts) and the noise (irrelevant specifics). This yields excellent performance on data that is identical to what was memorized, but when confronted with novel situations that require abstract reasoning, the learner fails because it lacks a generalized understanding of the underlying principles. Overfitting mirrors this memorization process, leading to high training accuracy but poor generalization.",
+    "potential_breaks": [
+      "Human memorization can sometimes still support transfer of knowledge, whereas overfitting in models typically offers no useful generalization; the analogy may overstate the equivalence."
+    ]
+  }
+}

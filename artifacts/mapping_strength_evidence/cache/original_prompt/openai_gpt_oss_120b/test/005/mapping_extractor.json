@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "4deec3f1712c7110",
+  "created_at": "2026-07-29T09:34:33.162533+00:00",
+  "usage": {
+    "completion_tokens": 1136,
+    "prompt_tokens": 702,
+    "total_tokens": 1838,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 648
+    }
+  },
+  "result": {
+    "source_concept": "baking a cake using a recipe",
+    "target_concept": "transfer learning",
+    "mappings": [
+      {
+        "source_element": "knowledge of measuring ingredients, mixing batter, and baking time",
+        "target_element": "learned model parameters, features, and training procedures",
+        "relation": "reused knowledge/skills transferred from source to target",
+        "evidence": "you reuse what you already know about baking: how to measure, mix, and bake, then adjust a few details"
+      },
+      {
+        "source_element": "chocolate cake recipe (original task)",
+        "target_element": "source task/domain in transfer learning",
+        "relation": "original source task whose knowledge is transferred",
+        "evidence": "mastering how to bake a chocolate cake"
+      },
+      {
+        "source_element": "vanilla cake recipe (new task)",
+        "target_element": "target task/domain in transfer learning",
+        "relation": "new task to which the transferred knowledge is applied",
+        "evidence": "bake a vanilla cake by swapping cocoa powder for vanilla extract"
+      },
+      {
+        "source_element": "swapping cocoa powder for vanilla extract (minor adjustment)",
+        "target_element": "fine‑tuning or adapting the model to the new task",
+        "relation": "adaptation with minor changes after transfer",
+        "evidence": "you just adjust a few details, like swapping cocoa powder for vanilla extract"
+      }
+    ],
+    "process_summary": "Both the cake‑baking analogy and transfer learning involve first mastering a base task (the chocolate cake or source model), extracting reusable knowledge (ingredients, mixing steps or model parameters), and then applying that knowledge to a similar new task (vanilla cake or target domain) with only minor adjustments, thereby saving time and effort.",
+    "potential_breaks": [
+      "Cooking is a deterministic physical process, whereas model training involves statistical learning and may not map directly.",
+      "If the new task is too dissimilar (e.g., a completely different type of cake), the simple ingredient swap may fail, mirroring cases where source and target domains are unrelated.",
+      "Procedural knowledge in baking may not capture the abstract feature representations used in machine learning."
+    ]
+  }
+}

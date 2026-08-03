@@ -24,15 +24,15 @@ SUBMISSION_COLUMNS = ["id", "TCC", "MS", "M", "VC", "VA", "VE"]
 
 DEFAULT_TCC = (
     WORKSPACE
-    / "artifacts/frozen/tcc_predictions.csv"
+    / "artifacts/frozen/target_concept_coverage_predictions.csv"
 )
 DEFAULT_MS_BASE = (
     WORKSPACE
-    / "artifacts/frozen/ms_v1_base_submission.csv"
+    / "artifacts/frozen/mapping_strength_predictions.csv"
 )
 DEFAULT_M = (
     WORKSPACE
-    / "artifacts/frozen/m_v7_1_predictions.csv"
+    / "artifacts/frozen/metaphoricity_predictions.csv"
 )
 DEFAULT_OUTPUT = WORKSPACE / "output/submission.csv"
 DEFAULT_AUDIT = WORKSPACE / "output/build_audit.json"
@@ -150,10 +150,7 @@ def build_submission(
     expected_path = _resolve(expected_path) if expected_path is not None else None
 
     tcc_rows = _index_rows(tcc_path, required_columns={"TCC"})
-    base_rows = _index_rows(
-        ms_base_path,
-        required_columns={"MS", "VC", "VA", "VE"},
-    )
+    base_rows = _index_rows(ms_base_path, required_columns={"MS"})
     m_rows = _index_rows(m_path, required_columns={"M"})
 
     data: list[list[int]] = []
@@ -183,6 +180,9 @@ def build_submission(
                 minimum=0,
                 maximum=3,
             )
+            if column in base_rows[example_id]
+            and base_rows[example_id][column] not in {None, ""}
+            else 0
             for column in ("VC", "VA", "VE")
         ]
         if video != [0, 0, 0]:
@@ -209,7 +209,7 @@ def build_submission(
     audit: dict[str, Any] = {
         "method": {
             "TCC": "tcc_v1_facet_conservative_v1",
-            "MS": "original_v1_frozen_prediction",
+            "MS": "original_v1_mapping_extractor_ms_judge",
             "M": "v7_1_role_audit_loo",
             "video": "all_zero",
         },

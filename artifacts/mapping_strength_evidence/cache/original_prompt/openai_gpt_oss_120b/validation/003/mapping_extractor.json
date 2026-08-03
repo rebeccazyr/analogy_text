@@ -1,0 +1,96 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "b8c0ba975e5c71c6",
+  "created_at": "2026-07-29T09:29:34.207381+00:00",
+  "usage": {
+    "completion_tokens": 1672,
+    "prompt_tokens": 804,
+    "total_tokens": 2476,
+    "prompt_tokens_details": {
+      "cached_tokens": 145
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 734
+    }
+  },
+  "result": {
+    "source_concept": "architectural blueprinting / house design process",
+    "target_concept": "object-oriented analysis and design (OOAD)",
+    "mappings": [
+      {
+        "source_element": "walking around the neighborhood (survey)",
+        "target_element": "analysis phase identifying classes",
+        "relation": "analogous activity of surveying to discover entity types",
+        "evidence": "First, you walk around the neighborhood (analysis) identifying different types of houses (classes)"
+      },
+      {
+        "source_element": "different types of houses (colonial, ranch, Victorian)",
+        "target_element": "classes",
+        "relation": "correspondence of categories/types",
+        "evidence": "identifying different types of houses (classes)"
+      },
+      {
+        "source_element": "characteristics of houses (number of rooms)",
+        "target_element": "attributes of classes",
+        "relation": "parallel of properties describing an entity",
+        "evidence": "specific characteristics (attributes) like number of rooms"
+      },
+      {
+        "source_element": "capabilities of houses (heating systems)",
+        "target_element": "methods of classes",
+        "relation": "parallel of functions/behaviors an entity can perform",
+        "evidence": "capabilities (methods) like heating systems"
+      },
+      {
+        "source_element": "creating detailed blueprints",
+        "target_element": "design phase producing models",
+        "relation": "both involve constructing a detailed plan before construction",
+        "evidence": "Then in the design phase, you create detailed blueprints"
+      },
+      {
+        "source_element": "reusing standard components (bathroom layouts)",
+        "target_element": "inheritance",
+        "relation": "reuse of existing structure to form new variants",
+        "evidence": "You reuse standard components (inheritance) like bathroom layouts"
+      },
+      {
+        "source_element": "organizing blueprints into sections (plumbing, electrical, structural)",
+        "target_element": "encapsulation",
+        "relation": "grouping related elements into cohesive units",
+        "evidence": "You organize your blueprints into sections (encapsulation)"
+      },
+      {
+        "source_element": "rooms connecting in the blueprint",
+        "target_element": "relationships/associations between objects",
+        "relation": "depicts how entities are linked",
+        "evidence": "Your blueprints show how rooms connect (relationships between objects)"
+      },
+      {
+        "source_element": "plumbing system interacting with multiple rooms",
+        "target_element": "associations (multiple object links)",
+        "relation": "illustrates many‑to‑many connections",
+        "evidence": "systems like plumbing interact with multiple rooms (associations)"
+      },
+      {
+        "source_element": "modular kitchen that can be configured in different ways",
+        "target_element": "polymorphism",
+        "relation": "ability of a component to take multiple forms",
+        "evidence": "modular design where the kitchen can be configured in different ways (polymorphism)"
+      },
+      {
+        "source_element": "reviewing blueprints with family, contractors, inspectors using visual models",
+        "target_element": "stakeholder communication via visual models",
+        "relation": "shared purpose of making the design understandable to non‑technical participants",
+        "evidence": "review these blueprints with stakeholders... using visual models everyone can understand"
+      }
+    ],
+    "process_summary": "Both the architectural blueprinting process and OOAD begin with a survey/analysis to identify entity types (classes) and their properties (attributes) and behaviors (methods). They then move to a design phase where a detailed plan (blueprint/model) is created, reusing standard components (inheritance), grouping related parts into cohesive units (encapsulation), and explicitly showing connections between entities (associations). The design also supports interchangeable configurations (polymorphism). Finally, visual representations are shared with stakeholders to ensure shared understanding and alignment before construction/implementation.",
+    "potential_breaks": [
+      "Inheritance is portrayed as simple component reuse (bathroom layout), which may obscure the hierarchical type relationship central to inheritance.",
+      "Encapsulation is described as organizing sections of a blueprint, which may miss the crucial aspect of information hiding and access control.",
+      "Polymorphism likened to a modular kitchen simplifies the concept of dynamic method dispatch and substitutability."
+    ]
+  }
+}

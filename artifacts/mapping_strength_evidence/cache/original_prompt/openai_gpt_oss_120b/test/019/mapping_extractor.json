@@ -1,0 +1,73 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "7b8efc9765763068",
+  "created_at": "2026-07-29T09:38:56.147062+00:00",
+  "usage": {
+    "completion_tokens": 1209,
+    "prompt_tokens": 840,
+    "total_tokens": 2049,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 507
+    }
+  },
+  "result": {
+    "source_concept": "Hierarchical library system with librarians, headquarters, regional and local branches",
+    "target_concept": "Domain Name System (DNS)",
+    "mappings": [
+      {
+        "source_element": "Librarians",
+        "target_element": "DNS servers",
+        "relation": "maintain directories of addresses",
+        "evidence": "The librarians are DNS servers who maintain directories of addresses"
+      },
+      {
+        "source_element": "Main headquarters (central library)",
+        "target_element": "Root DNS servers",
+        "relation": "top‑level authority that knows which regional branches handle which address spaces",
+        "evidence": "The main headquarters (root DNS servers) have general information about which regional branches handle different types of addresses (.com, .org, etc.)"
+      },
+      {
+        "source_element": "Regional branches",
+        "target_element": "TLD servers",
+        "relation": "know which local branches are responsible for specific domains",
+        "evidence": "Regional branches (TLD servers) know which local branches handle specific domains"
+      },
+      {
+        "source_element": "Local branches",
+        "target_element": "Authoritative name servers",
+        "relation": "store the exact coordinates (IP address) for a given name",
+        "evidence": "Local branches (authoritative servers) have the exact \"coordinates\" for specific addresses"
+      },
+      {
+        "source_element": "Local librarian (who checks their own list first)",
+        "target_element": "Recursive resolver",
+        "relation": "caches recent answers and initiates hierarchical queries when needed",
+        "evidence": "Your local librarian (recursive resolver) checks if they already know"
+      },
+      {
+        "source_element": "Human‑readable address (street address)",
+        "target_element": "Domain name",
+        "relation": "readable identifier that must be translated to a numeric location",
+        "evidence": "you don't need to memorize their exact GPS coordinates (IP address) - you just need to know their address in human‑readable form (domain name)"
+      },
+      {
+        "source_element": "Numeric coordinates (GPS coordinates)",
+        "target_element": "IP address",
+        "relation": "machine‑readable location used for routing",
+        "evidence": "exact coordinates (IP address)"
+      }
+    ],
+    "process_summary": "A client asks its local resolver for a domain name. The resolver first checks its cache; if missing, it queries the root servers, which point to the appropriate TLD servers; those point to the authoritative server for the specific domain, which returns the IP address. The resolver caches the result for future queries, mirroring a librarian consulting increasingly specific branches of a library hierarchy to locate a book.",
+    "potential_breaks": [
+      "Library branches are typically static and unique, whereas DNS can have multiple authoritative servers for redundancy and load‑balancing.",
+      "Phone‑book style lookup suggests a one‑time, immutable entry, while DNS records can change frequently (TTL, dynamic updates).",
+      "Librarians \"remember\" answers indefinitely in the analogy, but DNS caching respects expiration times and may evict entries.",
+      "Physical library locations are tied to a single geography, whereas DNS operates globally with distributed replication."
+    ]
+  }
+}

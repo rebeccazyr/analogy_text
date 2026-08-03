@@ -1,0 +1,72 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "d7b2d667bf4f5594",
+  "created_at": "2026-07-29T09:43:59.651297+00:00",
+  "usage": {
+    "completion_tokens": 978,
+    "prompt_tokens": 806,
+    "total_tokens": 1784,
+    "prompt_tokens_details": {
+      "cached_tokens": 145
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 238
+    }
+  },
+  "result": {
+    "source_concept": "cautious road trip with regular checkpoints",
+    "target_concept": "spiral model",
+    "mappings": [
+      {
+        "source_element": "planning a short route to a nearby lookout point",
+        "target_element": "planning phase of the first spiral loop",
+        "relation": "corresponds to",
+        "evidence": "Analogy states \"First loop: You plan a short route...\" which mirrors the planning activity in the spiral model."
+      },
+      {
+        "source_element": "assessing potential hazards (weather, road conditions)",
+        "target_element": "risk analysis of the first loop",
+        "relation": "corresponds to",
+        "evidence": "Analogy mentions \"assess potential hazards\" as the risk‑analysis step."
+      },
+      {
+        "source_element": "driving the segment to the lookout point",
+        "target_element": "engineering/implementation of the first loop",
+        "relation": "corresponds to",
+        "evidence": "Analogy describes \"drive there carefully\" after planning, matching the development work."
+      },
+      {
+        "source_element": "stopping to evaluate progress and adjust plans",
+        "target_element": "evaluation and decision point of the first loop",
+        "relation": "corresponds to",
+        "evidence": "Analogy says \"stop to evaluate your progress and adjust your plans\" which aligns with the evaluation phase."
+      },
+      {
+        "source_element": "subsequent loops that cover longer routes and new hazards",
+        "target_element": "later spiral iterations that expand scope and address new risks",
+        "relation": "corresponds to",
+        "evidence": "Analogy describes \"Second loop... plan a slightly longer route... analyze new risks\" mirroring iterative expansion."
+      },
+      {
+        "source_element": "regular checkpoints after each segment",
+        "target_element": "the spiral’s built‑in risk‑analysis and evaluation checkpoints",
+        "relation": "corresponds to",
+        "evidence": "Analogy emphasizes \"regular stops to check your map, assess dangers, and adjust your route\" which is the core spiral mechanism."
+      },
+      {
+        "source_element": "riskier territory requiring more careful, deliberate loops",
+        "target_element": "higher project risk profile leading to tighter risk‑driven cycles",
+        "relation": "corresponds to",
+        "evidence": "Analogy notes \"The riskier the territory, the more careful and deliberate your spiral approach becomes\" reflecting risk‑driven adaptation."
+      }
+    ],
+    "process_summary": "Both the road‑trip analogy and the spiral model describe an iterative cycle of planning, risk assessment, execution, and evaluation. Each loop (or trip segment) starts with a plan, identifies hazards, carries out work, then pauses to review outcomes and adjust the next plan. The process repeats, gradually extending reach toward the final goal while adapting to newly discovered risks, embodying a risk‑driven, incremental development approach.",
+    "potential_breaks": [
+      "The analogy does not explicitly represent the spiral model’s integration of other life‑cycle models (waterfall, incremental, prototyping).",
+      "Physical travel distance in a road trip may suggest linear spatial progress, whereas the spiral model’s progress is conceptual and risk‑focused.",
+      "Road‑trip checkpoints imply a fixed geographic map, while the spiral model’s evaluation points are abstract decision milestones."
+    ]
+  }
+}

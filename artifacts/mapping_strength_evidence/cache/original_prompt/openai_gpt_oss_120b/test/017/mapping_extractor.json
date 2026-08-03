@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "33c7945efce98fe2",
+  "created_at": "2026-07-29T09:38:13.148498+00:00",
+  "usage": {
+    "completion_tokens": 1054,
+    "prompt_tokens": 774,
+    "total_tokens": 1828,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 433
+    }
+  },
+  "result": {
+    "source_concept": "Magical librarian managing enchanted scrolls that contain spells",
+    "target_concept": "Symbolic computation (computer algebra) manipulating symbolic mathematical expressions",
+    "mappings": [
+      {
+        "source_element": "Librarian",
+        "target_element": "Symbolic computation system / algorithm",
+        "relation": "acts as the agent that organizes and transforms the objects",
+        "evidence": "The analogy describes the librarian as the one who rearranges, simplifies, or rewrites the scrolls, just as symbolic computation rewrites expressions."
+      },
+      {
+        "source_element": "Enchanted scrolls containing spells in pure form",
+        "target_element": "Symbolic expressions (exact mathematical forms)",
+        "relation": "serve as the data objects that are manipulated",
+        "evidence": "Scrolls are said to describe spells in their original form, mirroring symbolic expressions that retain exact mathematical structure."
+      },
+      {
+        "source_element": "Wizard's request to simplify, combine, or rewrite a spell",
+        "target_element": "User's request to simplify, combine, or rewrite a symbolic expression",
+        "relation": "initiates a transformation operation",
+        "evidence": "The wizard asks the librarian to simplify or combine spells; similarly, a user asks symbolic software to simplify or combine expressions."
+      },
+      {
+        "source_element": "Not performing the spells (no numerical calculation)",
+        "target_element": "Avoiding numerical approximation; staying in exact symbolic form",
+        "relation": "defines the scope of the operation – exact manipulation only",
+        "evidence": "The analogy explicitly says the librarian does not perform the spells, just rearranges them, paralleling symbolic computation’s avoidance of numeric evaluation."
+      },
+      {
+        "source_element": "Magical rule that \"sin(x)^2 + cos(x)^2\" simplifies to \"1\"",
+        "target_element": "Algebraic identity used by symbolic computation to simplify expressions",
+        "relation": "application of a known transformation rule",
+        "evidence": "The example shows the librarian applying a magical rule to simplify, analogous to a computer algebra system applying an identity."
+      }
+    ],
+    "process_summary": "Both the magical librarian and symbolic computation receive formal, exact representations (scrolls or expressions) and, upon request, apply deterministic transformation rules (simplification, combination, rewriting) to produce equivalent representations without evaluating numerically, thereby preserving the exact essence of the original content.",
+    "potential_breaks": [
+      "The library metaphor suggests a physical storage medium, whereas symbolic computation operates on abstract data structures.",
+      "Describing the librarian as \"magical\" may imply non‑deterministic or supernatural capabilities that do not reflect the algorithmic nature of symbolic computation.",
+      "The analogy treats expressions as static scrolls handed over by a wizard, while in practice symbolic computation can generate and manipulate expressions dynamically."
+    ]
+  }
+}

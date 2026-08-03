@@ -1,0 +1,48 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "46af48f380c05237",
+  "created_at": "2026-07-29T09:33:23.000967+00:00",
+  "usage": {
+    "completion_tokens": 739,
+    "prompt_tokens": 743,
+    "total_tokens": 1482,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 340
+    }
+  },
+  "result": {
+    "source_concept": "Phonebook (telephone directory) that maps names to street addresses",
+    "target_concept": "Domain Name System (DNS)",
+    "mappings": [
+      {
+        "source_element": "Phonebook",
+        "target_element": "DNS",
+        "relation": "serves the same role of translating human‑readable names into machine‑usable addresses",
+        "evidence": "\"That's where the city's phonebook (DNS) comes in... the phonebook quickly finds the matching street address for you\""
+      },
+      {
+        "source_element": "Building name (e.g., \"Empire State Building\")",
+        "target_element": "Domain name (e.g., \"www.example.com\")",
+        "relation": "human‑friendly identifier that is looked up",
+        "evidence": "\"you just look up the name of the building (domain name) in the phonebook\""
+      },
+      {
+        "source_element": "Street address (numeric location)",
+        "target_element": "IP address (numeric location)",
+        "relation": "precise numeric location used to reach the entity",
+        "evidence": "\"matching street address (IP address)\""
+      }
+    ],
+    "process_summary": "Both the phonebook and DNS act as lookup services: a user supplies a familiar name, the system searches a directory, and returns a precise numeric address that enables the user (or device) to locate the desired entity.",
+    "potential_breaks": [
+      "A traditional phonebook is a single, static, centralized list, whereas DNS is a hierarchical, distributed, and dynamically updated system.",
+      "Phonebooks do not incorporate caching or replication mechanisms that DNS uses to improve performance and resilience.",
+      "Phonebooks are not designed for automated machine queries at Internet scale, unlike DNS which handles billions of lookups per second."
+    ]
+  }
+}

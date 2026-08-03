@@ -1,0 +1,66 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "7ea13d2283913392",
+  "created_at": "2026-07-29T09:49:54.896498+00:00",
+  "usage": {
+    "completion_tokens": 1455,
+    "prompt_tokens": 781,
+    "total_tokens": 2236,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 766
+    }
+  },
+  "result": {
+    "source_concept": "Physical neighborhood (houses, doors, block parties, rumors)",
+    "target_concept": "Digital citizenship (privacy, security hygiene, respectful communication, trustworthy sharing)",
+    "mappings": [
+      {
+        "source_element": "House (your home)",
+        "target_element": "Collection of private information and online accounts",
+        "relation": "represents",
+        "evidence": "Your house is your collection of private information and online accounts (your email, social media profile, game logins)."
+      },
+      {
+        "source_element": "Front door left unlocked or keys given to a stranger",
+        "target_element": "Leaving personal data exposed / weak passwords",
+        "relation": "corresponds to",
+        "evidence": "You wouldn't leave your front door unlocked or give your keys to a stranger."
+      },
+      {
+        "source_element": "Strong locks (unique passwords and security settings)",
+        "target_element": "Security measures protecting digital accounts",
+        "relation": "analogous to",
+        "evidence": "Protecting your house with strong locks (using unique passwords and security settings) is the most important part of respectful communication."
+      },
+      {
+        "source_element": "Posting bank statements on the front door for everyone to read",
+        "target_element": "Oversharing sensitive data (privacy violation)",
+        "relation": "illustrates",
+        "evidence": "You also wouldn't post your bank statements on your front door for everyone to read (practicing privacy by not oversharing sensitive data)."
+      },
+      {
+        "source_element": "Block party or sidewalk conversation",
+        "target_element": "Respectful communication online",
+        "relation": "parallels",
+        "evidence": "When you talk to people at a block party or on the sidewalk, you are polite and constructive, even if you disagree with them."
+      },
+      {
+        "source_element": "Hearing a wild rumor about a neighbor and verifying before spreading",
+        "target_element": "Security hygiene (verifying information before sharing, avoiding fake news)",
+        "relation": "maps to",
+        "evidence": "If you hear a wild rumor about another neighbor, you don't immediately run around shouting it to everyone. You'd want to make sure it's true first. Sharing this unverified rumor with just one other person is how you practice good security hygiene."
+      }
+    ],
+    "process_summary": "Both the neighborhood and digital environments involve protecting a personal space, controlling who can enter (through locks or passwords), limiting the exposure of sensitive information, interacting politely with others, and checking the truth of information before sharing. The causal structure is that securing the home and verifying rumors prevent harm, just as strong passwords, privacy practices, respectful communication, and security hygiene prevent digital breaches and misinformation.",
+    "potential_breaks": [
+      "The analogy conflates respectful communication with security (locks), which are distinct aspects of digital citizenship.",
+      "Security hygiene is portrayed solely as rumor verification, omitting technical practices such as software updates, antivirus use, and patch management.",
+      "A physical neighborhood implies known, proximate neighbors, whereas online interactions can be anonymous and globally distributed, limiting the analogy's coverage of anonymity and scale."
+    ]
+  }
+}

@@ -20,14 +20,25 @@ The active path begins at
 
 ## MS
 
-Active artifact: the original v1 predictions. The pipeline extracts explicit
-source-to-target mappings and judges their logical soundness independently of
-coverage and conceptual distance.
+Active method: the original-v1 `MappingExtractor` followed by `MSJudge`.
 
-The exact original MS v1 prompt source was not independently preserved at the
-time of the run. For honest reproducibility, this repository treats the
-audited 62-row MS prediction as an immutable input rather than claiming it can
-be regenerated exactly.
+1. `MappingExtractor` identifies the source concept, explicit or clearly
+   implied source-to-target correspondences, the shared process, and potential
+   breaks. It does not assign a score.
+2. `MSJudge` labels every extracted mapping `sound`, `stretch`, or
+   `inconsistent`, records structural issues, and recommends the official
+   ordinal score: `0` for far-fetched/highly inconsistent mappings, `1` for
+   some stretches or inconsistencies, and `2` for well-aligned and consistent
+   mappings.
+3. The final MS column is `MSJudge.recommended_score`; there is no manual or
+   ID-specific correction.
+
+The original archive stored prompt hashes rather than a separate prompt-source
+copy. The surviving templates have now been verified against all archived
+calls: 74/74 MappingExtractor hashes and 74/74 MSJudge hashes match. The repo
+also contains all 148 original responses.
+`scripts/verify_mapping_strength_archive.py` checks the prompt, schema, cache,
+validation prediction, and frozen test-column chain.
 
 ## M
 

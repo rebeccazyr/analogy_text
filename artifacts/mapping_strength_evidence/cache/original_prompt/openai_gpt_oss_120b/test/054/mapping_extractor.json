@@ -1,0 +1,48 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "ccaa67818c81442a",
+  "created_at": "2026-07-29T09:52:42.948793+00:00",
+  "usage": {
+    "completion_tokens": 1147,
+    "prompt_tokens": 677,
+    "total_tokens": 1824,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 627
+    }
+  },
+  "result": {
+    "source_concept": "CLI tool output design (unformatted text vs structured JSON and flags)",
+    "target_concept": "Accessibility (inclusive design and assistive support)",
+    "mappings": [
+      {
+        "source_element": "Unformatted text printed to the console",
+        "target_element": "Digital product without accessibility",
+        "relation": "represents a lack of accessibility",
+        "evidence": "Analogy states the unformatted text is only useful to a human who can read it directly, likening it to a product without accessibility."
+      },
+      {
+        "source_element": "Structured JSON output and clear command-line flags",
+        "target_element": "Inclusive design and assistive technologies (e.g., screen readers)",
+        "relation": "provides a machine‑readable interface analogous to inclusive design that enables assistive technologies to interpret and interact",
+        "evidence": "Analogy describes redesigning the tool to output structured JSON and flags as creating a machine‑readable API (inclusive design) for scripts (assistive technologies)."
+      },
+      {
+        "source_element": "Automated scripts that parse the JSON",
+        "target_element": "People with diverse abilities using assistive technologies",
+        "relation": "acts as the consumer of the accessible interface",
+        "evidence": "Analogy says scripts can reliably parse the output, understand the data, and interact, making it useful for a new set of automated consumers (people with diverse abilities)."
+      }
+    ],
+    "process_summary": "Both the CLI redesign and accessibility improvements involve transforming a raw, human‑only output into a structured, machine‑readable format. This transformation creates a stable interface that external agents—automated scripts in the CLI case, assistive technologies in the accessibility case—can reliably parse, interpret, and act upon, thereby extending usability to a broader set of users.",
+    "potential_breaks": [
+      "Scripts are not equivalent to human users; the analogy may over‑simplify the cognitive and sensory differences between automated parsers and people with disabilities.",
+      "The mapping of command‑line flags to assistive‑technology features is imperfect; flags aid programmatic control, whereas assistive tech often requires semantic labeling, contrast, and navigation cues beyond mere data format.",
+      "Assuming all assistive technologies can consume JSON ignores the diversity of assistive tools (e.g., screen readers that rely on HTML semantics rather than raw JSON)."
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "66c7008291edbec1",
+  "created_at": "2026-07-29T09:32:32.658188+00:00",
+  "usage": {
+    "completion_tokens": 905,
+    "prompt_tokens": 676,
+    "total_tokens": 1581,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 409
+    }
+  },
+  "result": {
+    "source_concept": "Memory address in RAM",
+    "target_concept": "Internet Protocol (IP) address",
+    "mappings": [
+      {
+        "source_element": "numeric memory address for a byte in RAM",
+        "target_element": "numeric IP address for a networked device",
+        "relation": "serves as a unique identifier that allows a controller to locate a specific element",
+        "evidence": "the analogy states each byte has a unique, numeric memory address and compares it to the IP address as a unique numeric label used to route packets."
+      },
+      {
+        "source_element": "CPU request containing a memory address",
+        "target_element": "network packet containing an IP address",
+        "relation": "encodes the destination identifier so the receiving controller/router can direct the operation",
+        "evidence": "the analogy describes the CPU sending a request with the memory address, and the memory controller using that address to fetch or place data, paralleling a packet carrying an IP address to reach a device."
+      },
+      {
+        "source_element": "memory controller that uses the address to access the exact byte",
+        "target_element": "router (or network stack) that uses the IP address to forward the packet to the correct device",
+        "relation": "uses the identifier to perform direct routing to the target location",
+        "evidence": "the analogy says the memory controller uses the address to go directly to that single location, analogous to routing the packet to the networked device."
+      }
+    ],
+    "process_summary": "Both the memory‑addressing scenario and IP routing rely on a unique numeric identifier to pinpoint a specific location. A request (CPU instruction or network packet) carries that identifier, and a controller (memory controller or router) uses it to directly retrieve or deliver data to the addressed element.",
+    "potential_breaks": [
+      "RAM addressing is within a single, directly attached system with uniform latency, whereas IP routing may involve multiple hops, variable latency, and hierarchical address aggregation.",
+      "Memory addresses are absolute within one address space; IP addresses can be NATed, subnetted, or otherwise transformed, so they are not always globally unique in practice.",
+      "The memory controller operates under tight hardware timing constraints, while network routing involves software protocols and can experience congestion or packet loss."
+    ]
+  }
+}

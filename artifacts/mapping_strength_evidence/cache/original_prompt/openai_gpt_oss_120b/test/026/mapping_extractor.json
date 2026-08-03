@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "9c724d2ee604e65d",
+  "created_at": "2026-07-29T09:41:35.894225+00:00",
+  "usage": {
+    "completion_tokens": 971,
+    "prompt_tokens": 771,
+    "total_tokens": 1742,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 433
+    }
+  },
+  "result": {
+    "source_concept": "Restaurant bell system with waiters responding to bell rings",
+    "target_concept": "Event handler (callback) in event‑driven programming",
+    "mappings": [
+      {
+        "source_element": "Bell ring",
+        "target_element": "Specific event occurrence (e.g., mouse click)",
+        "relation": "signals / triggers the responder",
+        "evidence": "When Table 5's bell rings (mouse click event)"
+      },
+      {
+        "source_element": "Waiter",
+        "target_element": "Event handler (callback subroutine)",
+        "relation": "responds to the signal and executes a predefined action",
+        "evidence": "The waiter (event handler) ... immediately stops what they're doing and responds to that table (executes the callback function)"
+      },
+      {
+        "source_element": "Waiter not constantly checking tables",
+        "target_element": "Handler not constantly polling for events",
+        "relation": "remains idle until the relevant signal arrives",
+        "evidence": "The waiter ... isn't constantly checking every table. Instead, they go about other tasks until they hear a specific bell ring"
+      },
+      {
+        "source_element": "Different waiters assigned to different sections",
+        "target_element": "Different handlers assigned to different event types",
+        "relation": "specialization of responders to particular signals",
+        "evidence": "Different waiters might be assigned to different sections (different event types)"
+      },
+      {
+        "source_element": "Restaurant efficiency from on‑demand service",
+        "target_element": "Program efficiency from event‑driven execution",
+        "relation": "resource efficiency by avoiding unnecessary checks",
+        "evidence": "The restaurant runs efficiently because waiters aren't wasting time checking tables that don't need service"
+      }
+    ],
+    "process_summary": "Both systems rely on a signal (bell ring / event) that activates a designated responder (waiter / event handler). The responder remains idle while other tasks proceed, and upon receiving its specific signal it interrupts its current activity to perform a predefined response. Multiple distinct signals map to distinct responders, yielding efficient, on‑demand processing.",
+    "potential_breaks": [
+      "Human waiters may experience delays or forget to respond, whereas event handlers execute deterministically.",
+      "A bell typically alerts a single waiter, while multiple handlers can be attached to the same event.",
+      "The analogy does not capture concurrent handling of multiple events that can occur simultaneously in programming."
+    ]
+  }
+}

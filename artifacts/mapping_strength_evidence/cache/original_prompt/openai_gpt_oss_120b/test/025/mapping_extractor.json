@@ -1,0 +1,85 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "323a8332aa06e507",
+  "created_at": "2026-07-29T09:41:14.361526+00:00",
+  "usage": {
+    "completion_tokens": 1392,
+    "prompt_tokens": 814,
+    "total_tokens": 2206,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 638
+    }
+  },
+  "result": {
+    "source_concept": "Gold prospecting in mountains",
+    "target_concept": "Data mining",
+    "mappings": [
+      {
+        "source_element": "Mountains (of information)",
+        "target_element": "Large datasets",
+        "relation": "represent",
+        "evidence": "The mountains represent your massive datasets, filled with mostly ordinary rock (regular data) but also containing valuable gold nuggets (insights) hidden within."
+      },
+      {
+        "source_element": "Ordinary rock",
+        "target_element": "Regular data",
+        "relation": "corresponds to",
+        "evidence": "filled with mostly ordinary rock (regular data)"
+      },
+      {
+        "source_element": "Gold nuggets",
+        "target_element": "Valuable insights/patterns",
+        "relation": "correspond to",
+        "evidence": "containing valuable gold nuggets (insights) hidden within"
+      },
+      {
+        "source_element": "Surveying the land",
+        "target_element": "Examining the dataset to identify promising areas",
+        "relation": "analogous to",
+        "evidence": "Survey the land (examine the dataset) to identify promising areas"
+      },
+      {
+        "source_element": "Pans, sluice boxes, metal detectors (prospecting tools)",
+        "target_element": "Algorithms and statistical methods",
+        "relation": "map to",
+        "evidence": "Use different tools like pans, sluice boxes, and metal detectors (algorithms and statistical methods)"
+      },
+      {
+        "source_element": "Systematic techniques to process large amounts of earth",
+        "target_element": "Data processing techniques",
+        "relation": "parallel",
+        "evidence": "Develop systematic techniques to efficiently process large amounts of earth (data processing techniques)"
+      },
+      {
+        "source_element": "Recognizing patterns in the landscape",
+        "target_element": "Pattern recognition in data",
+        "relation": "analogous to",
+        "evidence": "Learn to recognize patterns in the landscape that might indicate gold deposits (pattern recognition)"
+      },
+      {
+        "source_element": "Unexpected gems or minerals",
+        "target_element": "Anomaly detection",
+        "relation": "correspond to",
+        "evidence": "Sometimes discover unexpected gems or minerals you weren't even looking for (anomaly detection)"
+      },
+      {
+        "source_element": "Prospector's intuition about where to look",
+        "target_element": "Data mining systems improving with experience",
+        "relation": "similar to",
+        "evidence": "experienced prospectors develop intuition about where to look, data mining systems improve with experience and refinement"
+      }
+    ],
+    "process_summary": "Both gold prospecting and data mining involve exploring a vast domain (mountains or datasets), first surveying to locate promising regions, then applying specialized tools (prospecting equipment or algorithms) to separate valuable material (gold nuggets or insights) from the bulk (rock or regular data). The process includes pattern recognition to guide extraction, detection of unexpected valuable items (anomalies), and continual refinement of techniques based on experience.",
+    "potential_breaks": [
+      "Physical extraction constraints in gold prospecting differ from computational extraction in data mining.",
+      "Gold prospecting often relies on a single pass over terrain, whereas data mining may be iterative with feedback loops.",
+      "The tangible value of gold does not map directly to the abstract value of data insights.",
+      "Geological randomness in prospecting is not identical to the statistical properties of data."
+    ]
+  }
+}

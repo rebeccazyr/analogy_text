@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "92da93aaf94e83a6",
+  "created_at": "2026-07-29T09:48:55.194089+00:00",
+  "usage": {
+    "completion_tokens": 924,
+    "prompt_tokens": 647,
+    "total_tokens": 1571,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 428
+    }
+  },
+  "result": {
+    "source_concept": "Test runner script processing a sequence of test files",
+    "target_concept": "Loop control structure",
+    "mappings": [
+      {
+        "source_element": "Initial selection of the first test file (or list of files)",
+        "target_element": "Loop initialization (setting counter or index)",
+        "relation": "corresponds to the setup step that establishes the starting point",
+        "evidence": "The analogy begins with the script going through the test files, implying an initial position."
+      },
+      {
+        "source_element": "Checking whether another test file remains to be run",
+        "target_element": "Loop condition check",
+        "relation": "maps to the evaluation that determines whether another iteration should occur",
+        "evidence": "The script continues \"until its governing condition is no longer met\" analogous to a loop's condition."
+      },
+      {
+        "source_element": "Executing the test code for the current file",
+        "target_element": "Loop body execution",
+        "relation": "represents the repeated action performed each iteration",
+        "evidence": "The analogy states the script \"executes the test code for a file\" each time."
+      },
+      {
+        "source_element": "Advancing to the next file after a test completes",
+        "target_element": "Loop update step (incrementing counter)",
+        "relation": "corresponds to the operation that moves the loop toward termination",
+        "evidence": "The script \"allows it to move to the next file in the series\" mirroring an update."
+      }
+    ],
+    "process_summary": "Both the test runner and a loop initialize a starting point, repeatedly check a condition to see if more work remains, perform a body of work (running a test or executing loop statements), and then update a counter or pointer to progress toward termination, stopping when the condition fails.",
+    "potential_breaks": [
+      "The analogy assumes strictly sequential processing, whereas loops can iterate in non‑linear ways or over complex data structures.",
+      "Error handling or early exit (e.g., test failures causing the runner to stop) is not addressed, while loops may have break/continue semantics.",
+      "A test runner may involve additional setup/teardown steps beyond simple iteration, which the analogy does not capture."
+    ]
+  }
+}

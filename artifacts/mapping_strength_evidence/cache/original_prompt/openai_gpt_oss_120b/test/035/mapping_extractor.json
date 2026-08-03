@@ -1,0 +1,56 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "372eab90866461e3",
+  "created_at": "2026-07-29T09:44:58.130119+00:00",
+  "usage": {
+    "completion_tokens": 818,
+    "prompt_tokens": 668,
+    "total_tokens": 1486,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 369
+    }
+  },
+  "result": {
+    "source_concept": "coded secret diary",
+    "target_concept": "encryption",
+    "mappings": [
+      {
+        "source_element": "diary entries (plain sentences)",
+        "target_element": "electronic data (plaintext)",
+        "relation": "corresponds to",
+        "evidence": "Analogy: \"you change every sentence into a special code\" mirrors converting data into ciphertext."
+      },
+      {
+        "source_element": "special code applied to sentences",
+        "target_element": "encryption algorithm converting plaintext to ciphertext",
+        "relation": "performs the same transformation",
+        "evidence": "Analogy: \"change every sentence into a special code\" parallels encrypting data."
+      },
+      {
+        "source_element": "jumbled letters that make zero sense",
+        "target_element": "ciphertext (unreadable encrypted data)",
+        "relation": "represents the output of the transformation",
+        "evidence": "Analogy: \"all they see is a bunch of jumbled letters\" describes ciphertext."
+      },
+      {
+        "source_element": "best friend who knows the code",
+        "target_element": "authorized party possessing the decryption key",
+        "relation": "has the necessary key to reverse the transformation",
+        "evidence": "Analogy: \"your best friend, knowing the code, can turn those jumbled letters back\" mirrors decryption."
+      },
+      {
+        "source_element": "turning jumbled letters back into the real story",
+        "target_element": "decryption of ciphertext back to plaintext",
+        "relation": "inverse process",
+        "evidence": "Analogy: \"can turn those jumbled letters back into the real story\" describes decryption."
+      }
+    ],
+    "process_summary": "Both the secret diary code and encryption involve converting readable information into an unreadable form using a shared secret (code or key), producing ciphertext that is unintelligible to outsiders, and allowing authorized parties with the secret to reverse the process and recover the original content.",
+    "potential_breaks": []
+  }
+}

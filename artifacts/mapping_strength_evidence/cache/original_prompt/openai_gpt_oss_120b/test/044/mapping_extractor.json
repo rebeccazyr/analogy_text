@@ -1,0 +1,49 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "3f65cf329512dd6f",
+  "created_at": "2026-07-29T09:48:00.820739+00:00",
+  "usage": {
+    "completion_tokens": 839,
+    "prompt_tokens": 728,
+    "total_tokens": 1567,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Version‑control bisect (binary search over code revisions)",
+    "target_concept": "Debugging with breakpoints and step‑through execution",
+    "mappings": [
+      {
+        "source_element": "Checking out a version in the middle of history",
+        "target_element": "Setting a breakpoint at a suspected code location",
+        "relation": "Both serve as an initial narrowing point in the search for the fault",
+        "evidence": "Analogy: 'checks out a version somewhere in the middle' ↔ Description: 'pauses the program's execution at a suspected location (a breakpoint)'"
+      },
+      {
+        "source_element": "Repeatedly checking out earlier/later versions to narrow the range",
+        "target_element": "Stepping through code line‑by‑line to narrow the range",
+        "relation": "Iterative narrowing of the search space until the exact fault is isolated",
+        "evidence": "Analogy: 'narrowing the search each time until it pinpoints the exact change' ↔ Description: 'step through the code line‑by‑line, narrowing the search until you pinpoint the exact instruction'"
+      },
+      {
+        "source_element": "Identifying the specific change that introduced the bug",
+        "target_element": "Identifying the specific line or logical flaw causing the failure",
+        "relation": "Both represent the final pinpointed fault element",
+        "evidence": "Analogy: 'once you find the specific change' ↔ Description: 'once you've found the specific line or logical flaw'"
+      },
+      {
+        "source_element": "Running a quick test on the change and marking it good/bad",
+        "target_element": "Inspecting internal state/variable values and deciding if execution is correct",
+        "relation": "Evaluating the candidate point to determine if it is the source of the problem",
+        "evidence": "Analogy: 'run a quick test on it... tell the tool whether that point is good or bad' ↔ Description: 'inspect its internal state and variable values'"
+      }
+    ],
+    "process_summary": "Both processes use an iterative, divide‑and‑conquer style search: they start at a midpoint, evaluate whether the fault lies before or after that point, and repeatedly halve the search space (or step forward) until the exact offending element—whether a code revision or a program instruction—is isolated, after which it can be examined and corrected.",
+    "potential_breaks": [
+      "Version‑control bisect is a binary (logarithmic) search over discrete commits, whereas breakpoint debugging typically proceeds linearly rather than halving the code space",
+      "The analogy assumes an automated test that can label a revision as good or bad, while debugging relies on manual inspection of state",
+      "Changes in version history are immutable snapshots, while program execution state is mutable and may depend on runtime inputs"
+    ]
+  }
+}

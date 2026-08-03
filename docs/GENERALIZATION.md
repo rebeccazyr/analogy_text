@@ -24,8 +24,9 @@
    with validation, and five share the exact target and description.
 3. Several method versions were compared using validation or public results,
    so leave-one-out does not remove method-selection bias.
-4. MS is reproducible as a frozen artifact, but its exact original prompt is
-   unavailable for a clean model rerun.
+4. The archived MS run, prompts, and structured responses are reproducible,
+   but a fresh model call can still differ because inference is not guaranteed
+   to be deterministic.
 
 The frozen file is suitable as the current competition baseline. It should not
 be presented as proof of out-of-distribution performance on new datasets.

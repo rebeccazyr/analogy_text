@@ -1,0 +1,66 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "4998646865b85ea8",
+  "created_at": "2026-07-29T09:33:04.968564+00:00",
+  "usage": {
+    "completion_tokens": 1055,
+    "prompt_tokens": 756,
+    "total_tokens": 1811,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 505
+    }
+  },
+  "result": {
+    "source_concept": "Busy kitchen with multiple chefs preparing a banquet",
+    "target_concept": "Concurrency in a program or algorithm",
+    "mappings": [
+      {
+        "source_element": "chef",
+        "target_element": "thread or task",
+        "relation": "represents",
+        "evidence": "Each chef (a part of the program) is assigned a specific task"
+      },
+      {
+        "source_element": "specific task (chopping vegetables, grilling meat, baking desserts)",
+        "target_element": "individual operation or subroutine",
+        "relation": "corresponds to",
+        "evidence": "Each chef ... is assigned a specific task"
+      },
+      {
+        "source_element": "working independently",
+        "target_element": "executing concurrently without waiting",
+        "relation": "mirrors",
+        "evidence": "They all work independently but in harmony, ensuring that the dishes are ready on time"
+      },
+      {
+        "source_element": "not needing to wait unless absolutely necessary",
+        "target_element": "non‑blocking execution / minimal synchronization",
+        "relation": "parallels",
+        "evidence": "The key is that they don't need to wait for one another unless absolutely necessary"
+      },
+      {
+        "source_element": "plating the meal",
+        "target_element": "combining results / synchronization point",
+        "relation": "represents",
+        "evidence": "when it's time to plate the meal, everything comes together seamlessly (the final result is correct)"
+      },
+      {
+        "source_element": "busy kitchen",
+        "target_element": "concurrent system",
+        "relation": "embodies",
+        "evidence": "Concurrency is a Busy Kitchen"
+      }
+    ],
+    "process_summary": "Multiple independent agents (chefs) perform distinct subtasks (chopping, grilling, baking) without waiting for each other unless a dependency arises, and later their outputs are combined (plating) to produce a single coherent result, mirroring how concurrent tasks execute independently and synchronize only when necessary to achieve the program's overall goal.",
+    "potential_breaks": [
+      "The kitchen analogy may imply limited physical resources (e.g., a single stove) that could cause contention, which the analogy does not address.",
+      "Real concurrency often requires explicit synchronization primitives and handling of race conditions, aspects not captured by the simple “plating” step.",
+      "Ordering constraints in some concurrent algorithms can be stricter than the loosely ordered kitchen tasks, potentially oversimplifying the coordination required."
+    ]
+  }
+}

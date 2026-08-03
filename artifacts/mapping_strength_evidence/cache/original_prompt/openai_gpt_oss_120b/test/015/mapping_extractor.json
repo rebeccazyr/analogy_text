@@ -1,0 +1,55 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "e7ebdcc2d05b9bf4",
+  "created_at": "2026-07-29T09:37:35.352437+00:00",
+  "usage": {
+    "completion_tokens": 1065,
+    "prompt_tokens": 788,
+    "total_tokens": 1853,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Spiral staircase (people on steps)",
+    "target_concept": "recursion",
+    "mappings": [
+      {
+        "source_element": "person on a step",
+        "target_element": "function call",
+        "relation": "represents",
+        "evidence": "Each person on the staircase represents a function call"
+      },
+      {
+        "source_element": "calling the person above",
+        "target_element": "recursive call to a smaller subproblem",
+        "relation": "mirrors",
+        "evidence": "You call out to the person on the next step above you, passing the request upward step by step"
+      },
+      {
+        "source_element": "person at the top step who finds the book",
+        "target_element": "base case that stops recursion",
+        "relation": "corresponds to",
+        "evidence": "Eventually, someone at the top step finds the book (the base case) and shouts back"
+      },
+      {
+        "source_element": "message passed back down the staircase",
+        "target_element": "returning results down the call stack",
+        "relation": "mirrors",
+        "evidence": "The message is passed back down the staircase, step by step, until it reaches you"
+      },
+      {
+        "source_element": "spiral staircase structure",
+        "target_element": "self‑referential definition or data structure",
+        "relation": "embodies",
+        "evidence": "Recursion is a Spiral Staircase... a function, definition, or data structure expressed in terms of itself"
+      }
+    ],
+    "process_summary": "Both the staircase analogy and recursion involve a chain of successive steps: a request is passed upward (recursive calls) until a terminating condition is reached (base case), then the solution is propagated back down (returns). The structure is self‑similar, with each step/person mirroring a smaller instance of the whole process.",
+    "potential_breaks": [
+      "The staircase model is strictly linear, while recursion can branch into multiple simultaneous calls.",
+      "The base case is placed at the top step, whereas in recursion the base case is usually the smallest subproblem, not necessarily a 'top' element.",
+      "The spiral shape of the staircase is not used in the explanation; the analogy focuses only on vertical ordering."
+    ]
+  }
+}

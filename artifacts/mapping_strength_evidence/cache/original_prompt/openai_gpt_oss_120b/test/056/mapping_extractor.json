@@ -1,0 +1,61 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "3149165dd9e0cca5",
+  "created_at": "2026-07-29T09:52:57.681674+00:00",
+  "usage": {
+    "completion_tokens": 1163,
+    "prompt_tokens": 741,
+    "total_tokens": 1904,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 553
+    }
+  },
+  "result": {
+    "source_concept": "Sequential tasting expert system (food-tasting business with teams of tasters)",
+    "target_concept": "Neural networks",
+    "mappings": [
+      {
+        "source_element": "Line of tasting experts organized into teams",
+        "target_element": "Layers of nodes in a neural network",
+        "relation": "Structural correspondence: both consist of sequential processing stages",
+        "evidence": "Analogy describes a line of tasting teams; neural network description mentions interconnected layers"
+      },
+      {
+        "source_element": "First team of tasters gives feedback, each with its own focus and varying influence",
+        "target_element": "Input layer nodes receiving inputs with weighted connections and activation functions",
+        "relation": "Functional correspondence: individual units transform inputs with weighted influence",
+        "evidence": "Analogy notes opinions are more influential; neural networks use weights to modulate signal strength"
+      },
+      {
+        "source_element": "Combined opinions passed to senior tasters who look for more complex patterns",
+        "target_element": "Hidden layers extracting higher‑level features from previous layer outputs",
+        "relation": "Hierarchical feature extraction",
+        "evidence": "Analogy’s senior tasters detect complex patterns; neural networks’ hidden layers perform non‑linear transformations"
+      },
+      {
+        "source_element": "Final expert gives verdict: thumbs‑up or thumbs‑down",
+        "target_element": "Output layer producing the final prediction (e.g., classification)",
+        "relation": "Decision correspondence: both produce a binary (or categorical) output",
+        "evidence": "Analogy ends with a verdict; neural network description ends with a transformed output"
+      },
+      {
+        "source_element": "Adjusting collective judgment after seeing which predictions were right or wrong",
+        "target_element": "Weight adjustment via error feedback (backpropagation) to minimize loss",
+        "relation": "Learning through error correction",
+        "evidence": "Analogy mentions learning from mistakes; neural network description mentions iteratively adjusting weights to minimize error"
+      }
+    ],
+    "process_summary": "Both the food‑tasting analogy and neural networks involve a cascade of processing stages where each stage transforms its input, passes the result to the next, and culminates in a final decision. Learning occurs by comparing predictions to actual outcomes and adjusting internal parameters (weights or judgments) to reduce future error.",
+    "potential_breaks": [
+      "The analogy does not depict the backward flow of error signals (backpropagation) that updates earlier layers.",
+      "Influence of tasters is described as \"naturally\" more influential, whereas neural network weights are learned rather than innate.",
+      "Non‑linear activation functions are not explicitly represented in the tasting scenario.",
+      "Parallel processing of many nodes simultaneously is omitted; the analogy suggests a more sequential, human‑centric flow."
+    ]
+  }
+}

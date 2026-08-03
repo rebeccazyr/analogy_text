@@ -1,0 +1,50 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "f55faf74f89ac07e",
+  "created_at": "2026-07-29T09:37:54.810050+00:00",
+  "usage": {
+    "completion_tokens": 997,
+    "prompt_tokens": 819,
+    "total_tokens": 1816,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Layered cake baking process",
+    "target_concept": "Spiral model (risk‑driven software development lifecycle)",
+    "mappings": [
+      {
+        "source_element": "sketching the cake design and deciding flavors for the first layer",
+        "target_element": "planning phase (defining objectives, alternatives, and approach)",
+        "relation": "corresponds to",
+        "evidence": "Analogy describes the first spiral as planning, where the designer sketches the cake and chooses flavors."
+      },
+      {
+        "source_element": "taste‑testing a small batch of the first layer to see if the flavor works and if it bakes evenly",
+        "target_element": "risk analysis (identifying and evaluating risks before full development)",
+        "relation": "corresponds to",
+        "evidence": "The second spiral is labeled risk analysis and is illustrated by a taste‑test of the layer."
+      },
+      {
+        "source_element": "baking the first layer fully and evaluating how it turned out",
+        "target_element": "engineering (development) followed by evaluation (testing and validation)",
+        "relation": "corresponds to",
+        "evidence": "The third spiral (engineering) bakes the layer; the fourth spiral (evaluation) decides if adjustments are needed."
+      },
+      {
+        "source_element": "repeating the design‑test‑bake‑evaluate cycle for each subsequent layer, adjusting based on prior results",
+        "target_element": "iterative cycles for each increment, refining the software based on previous risk assessment and evaluation",
+        "relation": "corresponds to",
+        "evidence": "Analogy states the process is repeated for each cake layer, mirroring the spiral model’s repeated cycles."
+      }
+    ],
+    "process_summary": "Both the layered‑cake analogy and the spiral model describe an iterative, risk‑driven process: start with planning, perform a small‑scale test to uncover risks, develop the full component, evaluate the outcome, and then repeat the cycle for the next component, using lessons learned to reduce future failure.",
+    "potential_breaks": [
+      "Cake layers are physical, finite objects, whereas software increments can be abstract and may not stack linearly.",
+      "Taste‑testing captures only limited, sensory risks and does not reflect complex software risks such as schedule, cost, or technical debt.",
+      "The cake analogy implies a strictly sequential stacking, while the spiral model allows overlapping and revisiting of earlier cycles.",
+      "Evaluating a baked cake layer is a simple sensory check, whereas software evaluation involves extensive functional, performance, and integration testing."
+    ]
+  }
+}

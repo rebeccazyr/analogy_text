@@ -1,0 +1,53 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "bc99cb88c738468f",
+  "created_at": "2026-07-29T09:51:54.800216+00:00",
+  "usage": {
+    "completion_tokens": 902,
+    "prompt_tokens": 617,
+    "total_tokens": 1519,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 462
+    }
+  },
+  "result": {
+    "source_concept": "Ping command (sending a data packet)",
+    "target_concept": "Latency (time for data to travel from source to destination)",
+    "mappings": [
+      {
+        "source_element": "Your computer (the source)",
+        "target_element": "source of the data",
+        "relation": "represents the origin point of the transmission",
+        "evidence": "Analogy states \"Your computer (the source) sends a tiny data packet\""
+      },
+      {
+        "source_element": "tiny data packet",
+        "target_element": "the data being transmitted",
+        "relation": "serves as the unit of information whose travel time is measured",
+        "evidence": "Analogy refers to \"a tiny data packet\" that travels across the network"
+      },
+      {
+        "source_element": "travel across the network and arrive at the server",
+        "target_element": "travel from source to destination",
+        "relation": "mirrors the transmission path whose duration defines latency",
+        "evidence": "Analogy describes \"the time it takes for that single packet to travel across the network and arrive at the server\""
+      },
+      {
+        "source_element": "time it takes for that single packet to travel",
+        "target_element": "latency",
+        "relation": "directly corresponds to the measured duration of transmission",
+        "evidence": "Analogy concludes \"is the latency\""
+      }
+    ],
+    "process_summary": "Both the ping analogy and the concept of latency involve sending a unit of data from a source to a destination and measuring the duration of that transmission; latency is defined as the time taken for the data to travel along that path.",
+    "potential_breaks": [
+      "Ping typically measures round‑trip time (there and back), whereas latency is often defined as one‑way travel time; the analogy conflates the two.",
+      "The size of the ping packet and processing time at the server can affect the measured time, which the analogy does not address."
+    ]
+  }
+}

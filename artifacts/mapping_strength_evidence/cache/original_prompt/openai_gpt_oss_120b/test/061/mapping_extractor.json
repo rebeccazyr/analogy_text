@@ -1,0 +1,61 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "77aaa55fc429ad2a",
+  "created_at": "2026-07-29T09:53:40.436518+00:00",
+  "usage": {
+    "completion_tokens": 918,
+    "prompt_tokens": 614,
+    "total_tokens": 1532,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Diagnosing why a car won’t start",
+    "target_concept": "General troubleshooting workflow",
+    "mappings": [
+      {
+        "source_element": "Pulling out a simple checklist",
+        "target_element": "Methodical workflow to isolate and diagnose symptoms",
+        "relation": "Both provide a structured sequence of steps",
+        "evidence": "Analogy says \"you pull out a simple checklist\" mirroring the description of a methodical workflow"
+      },
+      {
+        "source_element": "Noting what you observe",
+        "target_element": "Isolating and diagnosing symptoms",
+        "relation": "Observation of observable signs informs the diagnosis",
+        "evidence": "Analogy: \"note what you observe\" aligns with description: \"isolate and diagnose symptoms\""
+      },
+      {
+        "source_element": "Jotting down a few likely causes",
+        "target_element": "Testing hypotheses to identify a root cause",
+        "relation": "Generating possible explanations for the observed problem",
+        "evidence": "Analogy: \"jot down a few likely causes\" parallels \"test hypotheses to identify a root cause\""
+      },
+      {
+        "source_element": "Trying a fix",
+        "target_element": "Restoring service",
+        "relation": "Applying a candidate solution to resolve the issue",
+        "evidence": "Analogy: \"try a fix\" corresponds to description: \"restore service\""
+      },
+      {
+        "source_element": "Stopping when the car starts",
+        "target_element": "Stopping when the root cause is found and service is restored",
+        "relation": "Termination condition once the problem is resolved",
+        "evidence": "Analogy: \"If it starts, you stop\" mirrors the goal of ending the troubleshooting process"
+      },
+      {
+        "source_element": "Setting aside a failed idea and trying another",
+        "target_element": "Iterating through hypotheses until one works",
+        "relation": "Iterative testing of alternatives",
+        "evidence": "Analogy: \"set that idea aside and try another\" reflects the iterative nature of troubleshooting"
+      }
+    ],
+    "process_summary": "Both the car-start scenario and general troubleshooting follow an iterative diagnostic loop: observe symptoms, generate possible causes, test each cause with a fix, and stop when the system works, repeating as needed.",
+    "potential_breaks": [
+      "The car analogy assumes a single, simple fix, whereas real troubleshooting may involve multiple interacting root causes.",
+      "Physical constraints of a car (mechanical parts) differ from software or service systems, limiting the analogy's fidelity.",
+      "The analogy does not explicitly capture documentation or systematic logging that is typical in formal troubleshooting workflows."
+    ]
+  }
+}

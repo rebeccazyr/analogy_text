@@ -1,0 +1,67 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "639b5e4fa05060c6",
+  "created_at": "2026-07-29T09:32:11.336714+00:00",
+  "usage": {
+    "completion_tokens": 1129,
+    "prompt_tokens": 729,
+    "total_tokens": 1858,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Remote build server accessed via a command-line request (on-demand build provisioning system)",
+    "target_concept": "Cloud computing",
+    "mappings": [
+      {
+        "source_element": "Local command line acting as a remote control",
+        "target_element": "User's API/CLI request to a cloud provider",
+        "relation": "Triggers resource provisioning",
+        "evidence": "Analogy: \"When you need to compile... you execute a remote command that sends a request to the build server\" parallels cloud users sending requests to provision resources."
+      },
+      {
+        "source_element": "Build server locating available processing power",
+        "target_element": "Cloud provider allocating compute resources",
+        "relation": "Allocates compute on demand",
+        "evidence": "Analogy: \"The server instantly finds available processing power (compute)\" mirrors cloud's on‑demand compute allocation."
+      },
+      {
+        "source_element": "Temporary disk space created for the job",
+        "target_element": "Provisioned storage in the cloud",
+        "relation": "Provides temporary storage",
+        "evidence": "Analogy: \"allocates temporary disk space (storage) for your job\" corresponds to cloud storage provisioning."
+      },
+      {
+        "source_element": "Server's high‑speed connection to fetch libraries",
+        "target_element": "Cloud networking bandwidth for data transfer",
+        "relation": "Supplies network connectivity",
+        "evidence": "Analogy: \"it uses the server's high‑speed connection (networking)\" maps to cloud networking resources."
+      },
+      {
+        "source_element": "Immediate availability of resources when the command runs",
+        "target_element": "On‑demand delivery of cloud resources over the internet",
+        "relation": "Provides instant provisioning",
+        "evidence": "Analogy: \"You get all of this power the moment you run the command\" reflects cloud's on‑demand nature."
+      },
+      {
+        "source_element": "Automatic provisioning of ten isolated build environments for concurrent builds",
+        "target_element": "Elastic scaling of multiple cloud instances",
+        "relation": "Scales resources elastically",
+        "evidence": "Analogy: \"the server automatically provisions ten isolated build environments... (elastic scaling)\" directly parallels cloud elasticity."
+      },
+      {
+        "source_element": "Tearing down each build environment after completion",
+        "target_element": "Automatic deallocation of cloud resources after use",
+        "relation": "Releases resources to avoid waste",
+        "evidence": "Analogy: \"then tears them down as each build finishes\" mirrors cloud's automatic scaling‑down."
+      }
+    ],
+    "process_summary": "Both the remote build server and cloud computing follow a request‑driven process: a user issues a command (or API call) that triggers the system to locate and allocate compute, storage, and networking resources on demand, provision isolated environments as needed, and release those resources automatically once the task completes, enabling elastic scaling and efficient use of infrastructure.",
+    "potential_breaks": [
+      "The analogy centers on a single powerful server, whereas cloud computing typically spans many distributed servers and data centers.",
+      "Pricing and pay‑per‑use aspects of cloud services are not represented in the build‑server scenario.",
+      "Security isolation and multi‑tenant concerns are simplified to \"isolated build environments\" and may not capture the full complexity of cloud tenancy."
+    ]
+  }
+}

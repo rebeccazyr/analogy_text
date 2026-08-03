@@ -1,0 +1,53 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "818676a192926dd9",
+  "created_at": "2026-07-29T09:31:01.181140+00:00",
+  "usage": {
+    "completion_tokens": 959,
+    "prompt_tokens": 664,
+    "total_tokens": 1623,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 415
+    }
+  },
+  "result": {
+    "source_concept": "Compiler (lexical analysis phase)",
+    "target_concept": "Token (in AI/LLMs)",
+    "mappings": [
+      {
+        "source_element": "raw source code",
+        "target_element": "raw text",
+        "relation": "corresponds to the initial input that is to be processed",
+        "evidence": "Analogy: \"It receives your raw source code\"; Description: \"A tokenizer receives raw text\""
+      },
+      {
+        "source_element": "compiler’s understanding of the program’s overall meaning",
+        "target_element": "fixed vocabulary learned from data",
+        "relation": "provides the contextual knowledge that guides how the input is segmented",
+        "evidence": "Analogy: \"The compiler first understands the program's overall meaning\"; Description: \"Based on a fixed vocabulary learned from data\""
+      },
+      {
+        "source_element": "scanning the text and breaking it into a sequence of standardized units (lexical analysis)",
+        "target_element": "scanning the text and breaking it into tokens (tokenization)",
+        "relation": "performs the same segmentation operation",
+        "evidence": "Both sentences state: \"scans the text and breaks it into a sequence of individual, standardized units\""
+      },
+      {
+        "source_element": "tokens as the only format the rest of the compiler can process",
+        "target_element": "numerical sequence as the only format the model can mathematically process",
+        "relation": "defines the required representation for downstream processing",
+        "evidence": "Analogy: \"These units are the only format the rest of the compiler can process\"; Description: \"creating a numerical sequence that is the only format the model can mathematically process\""
+      }
+    ],
+    "process_summary": "Both the compiler’s lexical analysis and an LLM tokenizer take raw textual input, use a pre‑defined knowledge base (vocabulary or program semantics) to guide segmentation, produce a linear sequence of standardized units, and present those units in a format that downstream components (the rest of the compiler or the neural model) can operate on.",
+    "potential_breaks": [
+      "The analogy’s claim that the compiler first \"understands the program's overall meaning\" suggests semantic analysis, which is not part of tokenization; tokenizers do not interpret meaning.",
+      "A compiler performs many later stages (parsing, optimization, code generation) that have no counterpart in the tokenization description, potentially overstating the similarity."
+    ]
+  }
+}

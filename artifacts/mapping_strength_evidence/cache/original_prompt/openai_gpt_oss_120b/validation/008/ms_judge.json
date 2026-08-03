@@ -1,0 +1,64 @@
+{
+  "agent": "ms_judge",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "ebca3e788c334cef",
+  "created_at": "2026-07-29T09:31:35.015171+00:00",
+  "usage": {
+    "completion_tokens": 972,
+    "prompt_tokens": 1445,
+    "total_tokens": 2417,
+    "prompt_tokens_details": {
+      "cached_tokens": 811
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 459
+    }
+  },
+  "result": {
+    "assessments": [
+      {
+        "source_element": "Command succeeds",
+        "target_element": "true",
+        "judgment": "sound",
+        "rationale": "Shell commands have a binary exit status (0 = success) that directly corresponds to the Boolean value true."
+      },
+      {
+        "source_element": "Command fails",
+        "target_element": "false",
+        "judgment": "sound",
+        "rationale": "A non‑zero exit status represents failure, matching the Boolean value false."
+      },
+      {
+        "source_element": "Run next command only if previous succeeded",
+        "target_element": "Logical AND (∧)",
+        "judgment": "sound",
+        "rationale": "The && operator executes the second command only when the first succeeds, mirroring the requirement that both operands be true for AND to yield true."
+      },
+      {
+        "source_element": "Run a backup command only if the first fails",
+        "target_element": "Logical OR (∨)",
+        "judgment": "sound",
+        "rationale": "The || operator runs the second command when the first fails; overall success occurs if either command succeeds, which aligns with Boolean OR."
+      },
+      {
+        "source_element": "Backup command succeeds, turning an overall failure into success",
+        "target_element": "Logical NOT (¬)",
+        "judgment": "stretch",
+        "rationale": "NOT is a unary inversion of a single proposition, whereas the backup command provides an alternative path rather than negating the original command's truth value."
+      }
+    ],
+    "structural_issues": [
+      "Mapping of NOT conflates fallback execution with logical negation, which is not a true one‑to‑one correspondence.",
+      "Shell OR (||) depends on execution order, while Boolean OR is order‑independent; the analogy glosses over this nuance."
+    ],
+    "score_probabilities": {
+      "score_0": 0.2,
+      "score_1": 0.6,
+      "score_2": 0.2
+    },
+    "recommended_score": 1,
+    "confidence": 0.9,
+    "rationale": "Four of the five mappings are logically sound, but the NOT mapping requires a conceptual stretch that weakens the overall correspondence. Hence a moderate score (1) is appropriate with high confidence."
+  }
+}

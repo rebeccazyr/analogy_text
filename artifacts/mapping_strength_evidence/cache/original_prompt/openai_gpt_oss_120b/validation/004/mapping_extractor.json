@@ -1,0 +1,63 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "a210faecddd452dd",
+  "created_at": "2026-07-29T09:30:01.002248+00:00",
+  "usage": {
+    "completion_tokens": 1372,
+    "prompt_tokens": 806,
+    "total_tokens": 2178,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "cooking with a precision chef",
+    "target_concept": "symbolic computation",
+    "mappings": [
+      {
+        "source_element": "chef (symbolic computation system)",
+        "target_element": "symbolic computation system",
+        "relation": "represents",
+        "evidence": "The chef (symbolic computation system) manipulates exact recipe ingredients"
+      },
+      {
+        "source_element": "precise measurements (e.g., \"1 cup plus 2 tablespoons\")",
+        "target_element": "exact symbolic expressions",
+        "relation": "corresponds to",
+        "evidence": "uses exact measurements like \"1 cup plus 2 tablespoons\" (symbolic form)"
+      },
+      {
+        "source_element": "approximate measurement (\"about a cup\")",
+        "target_element": "numerical approximation",
+        "relation": "contrasts with",
+        "evidence": "most cooks might measure \"about a cup\" (numerical approximation)"
+      },
+      {
+        "source_element": "keeping π as the symbol \"π\"",
+        "target_element": "keeping constants as symbols",
+        "relation": "preserves",
+        "evidence": "instead of saying \"approximately 3.14\" for pi, the chef keeps it as the symbol \"π\""
+      },
+      {
+        "source_element": "combining ingredients while maintaining precise recipe language",
+        "target_element": "performing operations while preserving exact form",
+        "relation": "mirrors",
+        "evidence": "When combining ingredients (performing operations), the chef maintains the precise recipe language rather than rounding or estimating"
+      },
+      {
+        "source_element": "using \"√2 cups of milk\" without converting to 1.414 cups",
+        "target_element": "keeping irrational numbers in symbolic form",
+        "relation": "maintains",
+        "evidence": "the chef doesn't convert it to 1.414 cups but keeps it in its pure symbolic form"
+      },
+      {
+        "source_element": "simplifying complex recipes (e.g., reducing \"x² + 2x + 1\" to \"(x+1)²\")",
+        "target_element": "simplifying mathematical expressions",
+        "relation": "analogous to",
+        "evidence": "The chef can simplify complex recipes without losing any precision"
+      }
+    ],
+    "process_summary": "Both the chef and symbolic computation preserve exact representations while manipulating them: precise measurements correspond to symbolic expressions, and operations are performed without rounding, ensuring the relationships among components remain unchanged throughout the process.",
+    "potential_breaks": []
+  }
+}

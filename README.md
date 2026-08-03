@@ -10,7 +10,7 @@ text-only submission for `rrrrr1030`.
 The submitted file combines:
 
 - TCC: `tcc_v1_facet_conservative_v1`
-- MS: frozen original-v1 prediction
+- MS: hash-verified original-v1 MappingExtractor + MSJudge
 - M: `v7_1_role_audit_loo`
 - VC, VA, VE: all zero
 
@@ -20,7 +20,7 @@ There are two different workflows:
 
 1. **Reproduce the submitted CSV** from frozen, audited predictions. This is
    deterministic, free, and does not call an API.
-2. **Run the model agents again** for TCC and M. This needs a Together API key,
+2. **Run the model agents again** for TCC, MS, and M. This needs a Together API key,
    incurs API cost, and may differ because model inference is not guaranteed to
    be deterministic.
 
@@ -89,15 +89,44 @@ The ordinal rubric is:
 - `1`: some logical stretches or inconsistencies remain;
 - `2`: mappings are well aligned, sound, and consistent.
 
-For this best submission, the exact original-v1 MS prompt was not preserved
-independently. The honest reproducible rule in this repository is therefore:
+At archive time, the original-v1 cache retained the prompt version and hash but
+not a separate copy of the prompt source. The surviving MappingExtractor and
+MSJudge templates were later checked against every archived example. Rebuilt
+hashes match `74/74` MappingExtractor calls and `74/74` MSJudge calls. The
+verified source is now frozen in
+`analogy_agents/original_mapping_strength_prompts.py`, and all 148 original
+structured responses are stored in `artifacts/mapping_strength_evidence/cache/`.
+
+The submitted value is the original judge's structured recommendation:
 
 ```text
-final_MS(id) = audited frozen original-v1 MS prediction for that id
+mapping = MappingExtractor_v1(TARGET, DESCRIPTION, ANALOGY)
+judgment = MSJudge_v1(TARGET, DESCRIPTION, ANALOGY, mapping)
+final_MS = judgment.recommended_score
 ```
 
-The repository does not claim that MS can be regenerated exactly from the
-current prompt source. Frozen test distribution: `0: 0`, `1: 12`, `2: 50`.
+Verify the full prompt → cache → final-column chain:
+
+```bash
+.venv/bin/python scripts/verify_mapping_strength_archive.py
+```
+
+Replay the archived test run without an API call:
+
+```bash
+.venv/bin/python run_text_agents.py \
+  --mode mapping-strength \
+  --split test \
+  --cache-dir artifacts/mapping_strength_evidence/cache \
+  --output-dir runs/mapping_strength_replay
+```
+
+This recreates
+`runs/mapping_strength_replay/test_mapping_strength_predictions.csv`, which
+matches the frozen MS column for all 62 rows. Adding `--refresh-cache` with a
+writable cache such as `.agent_cache` makes fresh Together calls; fresh
+inference can differ despite identical prompts. Frozen test distribution:
+`0: 0`, `1: 12`, `2: 50`.
 
 ### M — Metaphoricity
 
@@ -193,8 +222,9 @@ Equivalent test shortcut after creating the environment:
 make test
 ```
 
-The tests check the active TCC/M decision boundaries, validation leave-one-out
-behavior, dataset row counts, and exact frozen-submission reproduction.
+The tests check the active TCC/M decision boundaries, all 148 archived MS prompt
+and response records, validation leave-one-out behavior, dataset row counts,
+and exact frozen-submission reproduction.
 
 ## 3. Run the active model agents again
 
@@ -214,15 +244,17 @@ bash scripts/run_agents.sh
 This script:
 
 1. runs `tcc-v1-facet-conservative` on all 62 test examples;
-2. runs `m` (`v7_1_role_audit_loo`) on all 62 test examples;
-3. combines those new predictions with the frozen MS predictions;
-4. compares the result with the known-good submission.
+2. replays the exact archived `ms-v1` path on all 62 test examples;
+3. runs `m` (`v7_1_role_audit_loo`) on all 62 test examples;
+4. combines the three prediction files;
+5. compares the result with the known-good submission.
 
 New model outputs are written under:
 
 ```text
-runs/recomputed/tcc/             TCC details and predictions
-runs/recomputed/m/               M details and predictions
+runs/recomputed/target_coverage/ TCC details and predictions
+runs/recomputed/mapping_strength/ MS mapping/judge details and predictions
+runs/recomputed/metaphoricity/   M details and predictions
 runs/recomputed/submission.csv   recomputed combined submission
 runs/recomputed/build_audit.json recomputed verification report
 ```
@@ -236,9 +268,9 @@ instead of reusing `.agent_cache/`:
 REFRESH_CACHE=1 bash scripts/run_agents.sh
 ```
 
-This can increase API cost. MS is not rerun: its exact original-v1 prompt was
-not independently preserved, so the audited MS predictions are treated as an
-immutable input.
+This can increase API cost. With `REFRESH_CACHE=1`, MS uses the recovered exact
+v1 prompts but writes fresh responses to `.agent_cache`; it never overwrites
+the archived evidence under `artifacts/mapping_strength_evidence/`.
 
 ## What is actually required?
 
@@ -248,13 +280,13 @@ three layers so that the result can be reproduced and audited honestly:
 | Layer | Purpose | Main files |
 | --- | --- | --- |
 | Exact submission | Required to rebuild the leaderboard CSV without an API | `artifacts/frozen/*.csv`, `scripts/build_submission.py` |
-| Active model rerun | Required to call the active TCC and M agents again | `run_text_agents.py`, `analogy_agents/`, `challenge-dataset/data/`, `requirements.txt`, `scripts/run_agents.sh` |
+| Active model rerun | Required to call the active TCC, MS, and M agents again | `run_text_agents.py`, `analogy_agents/`, `challenge-dataset/data/`, `requirements.txt`, `scripts/run_agents.sh` |
 | Audit and traceability | Not needed to construct the CSV, but records why the snapshot is trustworthy and where it is limited | `tests/`, `docs/`, `manifest.json`, validation-score JSON files |
 
-Some source files under `analogy_agents/`, such as `m_pairwise.py` and the old
-taxonomy utilities, support earlier experimental modes exposed by the shared
-runner. They do not determine the frozen best submission and are retained only
-for source traceability.
+Some source files under `analogy_agents/`, such as
+`metaphoricity_pairwise.py` and the old taxonomy utilities, support earlier
+experimental modes exposed by the shared runner. They do not determine the
+frozen best submission and are retained only for source traceability.
 
 ## Repository contents
 
@@ -263,7 +295,8 @@ README.md
     Setup, reproduction, rerun, and repository guide.
 
 Makefile
-    Shortcuts: `make reproduce`, `make test`, and `make check`.
+    Shortcuts: `make reproduce`, `make test`,
+    `make verify-mapping-strength`, and `make check`.
 
 requirements.txt
     Python dependencies for model inference and tests. The deterministic CSV
@@ -286,10 +319,13 @@ analogy_agents/
         scoring rules, validation metrics, and output writers.
     prompts.py / schemas.py
         Current model prompts and their strict structured-output schemas.
-    v1_prompts.py / v1_schemas.py
+    original_target_coverage_prompts.py / original_target_coverage_schemas.py
         Recovered, frozen original-v1 TCC prompt and schema definitions used by
         the active TCC path.
-    m_taxonomy.py / m_pairwise.py
+    original_mapping_strength_prompts.py / original_mapping_strength_schemas.py
+        Hash-verified original-v1 MappingExtractor/MSJudge prompts and their
+        structured-output contracts.
+    metaphoricity_taxonomy.py / metaphoricity_pairwise.py
         Supporting utilities for earlier M experiments; they are retained for
         source traceability but are not part of the final frozen build.
 
@@ -298,16 +334,20 @@ challenge-dataset/data/
     intentionally excluded because the submitted video scores are zero.
 
 artifacts/frozen/
-    tcc_predictions.csv
+    target_concept_coverage_predictions.csv
         Frozen active TCC predictions.
-    ms_v1_base_submission.csv
-        Frozen original-v1 MS values plus zero video columns.
-    m_v7_1_predictions.csv
+    mapping_strength_predictions.csv
+        Frozen original Mapping Strength predictions.
+    metaphoricity_predictions.csv
         Frozen active M predictions.
     known_good_submission.csv
         Exact leaderboard submission used as the reproduction oracle.
     *_validation_scores.json
         Preserved validation audit summaries.
+
+artifacts/mapping_strength_evidence/
+    The 148 original MappingExtractor/MSJudge cache records for 12 validation
+    and 62 test rows, plus provenance and replay instructions.
 
 scripts/
     build_submission.py
@@ -315,7 +355,10 @@ scripts/
     reproduce.sh
         Shell wrapper for the deterministic builder.
     run_agents.sh
-        Reruns only the active TCC and M inference paths, then verifies them.
+        Runs the active TCC, MS, and M paths, then verifies the combined file.
+    verify_mapping_strength_archive.py
+        Recomputes all v1 MS prompt hashes, validates archived schemas, and
+        checks both validation and test predictions against frozen records.
 
 tests/
     test_pipeline.py
@@ -337,6 +380,7 @@ output/, runs/, .agent_cache/
 
 The frozen file is the current competition baseline, not proof of performance
 on a new distribution. In particular, active TCC has no complete independent
-validation run, M uses 12 validation anchors, and MS can be reproduced only as
-a frozen artifact. See [docs/METHOD.md](docs/METHOD.md) and
+validation run, M uses 12 validation anchors, and a fresh MS model call may
+differ even though its archived run and prompt source are reproducible. See
+[docs/METHOD.md](docs/METHOD.md) and
 [docs/GENERALIZATION.md](docs/GENERALIZATION.md) for details.

@@ -1,0 +1,61 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "a71cf32e1bc4550b",
+  "created_at": "2026-07-29T09:35:58.614568+00:00",
+  "usage": {
+    "completion_tokens": 611,
+    "prompt_tokens": 742,
+    "total_tokens": 1353,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Treasure Hunting in Sand",
+    "target_concept": "Data Mining",
+    "mappings": [
+      {
+        "source_element": "massive beach covered in sand",
+        "target_element": "large data set",
+        "relation": "represents",
+        "evidence": "\"massive beach covered in sand (the large data set)\""
+      },
+      {
+        "source_element": "hidden gems, coins, artifacts",
+        "target_element": "meaningful patterns, correlations, anomalies",
+        "relation": "correspond to",
+        "evidence": "\"Hidden beneath the sand are valuable gems, coins, and artifacts (meaningful patterns, correlations, or anomalies)\""
+      },
+      {
+        "source_element": "metal detector",
+        "target_element": "machine learning techniques",
+        "relation": "analogous tool for locating patterns",
+        "evidence": "\"The metal detector helps you locate metallic objects (patterns)\""
+      },
+      {
+        "source_element": "sifter",
+        "target_element": "statistical techniques",
+        "relation": "analogous tool for separating correlations",
+        "evidence": "\"the sifter separates the sand from the valuable items (correlations)\""
+      },
+      {
+        "source_element": "map",
+        "target_element": "database techniques",
+        "relation": "guides to likely areas for anomalies",
+        "evidence": "\"the map guides you to areas where treasures are most likely to be found (anomalies)\""
+      },
+      {
+        "source_element": "treasure hunter's goal to uncover hidden treasures",
+        "target_element": "data miner's goal to uncover hidden patterns",
+        "relation": "shared objective of extracting valuable items",
+        "evidence": "\"Your goal is to uncover these hidden treasures and make sense of them\""
+      }
+    ],
+    "process_summary": "Both processes involve searching a vast, undifferentiated substrate (sand or data) for hidden valuable items (treasures or patterns). The seeker uses specialized tools (metal detector, sifter, map vs. machine learning, statistics, databases) to locate, separate, and guide attention to these items, ultimately extracting and interpreting them as useful discoveries.",
+    "potential_breaks": [
+      "Physical extraction of tangible treasures differs from computational extraction of abstract patterns",
+      "Mapping of metal detector to machine learning is imperfect: metal detectors detect metallic objects directly, whereas ML infers patterns statistically",
+      "Sifter representing statistical techniques oversimplifies the role of statistics in identifying correlations"
+    ]
+  }
+}

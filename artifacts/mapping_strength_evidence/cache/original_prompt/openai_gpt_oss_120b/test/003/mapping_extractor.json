@@ -1,0 +1,48 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "2d8737cf66188369",
+  "created_at": "2026-07-29T09:33:57.814955+00:00",
+  "usage": {
+    "completion_tokens": 1203,
+    "prompt_tokens": 724,
+    "total_tokens": 1927,
+    "prompt_tokens_details": {
+      "cached_tokens": 145
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 675
+    }
+  },
+  "result": {
+    "source_concept": "Memorizing every question and answer from a past quiz (including typos and irrelevant details)",
+    "target_concept": "Overfitting in machine‑learning models",
+    "mappings": [
+      {
+        "source_element": "Memorizing every question and answer from last year's quiz (including typos and irrelevant details)",
+        "target_element": "Model fitting noise or spurious patterns in the training data",
+        "relation": "Both involve learning the exact details of the training set rather than the underlying structure",
+        "evidence": "The analogy says the student memorizes the exact past quiz and therefore performs well only on that quiz, mirroring how an overfitted model performs well on its training data but captures noise instead of general patterns."
+      },
+      {
+        "source_element": "Performing well when the same questions appear again",
+        "target_element": "High accuracy on the training data",
+        "relation": "Success on familiar data",
+        "evidence": "Analogy: \"you ace it (perform well on training data)\" when the exact same questions appear; Overfitting: model achieves high training accuracy."
+      },
+      {
+        "source_element": "Failing on new, slightly different questions",
+        "target_element": "Poor generalization to unseen examples",
+        "relation": "Inability to handle novel data",
+        "evidence": "Analogy: the student is \"stumped\" by new questions because only specifics were memorized; Overfitting: the model generalizes poorly to new data."
+      }
+    ],
+    "process_summary": "Both the student and the machine‑learning model first acquire knowledge from a limited set of examples. In the source, the student memorizes each exact question‑answer pair, ignoring broader concepts. In the target, the model captures exact training‑set patterns, including noise. This leads to strong performance on the familiar data (the past quiz or training set) but a failure to apply knowledge to new, varied situations, reflecting poor generalization.",
+    "potential_breaks": [
+      "Human memorization is a deliberate, conscious strategy, whereas overfitting is typically an unintended consequence of model capacity or training procedure.",
+      "The source mentions \"typos and irrelevant details,\" which may not map cleanly onto statistical noise in data.",
+      "A student can later choose to study concepts, while a model requires explicit regularization; the analogy does not capture the role of corrective interventions."
+    ]
+  }
+}

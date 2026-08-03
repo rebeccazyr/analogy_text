@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "a7268df9b549541d",
+  "created_at": "2026-07-29T09:46:56.751033+00:00",
+  "usage": {
+    "completion_tokens": 805,
+    "prompt_tokens": 707,
+    "total_tokens": 1512,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 296
+    }
+  },
+  "result": {
+    "source_concept": "Unused travel toothbrush packed for a trip",
+    "target_concept": "singleton variable in code",
+    "mappings": [
+      {
+        "source_element": "packing the toothbrush in the bag",
+        "target_element": "assigning a value to a variable",
+        "relation": "both represent an initial allocation of a resource",
+        "evidence": "Analogy: \"You only packed it because you thought you might need it\" parallels \"It's assigned a value (packed in the bag)\""
+      },
+      {
+        "source_element": "toothbrush never used during the trip",
+        "target_element": "variable referenced exactly once (or not used)",
+        "relation": "both result in the allocated resource remaining unused",
+        "evidence": "Analogy: \"you never actually use it\" mirrors \"never actually used (never brushed with)\""
+      },
+      {
+        "source_element": "toothbrush taking up space in the bag",
+        "target_element": "variable occupying memory/namespace",
+        "relation": "both create unnecessary waste of limited capacity",
+        "evidence": "Analogy: \"It just sits there, taking up space in your bag\" corresponds to the variable being present without purpose"
+      },
+      {
+        "source_element": "friend checking the bag and questioning the toothbrush",
+        "target_element": "compiler or linter issuing a warning",
+        "relation": "both act as an external reviewer flagging the wasteful allocation",
+        "evidence": "Analogy: \"Compilers and linters act like a friend who checks your bag and says...\""
+      }
+    ],
+    "process_summary": "Both the travel toothbrush scenario and the singleton variable involve an initial allocation of a resource (toothbrush/value) that ends up unused, thereby wasting space (bag memory) and prompting an external check (friend/compiler) that flags the inefficiency.",
+    "potential_breaks": [
+      "A toothbrush is typically intended for occasional use, whereas a singleton variable may be deliberately used exactly once, not necessarily wasted.",
+      "The analogy conflates \"never used\" with \"referenced exactly once\"; a singleton variable is still referenced once, while the toothbrush is never used.",
+      "Physical space constraints of a bag differ from abstract memory usage, so the waste analogy may not map perfectly to computational resources."
+    ]
+  }
+}

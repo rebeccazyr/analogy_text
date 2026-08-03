@@ -1,0 +1,53 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "2de7a656b8fcd440",
+  "created_at": "2026-07-29T09:36:35.858344+00:00",
+  "usage": {
+    "completion_tokens": 1018,
+    "prompt_tokens": 744,
+    "total_tokens": 1762,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "gatekeeper",
+    "target_concept": "firewall",
+    "mappings": [
+      {
+        "source_element": "visitor (network traffic)",
+        "target_element": "network traffic",
+        "relation": "corresponds to",
+        "evidence": "Analogy states visitor represents network traffic."
+      },
+      {
+        "source_element": "trusted friend or family member (trusted network)",
+        "target_element": "trusted network",
+        "relation": "corresponds to",
+        "evidence": "Analogy equates trusted friend/family with a trusted network."
+      },
+      {
+        "source_element": "stranger (untrusted network)",
+        "target_element": "untrusted network",
+        "relation": "corresponds to",
+        "evidence": "Analogy equates a stranger with an untrusted network."
+      },
+      {
+        "source_element": "gatekeeper checks ID and compares it to rules",
+        "target_element": "firewall checks traffic against security policies",
+        "relation": "performs analogous filtering decision based on predefined rules",
+        "evidence": "Analogy describes gatekeeper checking ID against a rule list, mirroring a firewall applying security policies to traffic."
+      },
+      {
+        "source_element": "gatekeeper allows or stops visitor at the door",
+        "target_element": "firewall allows or blocks traffic",
+        "relation": "allows or blocks based on rule match",
+        "evidence": "Analogy maps the gatekeeper's allow/stop action to the firewall's allow/block action."
+      }
+    ],
+    "process_summary": "Both the gatekeeper and the firewall act as barriers that examine incoming entities against a set of predefined rules, permitting those that match the rules and denying those that do not, thereby protecting the interior (house or network) from unwanted intrusions.",
+    "potential_breaks": [
+      "The gatekeeper relies on visual identification of a visitor, whereas a firewall inspects digital packet attributes; the analogy glosses over this modality difference."
+    ]
+  }
+}

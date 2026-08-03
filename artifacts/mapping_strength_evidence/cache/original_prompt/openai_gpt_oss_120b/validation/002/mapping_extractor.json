@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "f0ebdd20bc4de465",
+  "created_at": "2026-07-29T09:29:09.336305+00:00",
+  "usage": {
+    "completion_tokens": 1020,
+    "prompt_tokens": 833,
+    "total_tokens": 1853,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 381
+    }
+  },
+  "result": {
+    "source_concept": "Inclusive Playground",
+    "target_concept": "Universal Design for Learning (UDL)",
+    "mappings": [
+      {
+        "source_element": "Multiple routes to the slide (stairs, ramp, climbing holds)",
+        "target_element": "Multiple means of accessing content (e.g., text, audio, video, manipulatives)",
+        "relation": "provides alternative access pathways",
+        "evidence": "Analogy states that the playground offers several ways to reach the slide, mirroring UDL’s principle of offering multiple ways for learners to engage with material."
+      },
+      {
+        "source_element": "Seating options at different heights and with/without backs",
+        "target_element": "Multiple means of expressing understanding (e.g., writing, speaking, drawing, digital media)",
+        "relation": "offers alternative expression modalities",
+        "evidence": "The analogy compares varied benches to varied ways students can demonstrate knowledge."
+      },
+      {
+        "source_element": "Quiet corners with books versus active zones with musical and spinning equipment",
+        "target_element": "Options for affective engagement (e.g., calm study areas, collaborative or kinetic learning activities)",
+        "relation": "provides choice in engagement environments",
+        "evidence": "The playground’s quiet and active zones map onto UDL’s recommendation to give learners choices that match their sensory and motivational needs."
+      },
+      {
+        "source_element": "Instructions delivered through pictures, words, and tactile symbols",
+        "target_element": "Multiple representation formats (visual, textual, tactile, auditory)",
+        "relation": "delivers information via varied representational media",
+        "evidence": "The analogy explicitly mentions diverse instructional symbols, paralleling UDL’s multiple means of representation."
+      },
+      {
+        "source_element": "Overall design that allows every child to play regardless of ability or preference",
+        "target_element": "Overall learning environment that is accessible and effective for all learners",
+        "relation": "embodies an inclusive design principle",
+        "evidence": "The concluding statement of the analogy equates the inclusive playground with UDL’s goal of universal accessibility."
+      }
+    ],
+    "process_summary": "Both the inclusive playground and UDL employ a shared design process: identify diverse learner/child needs, then create multiple, interchangeable options for access, engagement, and expression. By offering alternative routes, varied tools, and choice of environments, the system ensures participation and success for individuals with differing abilities, preferences, and prior experiences.",
+    "potential_breaks": [
+      "The playground metaphor emphasizes physical equipment and spatial layout, which may underrepresent UDL’s curricular and instructional design components (e.g., lesson planning, assessment strategies).",
+      "The analogy does not explicitly capture the cognitive‑science basis of UDL (e.g., the three brain networks of affect, recognition, and strategic).",
+      "Playground safety rules and liability concerns are not analogous to academic standards or learning objectives, potentially limiting the mapping of regulatory aspects."
+    ]
+  }
+}

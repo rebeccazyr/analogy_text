@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "ed799014417edbc7",
+  "created_at": "2026-07-29T09:50:24.163088+00:00",
+  "usage": {
+    "completion_tokens": 1071,
+    "prompt_tokens": 788,
+    "total_tokens": 1859,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 455
+    }
+  },
+  "result": {
+    "source_concept": "Assembling flat‑pack furniture using an instruction manual",
+    "target_concept": "Software documentation (user guides, API references, READMEs, code comments)",
+    "mappings": [
+      {
+        "source_element": "Wooden panels, screws, plastic bits (the parts in the box)",
+        "target_element": "Code components (functions, modules, classes)",
+        "relation": "raw elements that must be combined to create the final system",
+        "evidence": "Analogy says \"the code\" is like the confusing parts in the box."
+      },
+      {
+        "source_element": "Instruction manual that comes with the furniture",
+        "target_element": "Documentation collection (guides, references, README)",
+        "relation": "provides guidance and instructions for assembling/understanding the product",
+        "evidence": "Analogy states \"the box comes with an instruction manual\" analogous to documentation."
+      },
+      {
+        "source_element": "Pictures of the finished, assembled desk",
+        "target_element": "User guides and examples showing what the code can achieve",
+        "relation": "visual/descriptive overview of the final outcome and its features",
+        "evidence": "Analogy links pictures of the desk to \"user guides and examples showing what the code can achieve\"."
+      },
+      {
+        "source_element": "Identifying which screw connects panel A to panel B",
+        "target_element": "Code comments and API reference explaining how individual functions work",
+        "relation": "detailed step‑by‑step instructions for connecting specific parts",
+        "evidence": "Analogy maps deducing screws to \"code comments and API reference that explain how individual functions work\"."
+      },
+      {
+        "source_element": "First page of the manual listing all parts that should be present",
+        "target_element": "README file and setup instructions listing required components",
+        "relation": "checklist for verification that everything is present and correctly assembled",
+        "evidence": "Analogy equates the parts list on the manual’s first page with \"the README file and setup instructions\"."
+      }
+    ],
+    "process_summary": "Both the furniture assembly and software development rely on a hierarchical guide: an overview of the finished product, detailed instructions for connecting individual components, and a final checklist to verify completeness. The guide (documentation) translates raw parts (code) into a functional whole by describing purpose, usage, and assembly steps.",
+    "potential_breaks": [
+      "The analogy suggests documentation is only useful after the product is built, whereas software documentation is often consulted before or during development.",
+      "It implies the overview (pictures) is derived from a completed product, while user guides can be written prior to code completion.",
+      "Furniture manuals are external to the product; some documentation (e.g., inline comments) is embedded within the code itself."
+    ]
+  }
+}

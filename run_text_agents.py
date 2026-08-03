@@ -6,16 +6,18 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from analogy_agents.m_taxonomy import load_m_taxonomy
+from analogy_agents.metaphoricity_taxonomy import load_m_taxonomy
 from analogy_agents.pipeline import (
     PipelineConfig,
     SixAgentPipeline,
     load_archived_v1_tcc,
     load_split,
     score_m_validation,
+    score_ms_validation,
     score_validation,
     score_tcc_validation,
     write_m_outputs,
+    write_ms_outputs,
     write_run_outputs,
     write_tcc_outputs,
 )
@@ -34,8 +36,11 @@ from analogy_agents.prompts import (
     mapping_extractor_prompt,
     topic_importance_prompt,
 )
-from analogy_agents.v1_prompts import (
+from analogy_agents.original_target_coverage_prompts import (
     concept_decomposer_prompt as v1_concept_decomposer_prompt,
+)
+from analogy_agents.original_mapping_strength_prompts import (
+    mapping_extractor_prompt as original_mapping_extractor_prompt,
 )
 
 
@@ -65,6 +70,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--mode",
         choices=[
             "all",
+            "target-coverage",
+            "mapping-strength",
+            "metaphoricity",
             "tcc",
             "tcc-importance",
             "tcc-v1-conservative",
@@ -85,7 +93,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Run all agents, the legacy TCC path, the TCC path with a "
             "topic-importance judge, the archived-v1 conservative correction, "
             "the correction executed on the exact original v1 prompts, the "
-            "facet-level coverage-audit experiment, the v7 metaphoricity path, "
+            "facet-level coverage-audit experiment, the hash-verified original "
+            "v1 Mapping Strength path, the v7 metaphoricity path, "
             "the fixed-rule taxonomy path, or the taxonomy path with an "
             "independent final M agent, or the overall conceptual-distance "
             "agent path, or that path with a native-neighborhood critic and "
@@ -208,7 +217,7 @@ async def run_tcc_examples(
     sample_concurrency: int,
     apply_topic_importance: bool,
 ) -> list[dict]:
-    sample_dir = output_dir / "tcc_samples"
+    sample_dir = output_dir / "target_coverage_samples"
     sample_dir.mkdir(parents=True, exist_ok=True)
     groups: dict[tuple[str, str], list[int]] = {}
     for example_id in selected_ids:
@@ -307,7 +316,7 @@ async def run_v1_conservative_tcc_examples(
     archive_dir: Path,
 ) -> list[dict]:
     """Run a description-only automatic correction over immutable v1."""
-    sample_dir = output_dir / "tcc_samples"
+    sample_dir = output_dir / "target_coverage_samples"
     sample_dir.mkdir(parents=True, exist_ok=True)
     sample_semaphore = asyncio.Semaphore(sample_concurrency)
 
@@ -419,7 +428,7 @@ async def run_exact_v1_conservative_tcc_examples(
     facet_audit: bool = False,
 ) -> list[dict]:
     """Execute exact v1 prompts before applying the general correction."""
-    sample_dir = output_dir / "tcc_samples"
+    sample_dir = output_dir / "target_coverage_samples"
     sample_dir.mkdir(parents=True, exist_ok=True)
     sample_semaphore = asyncio.Semaphore(sample_concurrency)
 
@@ -482,6 +491,61 @@ async def run_exact_v1_conservative_tcc_examples(
     )
 
 
+async def run_original_mapping_strength_examples(
+    pipeline: SixAgentPipeline,
+    rows_by_id: dict[int, dict],
+    selected_ids: list[int],
+    split: str,
+    output_dir: Path,
+    sample_concurrency: int,
+) -> list[dict]:
+    """Execute the recovered original-v1 MappingExtractor and MSJudge."""
+    sample_dir = output_dir / "mapping_strength_samples"
+    sample_dir.mkdir(parents=True, exist_ok=True)
+    sample_semaphore = asyncio.Semaphore(sample_concurrency)
+
+    print(
+        f"Original Mapping Strength: {len(selected_ids)} examples",
+        flush=True,
+    )
+
+    async def run_one(position: int, example_id: int) -> dict:
+        async with sample_semaphore:
+            row = rows_by_id[example_id]
+            print(
+                f"[mapping strength {position}/{len(selected_ids)}] "
+                f"id={example_id} target={row['target']}",
+                flush=True,
+            )
+            result = await pipeline.evaluate_original_mapping_strength(
+                row,
+                split,
+            )
+            sample_path = sample_dir / f"{example_id:03d}.json"
+            sample_path.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            print(
+                f"  id={example_id} -> MS={result['prediction']['MS']} "
+                f"latent={result['latent_scores']['MS']:.3f}",
+                flush=True,
+            )
+            return result
+
+    return list(
+        await asyncio.gather(
+            *[
+                asyncio.create_task(run_one(position, example_id))
+                for position, example_id in enumerate(
+                    selected_ids,
+                    start=1,
+                )
+            ]
+        )
+    )
+
+
 async def run_m_examples(
     pipeline: SixAgentPipeline,
     rows_by_id: dict[int, dict],
@@ -498,7 +562,7 @@ async def run_m_examples(
     use_two_gate: bool = False,
     use_relation_gate: bool = False,
 ) -> list[dict]:
-    sample_dir = output_dir / "m_samples"
+    sample_dir = output_dir / "metaphoricity_samples"
     sample_dir.mkdir(parents=True, exist_ok=True)
     sample_semaphore = asyncio.Semaphore(sample_concurrency)
 
@@ -568,6 +632,7 @@ def main() -> None:
             "tcc-v1-conservative",
             "tcc-v1-prompt-conservative",
             "tcc-v1-facet-conservative",
+            "target-coverage",
         }:
             if args.mode == "tcc-v1-conservative":
                 archived_decomposition = load_archived_v1_tcc(
@@ -579,6 +644,7 @@ def main() -> None:
             elif args.mode in {
                 "tcc-v1-prompt-conservative",
                 "tcc-v1-facet-conservative",
+                "target-coverage",
             }:
                 decomposition_payload = {
                     "target_summary": "<exact v1 ConceptDecomposer output>",
@@ -618,6 +684,7 @@ def main() -> None:
                         if args.mode in {
                             "tcc-v1-prompt-conservative",
                             "tcc-v1-facet-conservative",
+                            "target-coverage",
                         }
                         else concept_decomposer_prompt(
                             first["target"],
@@ -631,12 +698,25 @@ def main() -> None:
                 "tcc-v1-conservative",
                 "tcc-v1-prompt-conservative",
                 "tcc-v1-facet-conservative",
+                "target-coverage",
             }:
                 prompts["topic_importance_judge"] = topic_importance_prompt(
                     first["target"],
                     first["description"],
                     decomposition_payload,
                 )
+        elif args.mode == "mapping-strength":
+            prompts = {
+                "original_mapping_extractor": original_mapping_extractor_prompt(
+                    first["target"],
+                    first["description"],
+                    first["analogy"],
+                ),
+                "original_mapping_strength_judge": (
+                    "MSJudge runs after the exact-v1 mapping result.",
+                    "All 74 archived prompt hashes are verified.",
+                ),
+            }
         elif args.mode == "m-relation-gate":
             prompts = {
                 "m_relation_target_signature": m_relation_target_frame_prompt(
@@ -715,6 +795,7 @@ def main() -> None:
             }
         elif args.mode in {
             "m",
+            "metaphoricity",
             "m-taxonomy",
             "m-taxonomy-agent",
             "m-conceptual-distance",
@@ -829,6 +910,7 @@ def main() -> None:
     if args.mode in {
         "tcc-v1-prompt-conservative",
         "tcc-v1-facet-conservative",
+        "target-coverage",
     }:
         results = asyncio.run(
             run_exact_v1_conservative_tcc_examples(
@@ -838,7 +920,10 @@ def main() -> None:
                 args.split,
                 args.output_dir,
                 args.sample_concurrency,
-                args.mode == "tcc-v1-facet-conservative",
+                args.mode in {
+                    "tcc-v1-facet-conservative",
+                    "target-coverage",
+                },
             )
         )
         details_path, predictions_path = write_tcc_outputs(
@@ -876,8 +961,23 @@ def main() -> None:
         details_path, predictions_path = write_tcc_outputs(
             results, args.output_dir, args.split
         )
+    elif args.mode == "mapping-strength":
+        results = asyncio.run(
+            run_original_mapping_strength_examples(
+                pipeline,
+                rows_by_id,
+                selected_ids,
+                args.split,
+                args.output_dir,
+                args.sample_concurrency,
+            )
+        )
+        details_path, predictions_path = write_ms_outputs(
+            results, args.output_dir, args.split
+        )
     elif args.mode in {
         "m",
+        "metaphoricity",
         "m-taxonomy",
         "m-taxonomy-agent",
         "m-conceptual-distance",
@@ -943,11 +1043,18 @@ def main() -> None:
             "tcc-v1-conservative",
             "tcc-v1-prompt-conservative",
             "tcc-v1-facet-conservative",
+            "target-coverage",
         }:
             scores = score_tcc_validation(results, rows)
             score_path = args.output_dir / "validation_tcc_scores.json"
+        elif args.mode == "mapping-strength":
+            scores = score_ms_validation(results, rows)
+            score_path = (
+                args.output_dir / "validation_mapping_strength_scores.json"
+            )
         elif args.mode in {
             "m",
+            "metaphoricity",
             "m-taxonomy",
             "m-taxonomy-agent",
             "m-conceptual-distance",

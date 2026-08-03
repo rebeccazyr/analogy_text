@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "86694e4550ac066f",
+  "created_at": "2026-07-29T09:53:07.689842+00:00",
+  "usage": {
+    "completion_tokens": 997,
+    "prompt_tokens": 616,
+    "total_tokens": 1613,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 536
+    }
+  },
+  "result": {
+    "source_concept": "Vending machine",
+    "target_concept": "Function",
+    "mappings": [
+      {
+        "source_element": "labeled button",
+        "target_element": "function name / call",
+        "relation": "invocation trigger",
+        "evidence": "You press a labeled button to make it act."
+      },
+      {
+        "source_element": "payment or choice",
+        "target_element": "function parameters",
+        "relation": "input provision",
+        "evidence": "You might add payment or a choice."
+      },
+      {
+        "source_element": "handles the rest out of sight",
+        "target_element": "encapsulated logic inside the function",
+        "relation": "internal processing hidden",
+        "evidence": "then it handles the rest out of sight."
+      },
+      {
+        "source_element": "item drops into the tray",
+        "target_element": "function returns a value",
+        "relation": "output delivery",
+        "evidence": "Often an item drops into the tray."
+      },
+      {
+        "source_element": "button just turns on a light and nothing comes out",
+        "target_element": "function may have no return (void)",
+        "relation": "no output",
+        "evidence": "other times a button just turns on a light and nothing comes out."
+      }
+    ],
+    "process_summary": "Both the vending machine and a function receive an explicit trigger (button press / function call) together with inputs (payment or choice / parameters), perform internal processing that is hidden from the user, and optionally produce an observable result (item dispensed / returned value). When no tangible output is produced, the action still completes (light turns on / void function).",
+    "potential_breaks": [
+      "A vending machine has a finite inventory that can be depleted, whereas a function can be invoked indefinitely without resource exhaustion.",
+      "The vending machine involves physical state changes and mechanical wear, while a function operates on abstract code without physical constraints.",
+      "Vending machines may require maintenance and refilling, concepts that have no direct analogue in pure functions."
+    ]
+  }
+}

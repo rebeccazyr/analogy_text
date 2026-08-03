@@ -1,0 +1,59 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "8772f8d2ecb906d1",
+  "created_at": "2026-07-29T09:45:58.516610+00:00",
+  "usage": {
+    "completion_tokens": 753,
+    "prompt_tokens": 699,
+    "total_tokens": 1452,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 249
+    }
+  },
+  "result": {
+    "source_concept": "bracelet made of beads on a cord",
+    "target_concept": "string (sequence of characters)",
+    "mappings": [
+      {
+        "source_element": "bead",
+        "target_element": "character (letter, number, or symbol)",
+        "relation": "represents",
+        "evidence": "Each bead can have a letter, a number, or a little symbol painted on it."
+      },
+      {
+        "source_element": "number of beads on the cord",
+        "target_element": "string length",
+        "relation": "corresponds to",
+        "evidence": "You can check how long the bracelet is by counting the beads (its length)."
+      },
+      {
+        "source_element": "tying another beaded cord onto the end",
+        "target_element": "concatenation of strings",
+        "relation": "analogous to",
+        "evidence": "If you want a bigger bracelet, you tie another beaded cord onto the end (concatenation)."
+      },
+      {
+        "source_element": "removing a portion of beads from one spot to another",
+        "target_element": "extracting a substring",
+        "relation": "parallels",
+        "evidence": "If you need just a small section, you carefully remove a portion of beads from one spot to another (substring)."
+      },
+      {
+        "source_element": "entire bracelet",
+        "target_element": "full string",
+        "relation": "equates to",
+        "evidence": "The full bracelet is simply the entire sequence of these little beads."
+      }
+    ],
+    "process_summary": "Both the bracelet and a string are linear sequences built from discrete units (beads or characters). Their length is measured by counting units, they can be extended by adding more units at the end, and a contiguous subset can be taken as a smaller sequence. The analogy maps the construction, measurement, extension, and extraction processes from the physical bracelet to the abstract string.",
+    "potential_breaks": [
+      "Removing beads physically alters the original bracelet, whereas extracting a substring typically leaves the original string unchanged.",
+      "A bracelet has a tangible, flexible material and may involve knots when concatenating, which does not map perfectly onto the abstract, immutable nature of string concatenation."
+    ]
+  }
+}

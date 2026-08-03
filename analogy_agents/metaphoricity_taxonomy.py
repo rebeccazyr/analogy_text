@@ -24,7 +24,9 @@ M_CONCEPTUAL_DISTANCE_CRITIC_CACHE_NAMESPACE = (
 )
 M_TAXONOMY_EVIDENCE_VERSION = "m_taxonomy_three_axis_evidence_v1"
 DEFAULT_TAXONOMY_PATH = (
-    Path(__file__).resolve().parent / "data" / "m_taxonomy_fair_v1.json"
+    Path(__file__).resolve().parent
+    / "data"
+    / "metaphoricity_taxonomy.json"
 )
 
 

@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "97e048a72dbc1fb2",
+  "created_at": "2026-07-29T09:52:39.854054+00:00",
+  "usage": {
+    "completion_tokens": 771,
+    "prompt_tokens": 699,
+    "total_tokens": 1470,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 262
+    }
+  },
+  "result": {
+    "source_concept": "Static analysis tool integrated into a CI/CD pipeline",
+    "target_concept": "Cybersecurity (prevention, detection, and response)",
+    "mappings": [
+      {
+        "source_element": "Configured ruleset that forbids insecure functions or open debug ports",
+        "target_element": "Security policy that defines prohibited behaviors",
+        "relation": "implements as",
+        "evidence": "Analogy states the ruleset acts as your security policy (prevention)."
+      },
+      {
+        "source_element": "Tool scans new code and identifies a call to a deprecated, vulnerable library",
+        "target_element": "Detection of unauthorized or harmful actions on digital assets",
+        "relation": "detects",
+        "evidence": "Analogy describes the tool detecting the forbidden call as detection."
+      },
+      {
+        "source_element": "Build fails, merge is blocked, and the team is notified to fix the vulnerability",
+        "target_element": "Response that blocks the threat and alerts stakeholders to remediate",
+        "relation": "responds by",
+        "evidence": "Analogy says the tool immediately fails the build, blocks the merge, and notifies the team, forcing a fix before production."
+      },
+      {
+        "source_element": "Integration of the tool into the CI/CD pipeline",
+        "target_element": "Integration of security controls throughout the software lifecycle",
+        "relation": "provides continuous",
+        "evidence": "Analogy frames the tool as part of the pipeline, mirroring continuous security monitoring."
+      }
+    ],
+    "process_summary": "Both the static analysis pipeline and cybersecurity follow a three‑stage process: (1) a preventive policy (ruleset/security policy) is defined; (2) incoming changes or actions are examined and violations are identified (detection); and (3) upon detection, the system blocks the change and alerts responsible parties to remediate (response). The analogy maps each stage directly onto the corresponding cybersecurity function.",
+    "potential_breaks": [
+      "Static analysis only catches known patterns; real cybersecurity must handle unknown or zero‑day threats.",
+      "The analogy focuses on code‑level assets, whereas cybersecurity also protects network, hardware, and user behavior.",
+      "Response in the analogy is instantaneous (build failure), while actual incident response can involve investigation, containment, and recovery over longer timeframes."
+    ]
+  }
+}

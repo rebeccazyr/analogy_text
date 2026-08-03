@@ -1,0 +1,91 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "634790dbcb99e248",
+  "created_at": "2026-07-29T09:40:38.599524+00:00",
+  "usage": {
+    "completion_tokens": 1595,
+    "prompt_tokens": 804,
+    "total_tokens": 2399,
+    "prompt_tokens_details": {
+      "cached_tokens": 579
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 779
+    }
+  },
+  "result": {
+    "source_concept": "Head Chef coordinating a restaurant kitchen",
+    "target_concept": "Central Processing Unit (CPU)",
+    "mappings": [
+      {
+        "source_element": "Head Chef",
+        "target_element": "CPU",
+        "relation": "acts as",
+        "evidence": "CPU is the Head Chef of a Computer's Kitchen."
+      },
+      {
+        "source_element": "Order tickets",
+        "target_element": "Instructions",
+        "relation": "represent",
+        "evidence": "head chef receives order tickets (instructions)."
+      },
+      {
+        "source_element": "Sous chef (Control Unit)",
+        "target_element": "Control Unit (CU)",
+        "relation": "corresponds to",
+        "evidence": "The sous chef (Control Unit) who reads the order tickets, decides what needs to be done, and directs other kitchen staff."
+      },
+      {
+        "source_element": "Line cook (Arithmetic Logic Unit)",
+        "target_element": "Arithmetic Logic Unit (ALU)",
+        "relation": "corresponds to",
+        "evidence": "The line cook (Arithmetic Logic Unit) who performs the actual cooking operations."
+      },
+      {
+        "source_element": "Reading the recipe (fetches instructions)",
+        "target_element": "Fetching instructions",
+        "relation": "analogous to",
+        "evidence": "Reads the recipe (fetches instructions)."
+      },
+      {
+        "source_element": "Decides what ingredients are needed (processes data)",
+        "target_element": "Processes data",
+        "relation": "analogous to",
+        "evidence": "Decides what ingredients are needed (processes data)."
+      },
+      {
+        "source_element": "Directs kitchen staff to prepare components (executes operations)",
+        "target_element": "Executes operations",
+        "relation": "analogous to",
+        "evidence": "Directs kitchen staff to prepare components (executes operations)."
+      },
+      {
+        "source_element": "Combines everything properly (performs calculations)",
+        "target_element": "Performs calculations",
+        "relation": "analogous to",
+        "evidence": "Combines everything properly (performs calculations)."
+      },
+      {
+        "source_element": "Makes decisions about cooking time and temperature (logical operations)",
+        "target_element": "Logical operations",
+        "relation": "analogous to",
+        "evidence": "Makes decisions about cooking time and temperature (logical operations)."
+      },
+      {
+        "source_element": "Sends the finished dish out to customers (output)",
+        "target_element": "Output",
+        "relation": "analogous to",
+        "evidence": "Sends the finished dish out to customers (output)."
+      }
+    ],
+    "process_summary": "Both the head chef and the CPU receive a set of instructions (order tickets/commands), decode them, coordinate subordinate agents (sous chef/Control Unit and line cook/ALU), perform data transformations (select ingredients/perform calculations), make logical decisions (cooking time/temperature or branching), and deliver a final product (finished dish/output). The shared causal structure is a central controller that interprets instructions, orchestrates subordinate components, and produces an output.",
+    "potential_breaks": [
+      "The chef is portrayed as a single decision-maker, whereas modern CPUs have multiple cores and can execute many instructions in parallel.",
+      "Cooking involves physical, time‑consuming transformations, which differ from the near‑instantaneous electronic operations of a CPU.",
+      "The kitchen hierarchy simplifies the complex micro‑architectural mechanisms (pipelines, registers, caches) that exist inside a CPU.",
+      "The analogy treats the CPU as a sole coordinator, overlooking the distributed nature of control signals and concurrent data paths within the chip."
+    ]
+  }
+}

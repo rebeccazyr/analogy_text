@@ -1,0 +1,72 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "3932b2e583d357f9",
+  "created_at": "2026-07-29T09:42:00.592345+00:00",
+  "usage": {
+    "completion_tokens": 1236,
+    "prompt_tokens": 758,
+    "total_tokens": 1994,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 609
+    }
+  },
+  "result": {
+    "source_concept": "Nightclub Bouncer",
+    "target_concept": "Firewall",
+    "mappings": [
+      {
+        "source_element": "bouncer's clipboard with specific instructions",
+        "target_element": "firewall's security rules",
+        "relation": "holds",
+        "evidence": "Analogy states the bouncer has a clipboard with specific instructions (security rules) about who can enter."
+      },
+      {
+        "source_element": "checking IDs to verify identities",
+        "target_element": "examining packet headers",
+        "relation": "examines",
+        "evidence": "Analogy: the bouncer checks IDs (examines packet headers)."
+      },
+      {
+        "source_element": "turns away anyone on the banned list",
+        "target_element": "blocks known malicious traffic",
+        "relation": "blocks",
+        "evidence": "Analogy: the bouncer turns away banned individuals (blocks known malicious traffic)."
+      },
+      {
+        "source_element": "allows entry through the front door",
+        "target_element": "restricts traffic to authorized ports",
+        "relation": "allows only specific entry points",
+        "evidence": "Analogy: only entry through the front door (restricts traffic to authorized ports)."
+      },
+      {
+        "source_element": "lets regular customers pass quickly while scrutinizing newcomers",
+        "target_element": "stateful inspection",
+        "relation": "differential processing based on familiarity",
+        "evidence": "Analogy: regular customers pass quickly, newcomers scrutinized (stateful inspection)."
+      },
+      {
+        "source_element": "calls the manager for borderline cases",
+        "target_element": "logs suspicious activity / escalates decisions",
+        "relation": "escalates / logs",
+        "evidence": "Analogy: bouncer can call manager for borderline cases (logging suspicious activity)."
+      },
+      {
+        "source_element": "protective barrier between safe inside and unpredictable street outside",
+        "target_element": "barrier between trusted network and untrusted network",
+        "relation": "creates barrier",
+        "evidence": "Analogy: bouncer creates barrier between club interior (trusted) and street (untrusted)."
+      }
+    ],
+    "process_summary": "Both the nightclub bouncer and the firewall act as gatekeepers that inspect incoming entities against a set of predefined rules, allowing authorized entries while denying or redirecting unauthorized ones, thereby establishing a protective boundary between a trusted interior and an untrusted exterior.",
+    "potential_breaks": [
+      "The bouncer relies on human judgment and can make subjective decisions, whereas a firewall follows deterministic, programmed rules.",
+      "Physical enforcement (e.g., using force) by a bouncer has no direct analogue in digital packet filtering.",
+      "A bouncer typically handles a single entry point, while a firewall can filter traffic across multiple network interfaces and ports simultaneously."
+    ]
+  }
+}

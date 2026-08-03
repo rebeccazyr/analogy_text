@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "f3c82ddbbe24145c",
+  "created_at": "2026-07-29T09:53:19.988980+00:00",
+  "usage": {
+    "completion_tokens": 929,
+    "prompt_tokens": 664,
+    "total_tokens": 1593,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 398
+    }
+  },
+  "result": {
+    "source_concept": "Child learning to sort fruit at a market",
+    "target_concept": "Machine learning",
+    "mappings": [
+      {
+        "source_element": "Tagged fruit pieces given to the child",
+        "target_element": "Labeled training data",
+        "relation": "Analogous to supervised learning where examples have known outputs",
+        "evidence": "“First, you give them tagged pieces and they practice filling baskets.”"
+      },
+      {
+        "source_element": "Child practicing filling baskets with tagged fruit",
+        "target_element": "Algorithm learning a mapping from input features to outputs",
+        "relation": "Both involve learning a function that maps inputs to correct labels",
+        "evidence": "“they practice filling baskets.”"
+      },
+      {
+        "source_element": "Tagless crate of fruit that arrives later",
+        "target_element": "Unlabeled data used for unsupervised learning",
+        "relation": "Analogous to discovering inherent structure without explicit labels",
+        "evidence": "“Then a tagless crate arrives, and they group by what seems alike.”"
+      },
+      {
+        "source_element": "Child grouping fruit by perceived similarity",
+        "target_element": "Algorithm clustering or extracting patterns from unlabeled data",
+        "relation": "Both perform pattern discovery based on similarity",
+        "evidence": "“they group by what seems alike.”"
+      },
+      {
+        "source_element": "Child quickly placing a new piece of fruit into the correct basket",
+        "target_element": "Model making predictions or classifications on new, unseen data",
+        "relation": "Both apply learned knowledge to novel instances",
+        "evidence": "“when a new piece appears, they place it quickly and confidently.”"
+      }
+    ],
+    "process_summary": "Both the child and a machine‑learning system first learn from explicit, labeled examples (supervised learning), then infer structure from unlabeled examples (unsupervised learning), and finally use the acquired knowledge to categorize or predict outcomes for new, unseen items.",
+    "potential_breaks": [
+      "A child may rely on prior world knowledge or visual cues that do not map to high‑dimensional feature spaces used by algorithms.",
+      "The analogy suggests a strict sequential order (supervised then unsupervised), whereas many ML pipelines combine or skip stages.",
+      "Human intuition can handle ambiguous cases more flexibly than current models, so the confidence described may overstate model performance."
+    ]
+  }
+}

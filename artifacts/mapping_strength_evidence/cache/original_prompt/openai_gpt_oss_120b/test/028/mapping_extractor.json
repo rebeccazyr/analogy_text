@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "535f4303d868a60d",
+  "created_at": "2026-07-29T09:42:23.673429+00:00",
+  "usage": {
+    "completion_tokens": 874,
+    "prompt_tokens": 754,
+    "total_tokens": 1628,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 428
+    }
+  },
+  "result": {
+    "source_concept": "traffic light",
+    "target_concept": "if-then statements",
+    "mappings": [
+      {
+        "source_element": "light being green",
+        "target_element": "condition evaluating to true",
+        "relation": "corresponds to",
+        "evidence": "If the light is green (the condition is true), then cars proceed through the intersection (the code block executes)."
+      },
+      {
+        "source_element": "cars proceeding through the intersection",
+        "target_element": "code block execution",
+        "relation": "corresponds to",
+        "evidence": "If the light is green ... then cars proceed ... (the code block executes)."
+      },
+      {
+        "source_element": "light being red or yellow",
+        "target_element": "condition evaluating to false (else branch)",
+        "relation": "corresponds to",
+        "evidence": "ELSE (if the light is red or yellow), cars stay stopped."
+      },
+      {
+        "source_element": "cars staying stopped",
+        "target_element": "code block skipped",
+        "relation": "corresponds to",
+        "evidence": "If the light is not green (the condition is false), then cars remain stopped (the code block is skipped)."
+      }
+    ],
+    "process_summary": "Both the traffic light and an if‑then statement continuously evaluate a single condition and then trigger exactly one of two mutually exclusive actions: when the condition holds, the designated action proceeds; when it does not, an alternative (or no) action occurs.",
+    "potential_breaks": [
+      "A traffic light cycles through multiple colors over time, whereas an if‑then statement evaluates the condition once per execution.",
+      "Traffic lights can affect multiple streams of traffic simultaneously, while an if‑then statement typically controls a single code block.",
+      "The timing of a traffic light is often independent of the condition (e.g., fixed intervals), whereas an if‑then statement’s execution is directly driven by the condition’s truth value."
+    ]
+  }
+}

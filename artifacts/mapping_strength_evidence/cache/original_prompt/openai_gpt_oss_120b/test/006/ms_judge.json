@@ -1,0 +1,53 @@
+{
+  "agent": "ms_judge",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "1126bc8d1a7793f3",
+  "created_at": "2026-07-29T09:34:57.028583+00:00",
+  "usage": {
+    "completion_tokens": 864,
+    "prompt_tokens": 1585,
+    "total_tokens": 2449,
+    "prompt_tokens_details": {
+      "cached_tokens": 811
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 324
+    }
+  },
+  "result": {
+    "assessments": [
+      {
+        "source_element": "Accessible tables, wheelchair‑friendly paths, high chairs, quiet seating areas",
+        "target_element": "Physical learning environment: wheelchair‑accessible desks, assistive technologies, collaborative spaces, quiet zones",
+        "judgment": "sound",
+        "rationale": "Both domains describe concrete spatial arrangements that remove physical barriers and provide multiple seating options, so the roles (accessibility) and mechanisms (layout design) align directly."
+      },
+      {
+        "source_element": "Variety of dishes (vegetarian, gluten‑free, spicy, mild, multicultural cuisines)",
+        "target_element": "Curriculum design offering multiple means of representation, engagement, and expression for diverse interests, abilities, and prior knowledge",
+        "judgment": "stretch",
+        "rationale": "The food variety captures the idea of offering multiple options, but it abstracts away the cognitive‑science basis of UDL (representation, engagement, expression). The correspondence requires a logical leap from taste preference to learning pathways."
+      },
+      {
+        "source_element": "Clear labels on each dish indicating ingredients and dietary information",
+        "target_element": "Transparent instructional information (e.g., clear learning goals, instructions, scaffolds) enabling informed learner choices",
+        "judgment": "sound",
+        "rationale": "Labeling dishes provides the same function as clear instructional cues: it supplies necessary information for participants to make informed decisions, preserving role and mechanism."
+      }
+    ],
+    "structural_issues": [
+      "The potluck scenario is a one‑time event, whereas UDL is a systematic, ongoing framework applied across curricula.",
+      "Key UDL principles (multiple means of representation, engagement, expression) are not explicitly mirrored in the food‑selection metaphor.",
+      "Core UDL processes such as assessment, feedback, and iterative instructional adjustment are absent from the analogy."
+    ],
+    "score_probabilities": {
+      "score_0": 0.1,
+      "score_1": 0.3,
+      "score_2": 0.6
+    },
+    "recommended_score": 2,
+    "confidence": 0.78,
+    "rationale": "Two of the three mappings are logically sound, and the third is a reasonable but stretched analogy. While the overall correspondence captures the inclusive intent of UDL, the analogy omits systematic, cognitive, and assessment components, limiting its completeness. Given the predominance of sound correspondences, a score of 2 is justified with moderate confidence."
+  }
+}

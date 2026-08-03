@@ -1,0 +1,48 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "824893cd06345315",
+  "created_at": "2026-07-29T09:47:38.027265+00:00",
+  "usage": {
+    "completion_tokens": 793,
+    "prompt_tokens": 671,
+    "total_tokens": 1464,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 288
+    }
+  },
+  "result": {
+    "source_concept": "Computer system user permissions (regular user vs. admin)",
+    "target_concept": "Social privilege and power",
+    "mappings": [
+      {
+        "source_element": "regular user",
+        "target_element": "non‑privileged individual or group",
+        "relation": "lacks the ability to change system‑wide settings / lacks systemic decision‑making power",
+        "evidence": "Analogy: a regular user’s attempt to alter the whole system fails; Description: systemic benefits and decision‑making power are tied to social identity and status."
+      },
+      {
+        "source_element": "admin user",
+        "target_element": "privileged individual or group",
+        "relation": "possesses elevated rights that allow alteration of the environment for all users / holds systemic power to set or modify rules",
+        "evidence": "Analogy: an admin can successfully perform actions that affect everyone; Description: privilege grants default access and the ability to set or modify the rules governing the system for all users."
+      },
+      {
+        "source_element": "system design that grants admin advantages",
+        "target_element": "social institutions or norms that embed privilege",
+        "relation": "structural mechanism that embeds unequal access and authority",
+        "evidence": "Analogy: the admin’s advantages are built into the computer system’s design; Description: privilege is tied to institutional norms and is part of the system’s design."
+      }
+    ],
+    "process_summary": "Both analogies describe a hierarchical structure where a set of rules or architecture confers special rights to a designated class (admin or privileged group). Those rights enable the class to modify the environment or rules for all participants, while others are constrained to operate only within their limited domain. The power differential is built into the underlying system—technical in the computer case, institutional in the social case—creating default access and decision‑making authority for the privileged class.",
+    "potential_breaks": [
+      "Technical permissions are explicitly coded and can be revoked or overridden by system updates; social privilege is often informal, culturally reinforced, and harder to revoke.",
+      "Computer admin rights are clearly defined and observable, whereas social privilege may be invisible, unearned, and contested.",
+      "The analogy assumes a binary hierarchy (admin vs. regular), while social privilege can be multi‑dimensional and intersecting."
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "e22294981c1c72b3",
+  "created_at": "2026-07-29T09:50:45.858691+00:00",
+  "usage": {
+    "completion_tokens": 921,
+    "prompt_tokens": 847,
+    "total_tokens": 1768,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 432
+    }
+  },
+  "result": {
+    "source_concept": "Physical accessibility modifications in a public library (ramps, elevators, magnifying tools)",
+    "target_concept": "Assistive technology for digital devices and software",
+    "mappings": [
+      {
+        "source_element": "Wheelchair ramp",
+        "target_element": "Screen reader",
+        "relation": "Provides an alternative access pathway by converting visual text into audio, analogous to a ramp allowing entry without stairs",
+        "evidence": "The ramp causes books to be converted into audiobooks so no one has to climb the stairs, like a screen reader that reads a website's text aloud."
+      },
+      {
+        "source_element": "Elevator that moves books to the first floor",
+        "target_element": "Switch control",
+        "relation": "Rearranges content to eliminate the need for vertical navigation, similar to a switch control that lets a user navigate without scrolling or moving through hierarchical layers",
+        "evidence": "The elevator moves all books from the second floor down to the first floor so vertical navigation is unnecessary, like a switch control that lets a user navigate."
+      },
+      {
+        "source_element": "Magnifying glass at the front desk",
+        "target_element": "Screen magnification software",
+        "relation": "Enlarges visual information for users with low vision, mirroring software that enlarges screen elements",
+        "evidence": "Using the magnifying glass causes a book to be reprinted in larger font for future readers, like screen magnification software that enlarges parts of the screen."
+      }
+    ],
+    "process_summary": "Both the library scenario and assistive technology identify a barrier (stairs or inaccessible UI) and apply tools that transform the presentation of core content, preserving the underlying information while making it reachable for users with differing abilities.",
+    "potential_breaks": [
+      "The analogy suggests the content is permanently altered (books reprinted, audiobooks created), whereas most assistive technologies provide a reversible overlay without changing the original digital content.",
+      "An elevator physically moves items, while a switch control does not relocate content but offers an alternative input method; the structural change is not a perfect match.",
+      "The magnifying glass leading to permanent larger print differs from screen magnification, which is typically temporary and user‑controlled."
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "a75c2c34869430d5",
+  "created_at": "2026-07-29T09:30:18.658154+00:00",
+  "usage": {
+    "completion_tokens": 829,
+    "prompt_tokens": 649,
+    "total_tokens": 1478,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 308
+    }
+  },
+  "result": {
+    "source_concept": "Doorman (gatekeeper at a restaurant entrance)",
+    "target_concept": "Firewall (network security system)",
+    "mappings": [
+      {
+        "source_element": "Doorman",
+        "target_element": "Firewall",
+        "relation": "functions as a gatekeeper that controls entry and exit",
+        "evidence": "Analogy states the doorman checks everyone wanting to come in or go out, just as a firewall inspects incoming and outgoing traffic."
+      },
+      {
+        "source_element": "VIP list / rules the doorman checks",
+        "target_element": "Firewall rule set",
+        "relation": "defines which entities are allowed or denied",
+        "evidence": "The doorman uses a list of rules (VIP list, suspicious looks) to decide; a firewall uses configured rules to permit or block packets."
+      },
+      {
+        "source_element": "Inspection of guests and their items",
+        "target_element": "Packet inspection and content filtering",
+        "relation": "examines characteristics to determine compliance",
+        "evidence": "Analogy mentions the doorman looks for suspicious behavior and checks items; firewalls examine packet headers and payloads."
+      },
+      {
+        "source_element": "Stopping those who don’t fit the rules",
+        "target_element": "Blocking traffic that violates firewall rules",
+        "relation": "denies access when criteria are not met",
+        "evidence": "The doorman “immediately stops them at the door” if they don’t fit; firewalls drop or reject non‑conforming packets."
+      }
+    ],
+    "process_summary": "Both the doorman and the firewall act as boundary controllers that enforce a set of explicit rules on entities attempting to cross the boundary. They inspect each entity, compare it against the rule set, and either allow passage or block it, thereby ensuring only authorized traffic (people or data) can enter or exit.",
+    "potential_breaks": [
+      "A doorman is a single human agent, while firewalls can be distributed across multiple devices and operate at high speed.",
+      "The doorman deals with physical people and items, whereas a firewall deals with digital packets and protocols.",
+      "A doorman typically handles one person at a time, but firewalls process many simultaneous connections.",
+      "Outbound inspection may be less emphasized for a doorman than for a firewall, which often enforces both inbound and outbound policies."
+    ]
+  }
+}

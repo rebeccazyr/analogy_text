@@ -1,0 +1,51 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "3da382546961d767",
+  "created_at": "2026-07-29T09:49:16.357300+00:00",
+  "usage": {
+    "completion_tokens": 778,
+    "prompt_tokens": 806,
+    "total_tokens": 1584,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Architectural and interior design of a house",
+    "target_concept": "Human-computer interaction (HCI)",
+    "mappings": [
+      {
+        "source_element": "House (the built structure)",
+        "target_element": "Software/application (digital system)",
+        "relation": "represents",
+        "evidence": "The analogy states: \"The house you are building is the software or application (the digital system)\""
+      },
+      {
+        "source_element": "Family (the occupants)",
+        "target_element": "Users of the system",
+        "relation": "represents",
+        "evidence": "The analogy says: \"the family that will live there are the people who will use it (the users)\""
+      },
+      {
+        "source_element": "Light switch placed next to the door for easy discovery in the dark",
+        "target_element": "Usability (ease of finding functions)",
+        "relation": "illustrates principle of",
+        "evidence": "\"The fact that a light switch is easy to find in the dark is a core principle of usability\""
+      },
+      {
+        "source_element": "Wide hallways that allow comfortable movement and prevent doors from colliding",
+        "target_element": "Interaction design (design of interactions to avoid conflicts)",
+        "relation": "analogous to",
+        "evidence": "\"You want the hallways to be wide enough to walk through comfortably because this ensures the doors don't bump into each other when opened (interaction design)\""
+      },
+      {
+        "source_element": "House feeling like a home—comfortable and intuitive",
+        "target_element": "User experience (overall feeling of comfort and intuition)",
+        "relation": "parallels",
+        "evidence": "\"Most importantly, the house must feel like a home—comfortable and intuitive. This positive feeling is the user experience\""
+      }
+    ],
+    "process_summary": "Both the architectural design of a house and HCI involve creating an environment that fits the needs, behaviors, and expectations of its occupants. The process includes mapping physical elements (walls, switches, hallways) to digital elements (interfaces, controls, interaction flows) to ensure ease of use (usability), smooth navigation (interaction design), and a pleasant overall feeling (user experience).",
+    "potential_breaks": []
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "4af22341346f7b2b",
+  "created_at": "2026-07-29T09:46:18.857064+00:00",
+  "usage": {
+    "completion_tokens": 969,
+    "prompt_tokens": 704,
+    "total_tokens": 1673,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Fixed Row of Numbered Mailboxes",
+    "target_concept": "array",
+    "mappings": [
+      {
+        "source_element": "mailbox",
+        "target_element": "array element",
+        "relation": "corresponds to",
+        "evidence": "Each mailbox holds exactly one postcard, analogous to each array slot holding one value."
+      },
+      {
+        "source_element": "mailbox number (index)",
+        "target_element": "array index",
+        "relation": "corresponds to",
+        "evidence": "Mailboxes are numbered from 0 onward, matching array indices that start at 0."
+      },
+      {
+        "source_element": "fixed row length",
+        "target_element": "fixed array size",
+        "relation": "corresponds to",
+        "evidence": "The row of mailboxes cannot be expanded or reduced, just as an array has a fixed size."
+      },
+      {
+        "source_element": "same type postcard",
+        "target_element": "values of the same type",
+        "relation": "corresponds to",
+        "evidence": "Each mailbox holds only one type of postcard, mirroring the homogeneous type constraint of array elements."
+      },
+      {
+        "source_element": "directly go to mailbox labeled '1'",
+        "target_element": "direct index access to the second element",
+        "relation": "corresponds to",
+        "evidence": "Accessing a specific mailbox by its number provides constant‑time retrieval, just as array indexing allows immediate access to a given element."
+      }
+    ],
+    "process_summary": "Both the mailbox row and an array are fixed‑size collections of homogeneous items that support direct, constant‑time access via a numeric index, enabling retrieval or replacement of a specific item without scanning the entire structure.",
+    "potential_breaks": [
+      "Mailboxes are physical objects that must be manually opened, whereas array access is a logical, instantaneous operation.",
+      "Mailboxes can be empty or contain a physical postcard, while arrays always contain a value (or a default) in each slot."
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "7ba1db3dd17404db",
+  "created_at": "2026-07-29T09:45:37.100322+00:00",
+  "usage": {
+    "completion_tokens": 1016,
+    "prompt_tokens": 650,
+    "total_tokens": 1666,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 311
+    }
+  },
+  "result": {
+    "source_concept": "Traffic Officer at a city intersection",
+    "target_concept": "Router",
+    "mappings": [
+      {
+        "source_element": "Traffic officer",
+        "target_element": "Router",
+        "relation": "plays the same coordinating role",
+        "evidence": "Analogy states \"Router is a Traffic Officer\" and describes the officer directing vehicles just as a router directs packets."
+      },
+      {
+        "source_element": "Intersection of streets",
+        "target_element": "Network junction where multiple networks connect",
+        "relation": "serves as the point where multiple paths converge",
+        "evidence": "Analogy mentions \"busy city intersection\" analogous to a router connecting several networks."
+      },
+      {
+        "source_element": "Streets leading in different directions",
+        "target_element": "Network links/paths to other networks",
+        "relation": "provide alternative routes for movement",
+        "evidence": "Analogy describes streets as the possible directions for cars, mirroring network links for data."
+      },
+      {
+        "source_element": "Cars carrying mail or passengers",
+        "target_element": "Data packets carrying information",
+        "relation": "units that need to be routed to a destination",
+        "evidence": "Analogy says \"cars arrive (carrying mail or passengers who need to reach a specific address)\" paralleling packets with payloads."
+      },
+      {
+        "source_element": "Officer checks where each car is headed",
+        "target_element": "Router examines packet header for destination address",
+        "relation": "performs a lookup to determine intended destination",
+        "evidence": "Analogy: \"officer quickly checks where they’re headed\" mirrors router's inspection of packet headers."
+      },
+      {
+        "source_element": "Officer points car down the best street",
+        "target_element": "Router forwards packet to the optimal next hop",
+        "relation": "directs the item onto the most efficient path",
+        "evidence": "Analogy: \"points them down the street best suited to get there\" corresponds to routing decision."
+      },
+      {
+        "source_element": "Ensuring efficient travel and avoiding confusion",
+        "target_element": "Ensuring efficient packet delivery and avoiding routing loops or collisions",
+        "relation": "maintains order and optimal flow",
+        "evidence": "Analogy emphasizes guidance for efficient route; router aims for optimal path and correct delivery."
+      }
+    ],
+    "process_summary": "Both the traffic officer and the router inspect incoming units (cars or packets), determine each unit's intended destination, and then direct it onto the most suitable outgoing path (street or network link) to reach that destination efficiently, thereby managing flow and preventing misrouting.",
+    "potential_breaks": [
+      "A traffic officer can physically stop or hold a car, whereas a router cannot halt packets; it can only forward or drop them.",
+      "The officer often has a global view of city traffic, while a router typically makes decisions based on local routing tables and may lack complete network-wide knowledge.",
+      "Traffic officers can apply discretionary judgment (e.g., emergency vehicles), whereas routers follow strict protocol rules.",
+      "Cars move continuously in a fluid stream, while packets are discrete units that may be buffered, retransmitted, or reordered."
+    ]
+  }
+}

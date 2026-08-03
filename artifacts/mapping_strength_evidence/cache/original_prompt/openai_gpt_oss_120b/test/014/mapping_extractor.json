@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "86b9c2f1d17ff67f",
+  "created_at": "2026-07-29T09:37:11.909283+00:00",
+  "usage": {
+    "completion_tokens": 1164,
+    "prompt_tokens": 790,
+    "total_tokens": 1954,
+    "prompt_tokens_details": {
+      "cached_tokens": 566
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 550
+    }
+  },
+  "result": {
+    "source_concept": "Designing a theme park with attractions",
+    "target_concept": "Object-oriented analysis and design (OOAD)",
+    "mappings": [
+      {
+        "source_element": "Attraction (e.g., roller coaster, food court, gift shop)",
+        "target_element": "Object (class/instance)",
+        "relation": "maps to as an individual object with its own purpose, properties, and behaviors",
+        "evidence": "Each attraction is like an \"object\" with its own purpose, rules, and behavior."
+      },
+      {
+        "source_element": "Properties of an attraction (speed, capacity, menu items, inventory)",
+        "target_element": "Attributes/fields of an object",
+        "relation": "correspond to object properties/attributes",
+        "evidence": "The roller coaster (object) has properties like speed and capacity; the food court has properties like menu items and seating."
+      },
+      {
+        "source_element": "Behaviors of an attraction (starting, stopping, serving food, restocking)",
+        "target_element": "Methods/operations of an object",
+        "relation": "correspond to object methods",
+        "evidence": "Behaviors like starting, stopping, loading passengers; serving food and cleaning tables; selling items and restocking shelves."
+      },
+      {
+        "source_element": "Guests moving between attractions",
+        "target_element": "Object interactions / messages / associations",
+        "relation": "represent interactions between objects",
+        "evidence": "How they interact (like guests moving between them) informs the overall design."
+      },
+      {
+        "source_element": "Overall theme park design process (decomposing the park into attractions and coordinating them)",
+        "target_element": "OOAD process of analysis and design (decomposing a system into objects and coordinating them)",
+        "relation": "parallels the systematic decomposition and integration steps of OOAD",
+        "evidence": "By focusing on these individual attractions (objects) and how they interact, you can design the park in a way that's easier to understand, build, and improve."
+      }
+    ],
+    "process_summary": "Both the theme‑park analogy and OOAD involve breaking a complex whole into modular components (attractions/objects) that each encapsulate state (properties/attributes) and behavior (methods). The design proceeds by specifying these components, defining how they interact (guest movement/object messages), and then integrating them to form a coherent system, facilitating understanding, construction, and communication with stakeholders.",
+    "potential_breaks": [
+      "The analogy does not illustrate inheritance or polymorphism, key OOAD mechanisms.",
+      "Physical constraints of a theme park (e.g., space, safety) may not map cleanly to software constraints.",
+      "Encapsulation is implied but not explicitly shown; attractions are described externally rather than hiding internal details."
+    ]
+  }
+}

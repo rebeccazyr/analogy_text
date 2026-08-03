@@ -1,0 +1,61 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "19062d3ca9741a9b",
+  "created_at": "2026-07-29T09:43:09.811129+00:00",
+  "usage": {
+    "completion_tokens": 870,
+    "prompt_tokens": 779,
+    "total_tokens": 1649,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Russian nesting doll (Matryoshka)",
+    "target_concept": "recursion",
+    "mappings": [
+      {
+        "source_element": "largest, outermost doll",
+        "target_element": "initial function call (original problem)",
+        "relation": "represents",
+        "evidence": "Analogy states: \"The largest, outermost doll is your initial function call with the original problem.\""
+      },
+      {
+        "source_element": "each smaller doll inside",
+        "target_element": "subsequent recursive calls (simpler versions of the problem)",
+        "relation": "represents",
+        "evidence": "Analogy: \"Inside, you find a slightly smaller doll (a simpler version of the same problem).\""
+      },
+      {
+        "source_element": "opening a doll",
+        "target_element": "making a recursive call / solving a subproblem",
+        "relation": "corresponds to",
+        "evidence": "Analogy: \"opening a doll represents solving a subproblem\" and \"you keep opening dolls (making recursive calls)\""
+      },
+      {
+        "source_element": "smallest doll that cannot be opened further",
+        "target_element": "base case of recursion",
+        "relation": "corresponds to",
+        "evidence": "Analogy: \"the smallest doll (the base case) that can't be opened further\""
+      },
+      {
+        "source_element": "putting the dolls back together",
+        "target_element": "returning values and unwinding the call stack",
+        "relation": "mirrors",
+        "evidence": "Analogy: \"When you've found the smallest doll, you start putting the dolls back together (returning values from each function call).\""
+      },
+      {
+        "source_element": "combining the reassembled layers",
+        "target_element": "combining subproblem solutions to form the final result",
+        "relation": "mirrors",
+        "evidence": "Analogy: \"As you reassemble each layer, you're combining the solutions of the subproblems to solve the original problem.\""
+      }
+    ],
+    "process_summary": "Both the nesting‑doll scenario and recursion involve repeatedly applying the same operation to a smaller instance of the same structure until a minimal, non‑divisible case is reached (the base case), then reversing the process to combine the results back up to the original level.",
+    "potential_breaks": [
+      "The analogy depicts a strictly linear chain of dolls, which aligns with simple (single‑branch) recursion but does not capture branching recursion where a call may spawn multiple subcalls.",
+      "Physical dolls are static objects; opening and closing them is a one‑time action, whereas recursive calls are dynamic and can involve varying amounts of computation.",
+      "The analogy suggests a deterministic order of unwinding, whereas actual recursion may involve early returns or tail‑call optimizations that differ from the literal re‑assembly of dolls."
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "f8726a8bfb844b0a",
+  "created_at": "2026-07-29T09:35:39.676394+00:00",
+  "usage": {
+    "completion_tokens": 899,
+    "prompt_tokens": 775,
+    "total_tokens": 1674,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 378
+    }
+  },
+  "result": {
+    "source_concept": "head chef in a restaurant kitchen",
+    "target_concept": "central processing unit (CPU)",
+    "mappings": [
+      {
+        "source_element": "head chef",
+        "target_element": "CPU",
+        "relation": "central coordinating entity that manages overall operation",
+        "evidence": "The analogy opens with \"The CPU is the Head Chef... central figure ensuring the kitchen runs smoothly\"."
+      },
+      {
+        "source_element": "waitstaff delivering orders",
+        "target_element": "program instructions delivered to the CPU",
+        "relation": "provides the tasks or orders to be executed",
+        "evidence": "\"The chef (CPU) receives orders from the waitstaff (the instructions from programs)\"."
+      },
+      {
+        "source_element": "chopping, mixing, cooking actions using tools",
+        "target_element": "arithmetic and logic operations performed by the ALU",
+        "relation": "executes core operational work using specialized mechanisms",
+        "evidence": "\"For chopping, mixing, or cooking ... the chef uses specific tools and techniques (the ALU)\"."
+      },
+      {
+        "source_element": "chef coordinating kitchen staff",
+        "target_element": "CPU control unit coordinating internal components",
+        "relation": "orchestrates timing and sequencing of sub‑tasks",
+        "evidence": "\"The chef also coordinates the kitchen staff ... (the control unit)\"."
+      },
+      {
+        "source_element": "sending completed dishes to the dining area",
+        "target_element": "CPU handling input/output operations",
+        "relation": "delivers final results to external recipients",
+        "evidence": "\"The chef ensures the completed dishes are sent out to the dining area (input/output operations)\"."
+      }
+    ],
+    "process_summary": "Both the head chef and the CPU act as central managers: they receive orders, interpret them, perform core work using specialized subsystems (tools/ALU), coordinate subordinate agents (kitchen staff/control unit), and finally deliver the finished product to the outside world (dishes/I‑O).",
+    "potential_breaks": [
+      "A chef is a conscious human capable of creativity, whereas a CPU follows deterministic logic.",
+      "Kitchen staff are distinct individuals; the CPU's internal units are not autonomous agents.",
+      "Cooking transforms raw ingredients physically, while CPU operations manipulate abstract data."
+    ]
+  }
+}

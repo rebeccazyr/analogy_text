@@ -1,0 +1,62 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "14e33704cae0010a",
+  "created_at": "2026-07-29T09:51:31.763985+00:00",
+  "usage": {
+    "completion_tokens": 980,
+    "prompt_tokens": 718,
+    "total_tokens": 1698,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 461
+    }
+  },
+  "result": {
+    "source_concept": "Advanced IDE code completion engine",
+    "target_concept": "Large language models (LLMs)",
+    "mappings": [
+      {
+        "source_element": "Advanced IDE code completion engine",
+        "target_element": "LLM",
+        "relation": "overall system analogous to the language model",
+        "evidence": "Imagine an advanced IDE code completion engine (the LLM)..."
+      },
+      {
+        "source_element": "Massive corpus of all public code repositories",
+        "target_element": "Large training corpora",
+        "relation": "source of training data",
+        "evidence": "trained ... on a massive corpus of all public code repositories (the large training corpora)"
+      },
+      {
+        "source_element": "Typing a new function (input prompt)",
+        "target_element": "Input prompt",
+        "relation": "initial user input that drives generation",
+        "evidence": "When you start typing a new function (the input prompt)..."
+      },
+      {
+        "source_element": "Sophisticated analysis that weighs importance of all other code in the file/project",
+        "target_element": "Transformer's attention mechanism",
+        "relation": "mechanism for contextual weighting of all tokens",
+        "evidence": "uses a sophisticated analysis to weigh the importance of all the other code... (the Transformer's attention mechanism)"
+      },
+      {
+        "source_element": "Calculates the most probable next piece of code (predicting the next token)",
+        "target_element": "Predicting the next token",
+        "relation": "probabilistic next-token generation",
+        "evidence": "calculates the most probable next piece of code you're about to write (predicting the next token)"
+      },
+      {
+        "source_element": "Suggest entire lines or whole functions (performing many language tasks)",
+        "target_element": "Performing many language tasks",
+        "relation": "breadth of generative capabilities",
+        "evidence": "allowing it to suggest entire lines or even whole functions... (performing many language tasks)"
+      }
+    ],
+    "process_summary": "Both the IDE completion engine and LLM are trained on massive corpora, use a mechanism that weights the relevance of all prior context (attention) to understand the current input prompt, then probabilistically predict the next token(s), enabling generation of varied outputs across many tasks.",
+    "potential_breaks": []
+  }
+}

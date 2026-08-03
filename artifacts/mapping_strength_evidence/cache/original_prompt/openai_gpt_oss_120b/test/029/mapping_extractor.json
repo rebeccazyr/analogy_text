@@ -1,0 +1,67 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "f74cec11a1ca4ff9",
+  "created_at": "2026-07-29T09:42:46.250040+00:00",
+  "usage": {
+    "completion_tokens": 1180,
+    "prompt_tokens": 840,
+    "total_tokens": 2020,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 485
+    }
+  },
+  "result": {
+    "source_concept": "Divide-and-Delegate Bookshelf Organization with helpers",
+    "target_concept": "Quicksort algorithm",
+    "mappings": [
+      {
+        "source_element": "Choosing a book as the pivot and placing it on a table",
+        "target_element": "Selecting a pivot element in the array",
+        "relation": "corresponds to",
+        "evidence": "Analogy sentence: \"You pick any book (the pivot) and place it on a table.\""
+      },
+      {
+        "source_element": "Helpers create three piles: earlier titles (left), later titles (right), identical titles (middle)",
+        "target_element": "Partitioning the array into elements less than, greater than, and equal to the pivot",
+        "relation": "maps to",
+        "evidence": "Analogy description of three piles matches quicksort's partition step."
+      },
+      {
+        "source_element": "Assigning two new helpers to organize the left and right piles using the same strategy",
+        "target_element": "Recursively sorting the left and right sub‑arrays",
+        "relation": "corresponds to",
+        "evidence": "Analogy step 3 describes helpers applying the same strategy to each sub‑pile."
+      },
+      {
+        "source_element": "Helpers recruit sub‑helpers for smaller piles until a pile contains a single book",
+        "target_element": "Base case of recursion when a sub‑array has size 1 (already sorted)",
+        "relation": "maps to",
+        "evidence": "Analogy step 4 mentions stopping when a helper gets a pile with just one book."
+      },
+      {
+        "source_element": "Putting the organized piles back together: left pile, middle books, right pile",
+        "target_element": "Concatenating the sorted left sub‑array, pivot(s), and sorted right sub‑array",
+        "relation": "corresponds to",
+        "evidence": "Analogy step 5 describes reassembling the piles in order."
+      },
+      {
+        "source_element": "Team grows with more helpers, making the process more efficient than sorting one book at a time",
+        "target_element": "Quicksort’s average O(n log n) efficiency due to divide‑and‑conquer",
+        "relation": "illustrates",
+        "evidence": "Analogy concluding sentence about efficiency as the team expands."
+      }
+    ],
+    "process_summary": "Both the bookshelf analogy and quicksort follow a divide‑and‑conquer process: select a pivot, partition the items into groups relative to the pivot, recursively apply the same procedure to each subgroup, and finally combine the ordered groups. The recursion stops when a subgroup contains a single element, which is trivially sorted.",
+    "potential_breaks": [
+      "The analogy suggests parallel work by multiple helpers, whereas classic quicksort is usually implemented sequentially.",
+      "Books are ordered by title chronology, which may not capture arbitrary comparison functions used in quicksort.",
+      "The treatment of identical books as a separate middle pile assumes a stable handling of duplicates, which is an implementation detail in quicksort.",
+      "Unlimited recruitment of helpers implies unbounded parallelism, which is not realistic for actual algorithm execution."
+    ]
+  }
+}

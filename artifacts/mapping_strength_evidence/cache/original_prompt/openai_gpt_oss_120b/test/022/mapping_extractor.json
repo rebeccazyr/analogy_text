@@ -1,0 +1,56 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "c4269ea4265d6bd3",
+  "created_at": "2026-07-29T09:39:52.581846+00:00",
+  "usage": {
+    "completion_tokens": 1038,
+    "prompt_tokens": 807,
+    "total_tokens": 1845,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Chain of Responsibility feedback in wall construction (team of workers with foreman)",
+    "target_concept": "Backpropagation in artificial neural networks",
+    "mappings": [
+      {
+        "source_element": "Foreman (loss function)",
+        "target_element": "Loss function",
+        "relation": "represents",
+        "evidence": "The foreman inspects the finished wall and identifies problems, analogous to the loss function evaluating the prediction error."
+      },
+      {
+        "source_element": "Workers in each row (neurons in a layer)",
+        "target_element": "Neurons in a layer",
+        "relation": "correspond to",
+        "evidence": "Each worker stands for a neuron, and each row of workers maps to a network layer."
+      },
+      {
+        "source_element": "Feedback messages sent backward",
+        "target_element": "Error gradients propagated backward",
+        "relation": "correspond to",
+        "evidence": "The analogy describes feedback traveling backward through the team, mirroring the backward flow of error gradients through network layers."
+      },
+      {
+        "source_element": "Worker adjusts brick‑laying technique",
+        "target_element": "Weight update for a neuron",
+        "relation": "analogous to",
+        "evidence": "Workers modify their technique based on feedback, just as neurons adjust their weights based on computed gradients."
+      },
+      {
+        "source_element": "Proportional adjustments based on contribution to the problem",
+        "target_element": "Gradient‑scaled weight changes",
+        "relation": "mirrors",
+        "evidence": "The analogy states adjustments are proportional to each worker’s contribution, matching how gradient magnitude scales weight updates."
+      }
+    ],
+    "process_summary": "Both the wall‑building chain of responsibility and backpropagation involve a hierarchical system where an error signal is evaluated at the output, then sent backward through successive layers. Each unit computes a local correction (weight update or technique adjustment) based on its contribution to the error and passes a modified signal to the preceding unit, enabling the whole system to iteratively improve its output.",
+    "potential_breaks": [
+      "Chain of Responsibility is a design‑pattern for handling requests, not for computing numerical gradients, so the mathematical nature of backpropagation is omitted.",
+      "The foreman in the analogy identifies problems but does not compute partial derivatives, whereas the loss function’s gradient is essential for backpropagation.",
+      "Physical adjustments to brick‑laying are discrete actions, while weight updates are continuous and often involve learning‑rate scaling.",
+      "The analogy does not capture activation functions, non‑linearities, or the need for differentiability of the network."
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "e830b89d5732a708",
+  "created_at": "2026-07-29T09:45:15.173701+00:00",
+  "usage": {
+    "completion_tokens": 735,
+    "prompt_tokens": 666,
+    "total_tokens": 1401,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 251
+    }
+  },
+  "result": {
+    "source_concept": "Jar label (a descriptive tag attached to a physical container)",
+    "target_concept": "Identifier (a unique name for a program element)",
+    "mappings": [
+      {
+        "source_element": "label on a jar",
+        "target_element": "identifier name",
+        "relation": "both serve as unique, descriptive tags",
+        "evidence": "Analogy states the label \"clearly announces what's inside\" just as an identifier \"should indicate the meaning and usage of the element\""
+      },
+      {
+        "source_element": "jar (the container holding an ingredient)",
+        "target_element": "program element (variable, procedure, etc.)",
+        "relation": "both are the objects being distinguished by the tag",
+        "evidence": "Analogy compares each jar holding a different ingredient to each program element needing a name"
+      },
+      {
+        "source_element": "uniqueness of each label",
+        "target_element": "uniqueness of each identifier",
+        "relation": "ensures no confusion between objects",
+        "evidence": "Analogy: \"Because each label is unique, you can always open the right jar\"; Description: \"user-defined, unique name\""
+      },
+      {
+        "source_element": "descriptive label that reflects jar contents",
+        "target_element": "meaningful identifier that reflects element purpose",
+        "relation": "semantic correspondence between tag and object",
+        "evidence": "Analogy: \"you carefully choose the label so it clearly announces what's inside\"; Description: \"identifier name should indicate the meaning and usage\""
+      }
+    ],
+    "process_summary": "Both the jar label and the programming identifier involve assigning a unique, descriptive tag to an object (a jar or a program element) so that the tag conveys the object's content or purpose, enabling correct selection and preventing mix‑ups.",
+    "potential_breaks": [
+      "A jar label is a physical, external marker; an identifier is an abstract symbol within code.",
+      "Changing a label does not affect the jar's contents, whereas renaming an identifier can affect program behavior and references.",
+      "Labels are optional for human convenience, while identifiers are mandatory for the program to reference elements."
+    ]
+  }
+}

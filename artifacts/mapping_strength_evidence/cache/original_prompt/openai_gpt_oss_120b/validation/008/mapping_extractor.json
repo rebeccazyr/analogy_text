@@ -1,0 +1,59 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "3189ea6150103f08",
+  "created_at": "2026-07-29T09:31:24.283043+00:00",
+  "usage": {
+    "completion_tokens": 812,
+    "prompt_tokens": 670,
+    "total_tokens": 1482,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 327
+    }
+  },
+  "result": {
+    "source_concept": "Shell command execution outcomes and chaining (success/failure, conditional execution)",
+    "target_concept": "Boolean logic",
+    "mappings": [
+      {
+        "source_element": "Command succeeds",
+        "target_element": "true",
+        "relation": "corresponds to",
+        "evidence": "Analogy states each command either succeeds or fails, mirroring binary true/false values."
+      },
+      {
+        "source_element": "Command fails",
+        "target_element": "false",
+        "relation": "corresponds to",
+        "evidence": "Analogy describes commands that can fail, matching the false value in Boolean logic."
+      },
+      {
+        "source_element": "Run next command only if previous succeeded",
+        "target_element": "Logical AND (∧)",
+        "relation": "maps to",
+        "evidence": "Analogy explicitly labels this pattern as AND."
+      },
+      {
+        "source_element": "Run a backup command only if the first fails",
+        "target_element": "Logical OR (∨)",
+        "relation": "maps to",
+        "evidence": "Analogy describes this as OR, where the second command acts as a fallback when the first is false."
+      },
+      {
+        "source_element": "Backup command succeeds, turning an overall failure into success",
+        "target_element": "Logical NOT (¬)",
+        "relation": "maps to",
+        "evidence": "Analogy says the act of running the backup command flips the outcome, analogous to NOT."
+      }
+    ],
+    "process_summary": "Both the shell command scenario and Boolean logic involve evaluating a series of binary outcomes (success/failure or true/false) and combining them using operators that dictate how the overall result is derived: AND requires all components to be true/successful, OR requires at least one true/successful component, and NOT inverts a single component's truth value.",
+    "potential_breaks": [
+      "The NOT mapping treats a backup command's success as flipping a failure, which differs from pure logical negation of a single proposition.",
+      "Shell OR as described runs a second command only on failure, whereas Boolean OR is true if either operand is true regardless of order."
+    ]
+  }
+}

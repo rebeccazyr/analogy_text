@@ -1,0 +1,61 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "8ad7a7785f795612",
+  "created_at": "2026-07-29T09:35:05.540125+00:00",
+  "usage": {
+    "completion_tokens": 906,
+    "prompt_tokens": 744,
+    "total_tokens": 1650,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Teacher grading a group project and giving feedback",
+    "target_concept": "Backpropagation in artificial neural networks",
+    "mappings": [
+      {
+        "source_element": "Final project (output layer)",
+        "target_element": "Output layer of the network",
+        "relation": "corresponds to",
+        "evidence": "The analogy says \"You start by looking at the final project (output layer)\" linking the project to the network's output layer."
+      },
+      {
+        "source_element": "Mistakes in the project (errors)",
+        "target_element": "Output error of the network",
+        "relation": "represents",
+        "evidence": "The teacher \"identifying the mistakes (errors)\" mirrors detecting the output error."
+      },
+      {
+        "source_element": "Each student's contribution (hidden layers)",
+        "target_element": "Hidden layers / neurons",
+        "relation": "corresponds to",
+        "evidence": "The analogy traces mistakes back to \"each student's contribution (hidden layers)\"."
+      },
+      {
+        "source_element": "Specific feedback to a student (gradients)",
+        "target_element": "Gradients for weight updates",
+        "relation": "analogous to",
+        "evidence": "The teacher \"gives specific feedback (gradients)\" which parallels computing gradients."
+      },
+      {
+        "source_element": "Students adjusting their work (weights)",
+        "target_element": "Weights being updated",
+        "relation": "analogous to",
+        "evidence": "The analogy states \"students (weights) take your feedback and adjust their work accordingly\"."
+      },
+      {
+        "source_element": "Next project (optimization/iteration)",
+        "target_element": "Next training iteration / weight optimization",
+        "relation": "analogous to",
+        "evidence": "Repeating the process for \"several projects (iterations)\" mirrors iterative optimization."
+      }
+    ],
+    "process_summary": "Both the teacher feedback scenario and backpropagation involve (1) detecting an overall error, (2) tracing that error back through intermediate components, (3) assigning specific corrective signals to each component, (4) applying those corrections, and (5) repeating the cycle to improve performance.",
+    "potential_breaks": [
+      "Teacher feedback is typically discrete and qualitative, whereas gradients are continuous numerical values.",
+      "Students may not directly modify past contributions, while weight updates instantly affect the model.",
+      "The analogy assumes a linear chain of responsibility, whereas neural networks can have complex, non‑sequential connections."
+    ]
+  }
+}

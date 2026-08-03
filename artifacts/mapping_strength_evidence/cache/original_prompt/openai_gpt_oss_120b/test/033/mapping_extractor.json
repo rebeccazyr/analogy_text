@@ -1,0 +1,42 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "a3a95603bfacf6f6",
+  "created_at": "2026-07-29T09:44:19.672617+00:00",
+  "usage": {
+    "completion_tokens": 714,
+    "prompt_tokens": 638,
+    "total_tokens": 1352,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "source_concept": "Light Switch",
+    "target_concept": "Boolean",
+    "mappings": [
+      {
+        "source_element": "up position (light on)",
+        "target_element": "true",
+        "relation": "represents",
+        "evidence": "When it’s in the up position, the light is on (like “true”)."
+      },
+      {
+        "source_element": "down position (light off)",
+        "target_element": "false",
+        "relation": "represents",
+        "evidence": "When it’s down, the light is off (like “false”)."
+      },
+      {
+        "source_element": "only two positions (up or down)",
+        "target_element": "two possible values (true or false)",
+        "relation": "corresponds to",
+        "evidence": "The switch can only be in one of two positions; there’s no middle ground—just on or off."
+      }
+    ],
+    "process_summary": "Both the light switch and a Boolean value toggle between exactly two mutually exclusive states. The switch’s physical positions (up/down) map directly onto the logical truth values (true/false), and the act of flipping the switch mirrors the operation of changing a Boolean’s value.",
+    "potential_breaks": [
+      "A simple switch is assumed to have only two positions; real switches may have intermediate or dimmer settings, which introduces more than two states, unlike a Boolean.",
+      "Physical failure (e.g., a burnt‑out bulb) can make the light’s state ambiguous, whereas a Boolean value is always well‑defined."
+    ]
+  }
+}

@@ -11,17 +11,24 @@
   "components": {
     "TCC": {
       "method": "tcc_v1_facet_conservative_v1",
-      "path": "artifacts/frozen/tcc_predictions.csv",
+      "path": "artifacts/frozen/target_concept_coverage_predictions.csv",
       "sha256": "66d02f0f9163cae5b618c10d699a5e1f45c159e8a380b56d238a2667aa61c0b1"
     },
     "MS": {
-      "method": "original_v1_frozen_prediction",
-      "path": "artifacts/frozen/ms_v1_base_submission.csv",
-      "sha256": "391e4e878c939b2af7737aceb8e021962801e5becb131d7376a8bf87e526823e"
+      "method": "original_v1_mapping_extractor_ms_judge",
+      "path": "artifacts/frozen/mapping_strength_predictions.csv",
+      "sha256": "8543f0bbbff57141f7633fde15919df4614676bf024f9125ceb254c6fa481956",
+      "prompt_source": "analogy_agents/original_mapping_strength_prompts.py",
+      "schema_source": "analogy_agents/original_mapping_strength_schemas.py",
+      "archive": "artifacts/mapping_strength_evidence/cache/original_prompt/openai_gpt_oss_120b",
+      "archived_examples": 74,
+      "archived_agent_responses": 148,
+      "mapping_prompt_hash_matches": 74,
+      "ms_prompt_hash_matches": 74
     },
     "M": {
       "method": "v7_1_role_audit_loo",
-      "path": "artifacts/frozen/m_v7_1_predictions.csv",
+      "path": "artifacts/frozen/metaphoricity_predictions.csv",
       "sha256": "74df2cada4f490ac6e50c02e1672fb67d1bbaa4821aea63e43d2190b9c4b597a"
     }
   },

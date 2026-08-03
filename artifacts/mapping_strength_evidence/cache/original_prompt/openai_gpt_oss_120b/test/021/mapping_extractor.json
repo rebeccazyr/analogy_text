@@ -1,0 +1,72 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "712bba72eaaded9a",
+  "created_at": "2026-07-29T09:39:32.199456+00:00",
+  "usage": {
+    "completion_tokens": 942,
+    "prompt_tokens": 794,
+    "total_tokens": 1736,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 316
+    }
+  },
+  "result": {
+    "source_concept": "Child learning to ride a bicycle",
+    "target_concept": "Reinforcement learning",
+    "mappings": [
+      {
+        "source_element": "Child (the learner)",
+        "target_element": "RL agent",
+        "relation": "corresponds to",
+        "evidence": "The analogy explicitly calls the child \"the agent\" who interacts with the environment."
+      },
+      {
+        "source_element": "Park (the setting)",
+        "target_element": "Environment",
+        "relation": "corresponds to",
+        "evidence": "The child is \"in a park (the environment)\" where actions are taken."
+      },
+      {
+        "source_element": "Leaning, pedaling, speed adjustments (actions)",
+        "target_element": "Actions taken by the RL agent",
+        "relation": "corresponds to",
+        "evidence": "The analogy lists the child's different approaches as \"actions\"."
+      },
+      {
+        "source_element": "Parent's praise or treat (positive reward)",
+        "target_element": "Positive reward signal",
+        "relation": "corresponds to",
+        "evidence": "Positive feedback from the parent is described as \"praise or a small treat (positive reward)\"."
+      },
+      {
+        "source_element": "Falling or discomfort (negative feedback)",
+        "target_element": "Negative reward/penalty",
+        "relation": "corresponds to",
+        "evidence": "The child experiences \"discomfort or a gentle correction (negative feedback)\" when actions lead to failure."
+      },
+      {
+        "source_element": "Goal of riding longer distances",
+        "target_element": "Goal of maximizing cumulative reward",
+        "relation": "corresponds to",
+        "evidence": "The child's goal \"to ride successfully for longer distances\" mirrors the RL objective of \"maximizing cumulative reward over time\"."
+      },
+      {
+        "source_element": "Developed riding strategy (policy)",
+        "target_element": "Learned policy",
+        "relation": "corresponds to",
+        "evidence": "The analogy says the child eventually \"develops a strategy (policy) for riding that works consistently\"."
+      }
+    ],
+    "process_summary": "Both the child and an RL agent learn by repeatedly interacting with an environment, trying different actions, receiving feedback in the form of rewards or penalties, and gradually adjusting their behavior to maximize long‑term reward, ultimately forming a stable policy that guides future actions.",
+    "potential_breaks": [
+      "Human feedback (praise, discomfort) is often qualitative and social, whereas RL rewards are typically scalar numeric values.",
+      "The child possesses innate motor abilities and prior physical experience, while an RL agent may start with no prior knowledge.",
+      "Physical constraints (gravity, balance) affect the child's learning but may not map directly to abstract RL environments."
+    ]
+  }
+}

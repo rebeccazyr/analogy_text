@@ -1,0 +1,67 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "720e3c120d37eb00",
+  "created_at": "2026-07-29T09:31:46.870218+00:00",
+  "usage": {
+    "completion_tokens": 1237,
+    "prompt_tokens": 675,
+    "total_tokens": 1912,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 636
+    }
+  },
+  "result": {
+    "source_concept": "Cooking a banquet with multiple chefs in a kitchen",
+    "target_concept": "Parallel computing",
+    "mappings": [
+      {
+        "source_element": "Head chef (main program)",
+        "target_element": "Master process / main program",
+        "relation": "acts as coordinator of the overall effort",
+        "evidence": "Analogy states \"You (the main program)\" as the head chef directing the work."
+      },
+      {
+        "source_element": "Banquet (large problem)",
+        "target_element": "Overall computational problem",
+        "relation": "represents the whole task to be solved",
+        "evidence": "Analogy equates \"the entire banquet\" with \"the large problem\"."
+      },
+      {
+        "source_element": "Breaking down banquet into smaller tasks",
+        "target_element": "Decomposing problem into subtasks",
+        "relation": "process of task partitioning",
+        "evidence": "Analogy says \"break down ... into smaller, manageable tasks\"."
+      },
+      {
+        "source_element": "Assigning chefs to specific tasks",
+        "target_element": "Assigning processor cores to subtasks",
+        "relation": "allocation of work units to workers",
+        "evidence": "Analogy: \"assign one chef (a processor core) to ...\""
+      },
+      {
+        "source_element": "Chefs working simultaneously at stations",
+        "target_element": "Processor cores executing tasks concurrently",
+        "relation": "parallel execution of independent work",
+        "evidence": "Analogy: \"All the chefs (the cores) work at their stations at the same time\"."
+      },
+      {
+        "source_element": "Coordinating chefs to finish banquet faster",
+        "target_element": "Parallel computing speeds up overall computation",
+        "relation": "resulting speedup through concurrency",
+        "evidence": "Analogy: \"ensuring the entire banquet is ready much, much faster than if one person had to do it all alone\"."
+      }
+    ],
+    "process_summary": "Both the kitchen scenario and parallel computing involve decomposing a large problem into independent subtasks, assigning each subtask to a separate worker (chef or processor core), having those workers operate concurrently, and then combining their outputs to achieve the overall goal more quickly than a single worker could alone.",
+    "potential_breaks": [
+      "Assumes tasks are perfectly independent, ignoring communication and synchronization overhead present in real parallel programs.",
+      "Ignores load‑balancing issues; some chefs (cores) may finish earlier while others are still busy.",
+      "Suggests unlimited chefs/resources, whereas actual systems have a fixed number of cores.",
+      "Overlooks contention for shared resources (e.g., kitchen tools or memory bandwidth)."
+    ]
+  }
+}

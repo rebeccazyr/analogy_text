@@ -1,0 +1,60 @@
+{
+  "agent": "mapping_extractor",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "prompt_hash": "2038254c695bd19e",
+  "created_at": "2026-07-29T09:53:27.935725+00:00",
+  "usage": {
+    "completion_tokens": 799,
+    "prompt_tokens": 634,
+    "total_tokens": 1433,
+    "prompt_tokens_details": {
+      "cached_tokens": 516
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 263
+    }
+  },
+  "result": {
+    "source_concept": "Coffee preparation chain in a café (barista habit, café rulebook, smart grinder)",
+    "target_concept": "Bias (unconscious, systemic, algorithmic)",
+    "mappings": [
+      {
+        "source_element": "Barista’s habit",
+        "target_element": "Implicit human cognition that introduces unconscious bias",
+        "relation": "introduces subtle alteration",
+        "evidence": "Analogy says the coffee passes the barista’s habit, which quietly nudges it away from the request."
+      },
+      {
+        "source_element": "Café’s rulebook",
+        "target_element": "Established institutional practices that embed systemic bias",
+        "relation": "applies standardized but biased constraints",
+        "evidence": "Analogy mentions the café’s rulebook as a stage that modifies the coffee, mirroring institutional rules shaping outcomes."
+      },
+      {
+        "source_element": "Smart grinder that follows what it learned",
+        "target_element": "Automated data‑driven systems that propagate algorithmic bias",
+        "relation": "learns from past data and reproduces bias",
+        "evidence": "Analogy describes a smart grinder that follows its learned behavior, analogous to algorithms trained on biased data."
+      },
+      {
+        "source_element": "Plain coffee request",
+        "target_element": "Original unbiased intention or neutral input",
+        "relation": "starting point before bias is introduced",
+        "evidence": "Analogy begins with everyone ordering “plain coffee,” representing an unbiased baseline."
+      },
+      {
+        "source_element": "Each stage quietly nudges the coffee away from plain",
+        "target_element": "Cumulative effect of multiple bias sources deviating outcomes",
+        "relation": "cumulative deviation",
+        "evidence": "Analogy states that by the time it’s served, the coffee isn’t quite plain, mirroring systematic deviations."
+      }
+    ],
+    "process_summary": "Both the café scenario and bias formation involve a neutral starting point that passes through successive influences—human habit, institutional rules, and learned automation—each subtly altering the outcome, resulting in a final product that deviates from the original intent.",
+    "potential_breaks": [
+      "Coffee is a single item, whereas bias often affects large populations.",
+      "Barista’s habit may be conscious, while unconscious bias is typically unintentional.",
+      "A smart grinder is a simplified model of algorithms and may not capture complex feedback loops present in algorithmic bias."
+    ]
+  }
+}
