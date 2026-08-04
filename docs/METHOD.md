@@ -1,53 +1,58 @@
 # Metric method snapshot
 
-The text evaluation uses three independently predicted ordinal metrics.
+Snapshot: 2026-08-04. Model: `openai/gpt-oss-120b`.
+
+| Metric | Method | Reasoning effort |
+| --- | --- | --- |
+| TCC | `tcc_v1_facet_conservative_v1` | medium |
+| MS | `ms_v3_counterfactual_zero_gate_v8` | medium |
+| M | `v7_1_role_audit_loo` | high |
+
+Only M uses high reasoning; all other active text inference uses medium.
 
 ## TCC
 
-Active policy: `tcc_v1_facet_conservative_v1`.
-
-1. Run the recovered original v1 concept decomposition and TCC judgment.
+1. Run the recovered original-v1 concept decomposition and TCC judgment.
 2. Classify description topics as independent, overlapping, or contextual.
 3. Audit unresolved blockers as atomic facets.
-4. Python permits only a conservative `1 -> 2` promotion when all retained
+4. Permit only a conservative `1 -> 2` promotion when all retained
    substantive and scope facets are covered.
 
 The active path begins at
-`SixAgentPipeline.evaluate_exact_v1_tcc_with_facet_audit` in
-`analogy_agents/pipeline.py`. The facet contract is in
-`facet_coverage_audit_prompt` in `analogy_agents/prompts.py`.
+`SixAgentPipeline.evaluate_exact_v1_tcc_with_facet_audit`.
 
 ## MS
 
-Active method: the original-v1 `MappingExtractor` followed by `MSJudge`.
+1. Load the hash-verified medium-reasoning v1 MappingExtractor and MSJudge
+   evidence as the baseline.
+2. Reconstruct the literal source three times without revealing the target.
+   Quarantine non-native target labels, equations, calculations, and causal
+   operations.
+3. Run three target-aware counterfactual zero-gate audits.
+4. Convert each audit with the fixed `ms_score_from_zero_gate` function.
+5. Change the baseline to zero only when at least two votes are zero; otherwise
+   preserve the v1 score.
 
-1. `MappingExtractor` identifies the source concept, explicit or clearly
-   implied source-to-target correspondences, the shared process, and potential
-   breaks. It does not assign a score.
-2. `MSJudge` labels every extracted mapping `sound`, `stretch`, or
-   `inconsistent`, records structural issues, and recommends the official
-   ordinal score: `0` for far-fetched/highly inconsistent mappings, `1` for
-   some stretches or inconsistencies, and `2` for well-aligned and consistent
-   mappings.
-3. The final MS column is `MSJudge.recommended_score`; there is no manual or
-   ID-specific correction.
+The zero gate detects only decisive target injection, missing recursive
+identity, impossible source operations, or reversed core relations. It cannot
+promote a score and does not distinguish the baseline `1/2` boundary.
 
-The original archive stored prompt hashes rather than a separate prompt-source
-copy. The surviving templates have now been verified against all archived
-calls: 74/74 MappingExtractor hashes and 74/74 MSJudge hashes match. The repo
-also contains all 148 original responses.
-`scripts/verify_mapping_strength_archive.py` checks the prompt, schema, cache,
-validation prediction, and frozen test-column chain.
+Test changes relative to v1:
+
+| ID | Target | v1 | v8 | Votes |
+| ---: | --- | ---: | ---: | --- |
+| 15 | recursion | 1 | 0 | `[1,0,0]` |
+| 22 | backpropagation | 1 | 0 | `[0,0,0]` |
+
+There is no manual or ID-specific correction in the active code.
 
 ## M
-
-Active policy: `v7_1_role_audit_loo`.
 
 1. Reconstruct the literal source operation.
 2. Apply a strict literal-instance gate.
 3. Check whether source and target preserve a native relation.
 4. Count only central ontological role changes.
-5. Apply the fixed Python boundary:
+5. Apply the fixed boundary:
 
 ```text
 literal instance                                      -> 0
@@ -55,13 +60,13 @@ native relation and at most one central role change   -> 1
 otherwise                                             -> 2
 ```
 
-Validation uses physical leave-one-out calibration anchors. Test inference
-uses all 12 validation anchors.
+Validation anchors are physically leave-one-out. Test inference uses all 12
+anchors. The active test run uses high reasoning.
 
-## Archived output distributions
+## Frozen output distributions
 
 | Metric | 0 | 1 | 2 |
 | --- | ---: | ---: | ---: |
 | TCC | 0 | 32 | 30 |
-| MS | 0 | 12 | 50 |
-| M | 8 | 10 | 44 |
+| MS | 2 | 10 | 50 |
+| M | 8 | 6 | 48 |

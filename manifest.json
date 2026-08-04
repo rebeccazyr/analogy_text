@@ -1,35 +1,86 @@
 {
-  "name": "rrrrr1030-best-text-submission",
-  "snapshot_date": "2026-08-03",
+  "name": "rrrrr1030-latest-text-submission",
+  "snapshot_date": "2026-08-04",
   "model": "openai/gpt-oss-120b",
+  "reasoning": {
+    "TCC": "medium",
+    "MS": "medium",
+    "M": "high"
+  },
+  "leaderboard_metrics_path": "artifacts/frozen/leaderboard_metrics.json",
   "leaderboard": {
-    "text_kendall_avg": 0.4109,
-    "text_spearman_avg": 0.4267,
-    "video_kendall_avg": 0.0,
-    "video_spearman_avg": 0.0
+    "text_kendall_AVG": 0.4516500963892369,
+    "video_kendall_AVG": 0.0,
+    "overall_kendall_AVG": 0.22582504819461846,
+    "text_spearman_AVG": 0.4677821546203598,
+    "video_spearman_AVG": 0.0,
+    "overall_spearman_AVG": 0.2338910773101799,
+    "kendall_TCC": 0.3359301817390369,
+    "spearman_TCC": 0.3359301817390369,
+    "kendall_MS": 0.4280255988882737,
+    "spearman_MS": 0.44073420509463207,
+    "kendall_M": 0.5909945085404001,
+    "spearman_M": 0.6266820770274106,
+    "kendall_VC": 0.0,
+    "spearman_VC": 0.0,
+    "kendall_VA": 0.0,
+    "spearman_VA": 0.0,
+    "kendall_VE": 0.0,
+    "spearman_VE": 0.0
   },
   "components": {
     "TCC": {
       "method": "tcc_v1_facet_conservative_v1",
+      "reasoning_effort": "medium",
       "path": "artifacts/frozen/target_concept_coverage_predictions.csv",
       "sha256": "66d02f0f9163cae5b618c10d699a5e1f45c159e8a380b56d238a2667aa61c0b1"
     },
     "MS": {
-      "method": "original_v1_mapping_extractor_ms_judge",
+      "method": "ms_v3_counterfactual_zero_gate_v8",
+      "baseline": "original_v1_mapping_extractor_ms_judge",
+      "reasoning_effort": "medium",
+      "ensemble_size": 3,
+      "decision_rule": "two_of_three_zero_votes_else_preserve_v1",
+      "test_changes_from_baseline": {
+        "15": {
+          "target": "recursion",
+          "from": 1,
+          "to": 0,
+          "votes": [1, 0, 0]
+        },
+        "22": {
+          "target": "backpropagation",
+          "from": 1,
+          "to": 0,
+          "votes": [0, 0, 0]
+        }
+      },
       "path": "artifacts/frozen/mapping_strength_predictions.csv",
-      "sha256": "8543f0bbbff57141f7633fde15919df4614676bf024f9125ceb254c6fa481956",
-      "prompt_source": "analogy_agents/original_mapping_strength_prompts.py",
-      "schema_source": "analogy_agents/original_mapping_strength_schemas.py",
-      "archive": "artifacts/mapping_strength_evidence/cache/original_prompt/openai_gpt_oss_120b",
-      "archived_examples": 74,
-      "archived_agent_responses": 148,
+      "sha256": "7b089f04148ba2f445220a9d06821431c7b34486f7de6e7114ac38cc892b5a1a",
+      "validation_scores": "artifacts/frozen/mapping_strength_validation_scores.json",
+      "baseline_predictions": "artifacts/frozen/mapping_strength_v1_baseline_predictions.csv",
+      "baseline_predictions_sha256": "8ea42735e8afa24f626d07f79e400fb99c1c79bf376e72b33f300e0043fe90a3",
+      "prompt_source": "analogy_agents/ms_corrective_prompts.py",
+      "schema_source": "analogy_agents/ms_corrective_schemas.py",
+      "baseline_prompt_source": "analogy_agents/original_mapping_strength_prompts.py",
+      "baseline_archive": "artifacts/mapping_strength_evidence/cache/original_prompt/openai_gpt_oss_120b",
+      "archived_baseline_examples": 74,
+      "archived_baseline_agent_responses": 148,
       "mapping_prompt_hash_matches": 74,
       "ms_prompt_hash_matches": 74
     },
     "M": {
       "method": "v7_1_role_audit_loo",
+      "reasoning_effort": "high",
       "path": "artifacts/frozen/metaphoricity_predictions.csv",
-      "sha256": "74df2cada4f490ac6e50c02e1672fb67d1bbaa4821aea63e43d2190b9c4b597a"
+      "sha256": "6e2a512aa4ca0b9640da3969a0d0d02d9ca554067d12a8a804e884be88ef82ac",
+      "validation_scores": "artifacts/frozen/metaphoricity_validation_scores.json"
     }
+  },
+  "submission": {
+    "path": "artifacts/frozen/submission.csv",
+    "sha256": "a907f25bf82577065e024438c54a47358c31203c539465fbc2037c8c33fa5a42",
+    "rows": 62,
+    "video_metrics": "all_zero"
   }
 }

@@ -1,0 +1,20 @@
+{
+  "text_kendall_AVG": 0.4516500963892369,
+  "video_kendall_AVG": 0.0,
+  "overall_kendall_AVG": 0.22582504819461846,
+  "text_spearman_AVG": 0.4677821546203598,
+  "video_spearman_AVG": 0.0,
+  "overall_spearman_AVG": 0.2338910773101799,
+  "kendall_TCC": 0.3359301817390369,
+  "spearman_TCC": 0.3359301817390369,
+  "kendall_MS": 0.4280255988882737,
+  "spearman_MS": 0.44073420509463207,
+  "kendall_M": 0.5909945085404001,
+  "spearman_M": 0.6266820770274106,
+  "kendall_VC": 0.0,
+  "spearman_VC": 0.0,
+  "kendall_VA": 0.0,
+  "spearman_VA": 0.0,
+  "kendall_VE": 0.0,
+  "spearman_VE": 0.0
+}

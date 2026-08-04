@@ -1,7 +1,7 @@
 # Original-v1 MS evidence
 
-This directory contains the surviving evidence for the Mapping Strength values
-used by the best submission.
+This directory contains the surviving original-v1 evidence used as the frozen
+baseline for the active `ms_v3_counterfactual_zero_gate_v8` method.
 
 ## Contents
 
@@ -48,3 +48,17 @@ Replay the archived responses without an API call with:
 
 Add `--refresh-cache` and use a writable cache directory such as `.agent_cache`
 to make fresh Together calls. Fresh inference may not reproduce every label.
+
+## Active v8 correction
+
+The active submission does not use the archived v1 score as the final value in
+two test rows. Three blind source reconstructions and three counterfactual
+audits are run with medium reasoning. Python requires at least two zero votes
+before replacing the v1 score with zero; otherwise it preserves the archived
+score. The active code has no ID-specific scoring branch.
+
+The resulting test changes are `id=15` (`recursion`, votes `[1,0,0]`) and
+`id=22` (`backpropagation`, votes `[0,0,0]`). The frozen corrected vector is
+`artifacts/frozen/mapping_strength_predictions.csv`; the uncorrected archive
+vector remains in
+`artifacts/frozen/mapping_strength_v1_baseline_predictions.csv`.

@@ -9,6 +9,7 @@ import time
 import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, TypeVar
 
@@ -122,6 +123,28 @@ from .original_mapping_strength_schemas import (
     MappingAnalysis as OriginalMappingAnalysis,
     MSJudgment as OriginalMappingStrengthJudgment,
 )
+from .ms_native_prompts import (
+    MS_NATIVE_INTEGRITY_VERSION,
+    ms_blind_source_frame_prompt,
+    ms_calibration_anchors,
+    ms_native_integrity_audit_prompt,
+    ms_target_frame_prompt,
+)
+from .ms_native_schemas import (
+    MSBlindSourceFrame,
+    MSNativeIntegrityAudit,
+    MSTargetMechanismFrame,
+)
+from .ms_corrective_prompts import (
+    MS_CONSERVATIVE_CORRECTION_VERSION,
+    ms_conservative_correction_prompt,
+    ms_counterfactual_zero_gate_prompt,
+    ms_corrective_blind_source_prompt,
+)
+from .ms_corrective_schemas import (
+    MSConservativeCorrectionAudit,
+    MSZeroGateAudit,
+)
 from .original_target_coverage_schemas import (
     ConceptDecomposition as V1ConceptDecomposition,
     TCCJudgment as V1TCCJudgment,
@@ -164,6 +187,45 @@ def load_split(dataset_dir: Path, split: str) -> list[dict[str, Any]]:
     table = pq.read_table(parquet_path)
     rows = table.to_pylist()
     return [{"id": index, **row} for index, row in enumerate(rows)]
+
+
+@lru_cache(maxsize=2)
+def load_frozen_original_ms(split: str) -> dict[int, dict[str, Any]]:
+    """Load the tracked, hash-verified medium-reasoning v1 MS evidence."""
+    base_dir = Path(__file__).resolve().parents[1]
+    if split not in {"validation", "test"}:
+        raise ValueError(f"Unsupported split for frozen MS: {split!r}")
+
+    evidence_dir = (
+        base_dir
+        / "artifacts/mapping_strength_evidence/cache/original_prompt"
+        / "openai_gpt_oss_120b"
+        / split
+    )
+    rows = load_split(base_dir / "challenge-dataset", split)
+    records: dict[int, dict[str, Any]] = {}
+    for row in rows:
+        example_id = int(row["id"])
+        cache_dir = evidence_dir / f"{example_id:03d}"
+        mapping_path = cache_dir / "mapping_extractor.json"
+        judgment_path = cache_dir / "ms_judge.json"
+        if not mapping_path.exists():
+            raise FileNotFoundError(mapping_path)
+        if not judgment_path.exists():
+            raise FileNotFoundError(judgment_path)
+        mapping_payload = json.loads(mapping_path.read_text(encoding="utf-8"))
+        judgment_payload = json.loads(
+            judgment_path.read_text(encoding="utf-8")
+        )
+        records[example_id] = {
+            "id": example_id,
+            "target": row["target"],
+            "agents": {
+                "mapping_extractor_v1_exact": mapping_payload["result"],
+                "ms_judge_v1_exact": judgment_payload["result"],
+            },
+        }
+    return records
 
 
 def load_archived_v1_tcc(
@@ -854,6 +916,140 @@ class SixAgentPipeline:
             "agents": {
                 "original_mapping_extractor": mapping.model_dump(),
                 "original_mapping_strength_judge": judgment.model_dump(),
+            },
+        }
+
+    async def evaluate_ms_native_integrity(
+        self,
+        example: dict[str, Any],
+        split: str,
+    ) -> dict[str, Any]:
+        """Conservatively correct v1 MS using blind native-source evidence."""
+        example_id = int(example["id"])
+        target = example["target"]
+        description = example["description"]
+        analogy = example["analogy"]
+
+        frozen_record = load_frozen_original_ms(split).get(example_id)
+        if frozen_record is None:
+            raise KeyError(
+                f"Frozen original MS evidence missing {split} id={example_id}"
+            )
+        if frozen_record["target"] != target:
+            raise ValueError(
+                "Frozen original MS target mismatch for "
+                f"{split} id={example_id}: "
+                f"{frozen_record['target']!r} != {target!r}"
+            )
+        frozen_agents = frozen_record["agents"]
+        mapping = OriginalMappingAnalysis.model_validate(
+            frozen_agents["mapping_extractor_v1_exact"]
+        )
+        baseline = OriginalMappingStrengthJudgment.model_validate(
+            frozen_agents["ms_judge_v1_exact"]
+        )
+
+        source_messages = ms_corrective_blind_source_prompt(analogy)
+        source_frames = await asyncio.gather(
+            *[
+                self._call_structured(
+                    split=split,
+                    example_id=example_id,
+                    agent_name=f"ms_zero_gate_blind_source_v1_vote_{vote}",
+                    output_model=MSBlindSourceFrame,
+                    system=source_messages[0],
+                    user=source_messages[1],
+                    cache_namespace=MS_CONSERVATIVE_CORRECTION_VERSION,
+                    prompt_version=MS_CONSERVATIVE_CORRECTION_VERSION,
+                    validate_result=validate_ms_blind_source_frame,
+                )
+                for vote in range(3)
+            ]
+        )
+        audit_message_sets = [
+            ms_counterfactual_zero_gate_prompt(
+                target,
+                description,
+                analogy,
+                mapping.model_dump(),
+                source_frame.model_dump(),
+                split,
+                example_id,
+            )
+            for source_frame in source_frames
+        ]
+        audits = await asyncio.gather(
+            *[
+                self._call_structured(
+                    split=split,
+                    example_id=example_id,
+                    agent_name=f"ms_counterfactual_zero_gate_v1_vote_{vote}",
+                    output_model=MSZeroGateAudit,
+                    system=messages[0],
+                    user=messages[1],
+                    cache_namespace=MS_CONSERVATIVE_CORRECTION_VERSION,
+                    prompt_version=MS_CONSERVATIVE_CORRECTION_VERSION,
+                    validate_result=validate_ms_zero_gate_audit,
+                )
+                for vote, messages in enumerate(audit_message_sets)
+            ]
+        )
+        baseline_score = int(baseline.recommended_score)
+        correction_votes = [
+            ms_score_from_zero_gate(
+                baseline_score,
+                audit,
+                source_frame,
+                analogy,
+            )
+            for audit, source_frame in zip(audits, source_frames, strict=True)
+        ]
+        score = 0 if correction_votes.count(0) >= 2 else baseline_score
+        representative_index = correction_votes.index(score)
+        representative_audit = audits[representative_index]
+        return {
+            "id": example_id,
+            "target": target,
+            "prediction": {"MS": score},
+            "latent_scores": {
+                "MS": (
+                    baseline.score_probabilities.expected_score()
+                    if score == baseline_score
+                    else float(score)
+                )
+            },
+            "confidence": {
+                "MS": sum(audit.confidence for audit in audits) / len(audits)
+            },
+            "ms_native_integrity_policy": {
+                "version": MS_CONSERVATIVE_CORRECTION_VERSION,
+                "decision_source": "v1_baseline_then_frozen_conservative_correction",
+                "baseline_score": baseline_score,
+                "baseline_source": "frozen_verified_v1_medium",
+                "correction_votes": correction_votes,
+                "ensemble_size": len(audits),
+                "native_structural_support": (
+                    representative_audit.native_structural_support
+                ),
+                "target_import_dependency": (
+                    representative_audit.target_import_dependency
+                ),
+                "core_relation": representative_audit.core_relation,
+                "counterfactual_result": (
+                    representative_audit.counterfactual_result
+                ),
+                "decisive_failure": representative_audit.failure_type,
+                "leave_one_out_calibration": split == "validation",
+            },
+            "agents": {
+                "ms_v1_mapping_extractor": mapping.model_dump(),
+                "ms_v1_baseline_judge": baseline.model_dump(),
+                "ms_zero_gate_blind_source_frames": [
+                    source_frame.model_dump() for source_frame in source_frames
+                ],
+                "ms_counterfactual_zero_gate_audits": [
+                    audit.model_dump() for audit in audits
+                ],
             },
         }
 
@@ -2014,6 +2210,193 @@ def m_score_from_ordinal(judgment: MOrdinalJudgment) -> int:
     if (
         judgment.native_relation_match == "yes"
         and judgment.role_change_degree == "none_or_one"
+    ):
+        return 1
+    return 2
+
+
+def validate_ms_native_integrity_audit(
+    audit: MSNativeIntegrityAudit,
+    target_frame: MSTargetMechanismFrame,
+) -> None:
+    """Require the auditor to assess every target requirement in order."""
+    expected_requirements = [
+        requirement.requirement
+        for requirement in target_frame.core_requirements
+    ]
+    returned_requirements = [
+        alignment.target_requirement
+        for alignment in audit.requirement_alignments
+    ]
+    if returned_requirements != expected_requirements:
+        raise ValueError(
+            "MS native-integrity audit must return target requirements "
+            "verbatim and in order: "
+            f"{returned_requirements!r} != {expected_requirements!r}"
+        )
+
+
+def validate_ms_correction_audit(
+    audit: MSConservativeCorrectionAudit,
+    mapping_count: int,
+) -> None:
+    """Require exactly one ordered audit record per extracted mapping."""
+    returned_indices = [claim.mapping_index for claim in audit.claim_audits]
+    expected_indices = list(range(mapping_count))
+    if returned_indices != expected_indices:
+        raise ValueError(
+            "MS correction audit must return every mapping index in order: "
+            f"{returned_indices!r} != {expected_indices!r}"
+        )
+    primary_indices = audit.primary_mapping_indices
+    if primary_indices != sorted(set(primary_indices)):
+        raise ValueError(
+            "MS primary mapping indices must be unique and sorted: "
+            f"{primary_indices!r}"
+        )
+    if any(index < 0 or index >= mapping_count for index in primary_indices):
+        raise ValueError(
+            "MS primary mapping index is outside extracted mappings: "
+            f"{primary_indices!r}"
+        )
+    audited_primary = [
+        claim.mapping_index
+        for claim in audit.claim_audits
+        if claim.importance == "primary"
+    ]
+    if audited_primary != primary_indices:
+        raise ValueError(
+            "MS primary index list must match per-claim importance: "
+            f"{primary_indices!r} != {audited_primary!r}"
+        )
+
+
+def validate_ms_zero_gate_audit(audit: MSZeroGateAudit) -> None:
+    """Keep the binary gate's failure label consistent with its counterfactual."""
+    if (
+        audit.counterfactual_result == "collapses"
+        and audit.failure_type == "none"
+    ):
+        raise ValueError(
+            "Collapsed MS counterfactual must name a decisive failure type"
+        )
+    if (
+        audit.counterfactual_result != "collapses"
+        and audit.failure_type != "none"
+    ):
+        raise ValueError(
+            "Non-collapsed MS counterfactual cannot name a decisive failure"
+        )
+
+
+def validate_ms_blind_source_frame(frame: MSBlindSourceFrame) -> None:
+    """Keep fictional-source ontology and coherence fields consistent."""
+    if frame.source_ontology == "explicitly_fictional_rule_system":
+        if frame.fictional_mechanism_coherence == "not_applicable":
+            raise ValueError(
+                "Fictional source must assess fictional mechanism coherence"
+            )
+    elif frame.fictional_mechanism_coherence != "not_applicable":
+        raise ValueError(
+            "Non-fictional source must use not_applicable coherence"
+        )
+
+
+def ms_score_from_zero_gate(
+    baseline_score: int,
+    audit: MSZeroGateAudit,
+    source_frame: MSBlindSourceFrame,
+    analogy: str,
+) -> int:
+    """Return zero only for a structurally corroborated collapse verdict."""
+    formal_mechanism_pattern = re.compile(
+        r"algebra|equation|factoriz|symbolic expression|gradient|derivative|"
+        r"backprop|error propagation|x[²^]|√|π",
+        re.IGNORECASE,
+    )
+    analogy_has_formal_mechanism = bool(
+        formal_mechanism_pattern.search(analogy)
+    )
+    decisive_mechanism_import = analogy_has_formal_mechanism and any(
+        detail.dependency == "essential"
+        and (
+            detail.import_kind == "formal_calculation"
+            or formal_mechanism_pattern.search(
+                f"{detail.detail} {detail.why_not_native}"
+            )
+        )
+        for detail in source_frame.imported_target_details
+    )
+    coherent_fictional_mechanism = (
+        source_frame.source_ontology == "explicitly_fictional_rule_system"
+        and source_frame.fictional_mechanism_coherence == "yes"
+    )
+    injected_operation_dominates = (
+        decisive_mechanism_import
+        and not coherent_fictional_mechanism
+        and audit.counterfactual_result != "intact"
+        and audit.native_structural_support != "substantial"
+    )
+    impossible_or_reversed = (
+        audit.counterfactual_result == "collapses"
+        and audit.failure_type
+        in {"reversed_core_relation", "impossible_source_operation"}
+    )
+    missing_recursive_identity = (
+        audit.self_reference_target == "yes"
+        and audit.same_process_on_smaller_instance == "no"
+        and audit.native_nesting_or_self_reference == "no"
+        and audit.linear_handoff_only == "yes"
+        and audit.counterfactual_result == "collapses"
+    )
+    if (
+        injected_operation_dominates
+        or missing_recursive_identity
+        or impossible_or_reversed
+    ):
+        return 0
+    return baseline_score
+
+
+def ms_score_from_conservative_correction(
+    baseline: OriginalMappingStrengthJudgment,
+    audit: MSConservativeCorrectionAudit,
+) -> int:
+    """Apply one frozen correction rule without replacing the v1 baseline."""
+    baseline_score = int(baseline.recommended_score)
+    if audit.decisive_failure != "none":
+        return 0
+    if baseline_score == 1 and audit.promotion_safe == "yes":
+        non_sound_indices = [
+            index
+            for index, assessment in enumerate(baseline.assessments)
+            if assessment.judgment != "sound"
+        ]
+        safe_issue_types = {
+            "terminology_precision",
+            "auxiliary_sequence_statement",
+        }
+        if non_sound_indices and all(
+            audit.claim_audits[index].issue_type in safe_issue_types
+            for index in non_sound_indices
+        ):
+            return 2
+    return baseline_score
+
+
+def ms_score_from_native_integrity(audit: MSNativeIntegrityAudit) -> int:
+    """Apply the frozen native-source integrity boundary to MS evidence."""
+    if (
+        audit.decisive_failure != "none"
+        or audit.native_core_alignment == "none"
+        or audit.source_integrity == "target_constructed"
+        or audit.causal_consistency == "contradictory"
+    ):
+        return 0
+    if (
+        audit.native_core_alignment == "partial"
+        or audit.source_integrity == "partly_forced"
+        or audit.causal_consistency == "limited_mismatch"
     ):
         return 1
     return 2

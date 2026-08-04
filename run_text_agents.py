@@ -42,6 +42,9 @@ from analogy_agents.original_target_coverage_prompts import (
 from analogy_agents.original_mapping_strength_prompts import (
     mapping_extractor_prompt as original_mapping_extractor_prompt,
 )
+from analogy_agents.ms_corrective_prompts import (
+    ms_corrective_blind_source_prompt,
+)
 
 
 def parse_ids(value: str | None, row_count: int) -> list[int]:
@@ -72,6 +75,7 @@ def build_parser() -> argparse.ArgumentParser:
             "all",
             "target-coverage",
             "mapping-strength",
+            "mapping-strength-native",
             "metaphoricity",
             "tcc",
             "tcc-importance",
@@ -94,7 +98,8 @@ def build_parser() -> argparse.ArgumentParser:
             "topic-importance judge, the archived-v1 conservative correction, "
             "the correction executed on the exact original v1 prompts, the "
             "facet-level coverage-audit experiment, the hash-verified original "
-            "v1 Mapping Strength path, the v7 metaphoricity path, "
+            "v1 Mapping Strength path, the three-vote counterfactual Mapping "
+            "Strength zero gate, the v7 metaphoricity path, "
             "the fixed-rule taxonomy path, or the taxonomy path with an "
             "independent final M agent, or the overall conceptual-distance "
             "agent path, or that path with a native-neighborhood critic and "
@@ -546,6 +551,59 @@ async def run_original_mapping_strength_examples(
     )
 
 
+async def run_ms_native_integrity_examples(
+    pipeline: SixAgentPipeline,
+    rows_by_id: dict[int, dict],
+    selected_ids: list[int],
+    split: str,
+    output_dir: Path,
+    sample_concurrency: int,
+) -> list[dict]:
+    """Run the active three-vote Mapping Strength zero gate."""
+    sample_dir = output_dir / "mapping_strength_native_samples"
+    sample_dir.mkdir(parents=True, exist_ok=True)
+    sample_semaphore = asyncio.Semaphore(sample_concurrency)
+
+    print(
+        f"Counterfactual-zero-gate MS: {len(selected_ids)} examples",
+        flush=True,
+    )
+
+    async def run_one(position: int, example_id: int) -> dict:
+        async with sample_semaphore:
+            row = rows_by_id[example_id]
+            print(
+                f"[native MS {position}/{len(selected_ids)}] "
+                f"id={example_id} target={row['target']}",
+                flush=True,
+            )
+            result = await pipeline.evaluate_ms_native_integrity(row, split)
+            sample_path = sample_dir / f"{example_id:03d}.json"
+            sample_path.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            policy = result["ms_native_integrity_policy"]
+            print(
+                f"  id={example_id} -> MS={result['prediction']['MS']} "
+                f"baseline={policy['baseline_score']} "
+                f"counterfactual={policy['counterfactual_result']} "
+                f"failure={policy['decisive_failure']} "
+                f"votes={policy['correction_votes']}",
+                flush=True,
+            )
+            return result
+
+    return list(
+        await asyncio.gather(
+            *[
+                asyncio.create_task(run_one(position, example_id))
+                for position, example_id in enumerate(selected_ids, start=1)
+            ]
+        )
+    )
+
+
 async def run_m_examples(
     pipeline: SixAgentPipeline,
     rows_by_id: dict[int, dict],
@@ -715,6 +773,25 @@ def main() -> None:
                 "original_mapping_strength_judge": (
                     "MSJudge runs after the exact-v1 mapping result.",
                     "All 74 archived prompt hashes are verified.",
+                ),
+            }
+        elif args.mode == "mapping-strength-native":
+            prompts = {
+                "ms_v1_mapping_extractor": original_mapping_extractor_prompt(
+                    first["target"],
+                    first["description"],
+                    first["analogy"],
+                ),
+                "ms_corrective_blind_source_frame": (
+                    ms_corrective_blind_source_prompt(first["analogy"])
+                ),
+                "ms_v1_baseline_judge": (
+                    "The exact-v1 judge runs after mapping extraction.",
+                    "Its score is the formal baseline for correction.",
+                ),
+                "ms_counterfactual_zero_gate": (
+                    "Three independent auditors test the cleaned source frame.",
+                    "Python requires two zero votes before changing the baseline.",
                 ),
             }
         elif args.mode == "m-relation-gate":
@@ -961,9 +1038,13 @@ def main() -> None:
         details_path, predictions_path = write_tcc_outputs(
             results, args.output_dir, args.split
         )
-    elif args.mode == "mapping-strength":
+    elif args.mode in {"mapping-strength", "mapping-strength-native"}:
+        if args.mode == "mapping-strength-native":
+            runner = run_ms_native_integrity_examples
+        else:
+            runner = run_original_mapping_strength_examples
         results = asyncio.run(
-            run_original_mapping_strength_examples(
+            runner(
                 pipeline,
                 rows_by_id,
                 selected_ids,
@@ -1047,7 +1128,7 @@ def main() -> None:
         }:
             scores = score_tcc_validation(results, rows)
             score_path = args.output_dir / "validation_tcc_scores.json"
-        elif args.mode == "mapping-strength":
+        elif args.mode in {"mapping-strength", "mapping-strength-native"}:
             scores = score_ms_validation(results, rows)
             score_path = (
                 args.output_dir / "validation_mapping_strength_scores.json"

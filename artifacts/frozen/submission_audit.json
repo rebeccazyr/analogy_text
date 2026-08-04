@@ -1,0 +1,45 @@
+{
+  "snapshot_date": "2026-08-04",
+  "model": "openai/gpt-oss-120b",
+  "method": {
+    "TCC": "tcc_v1_facet_conservative_v1",
+    "MS": "ms_v3_counterfactual_zero_gate_v8",
+    "M": "v7_1_role_audit_loo",
+    "video": "all_zero"
+  },
+  "reasoning_effort": {
+    "TCC": "medium",
+    "MS": "medium",
+    "M": "high"
+  },
+  "sources": {
+    "TCC": {
+      "path": "artifacts/frozen/target_concept_coverage_predictions.csv",
+      "sha256": "66d02f0f9163cae5b618c10d699a5e1f45c159e8a380b56d238a2667aa61c0b1"
+    },
+    "MS": {
+      "path": "artifacts/frozen/mapping_strength_predictions.csv",
+      "sha256": "7b089f04148ba2f445220a9d06821431c7b34486f7de6e7114ac38cc892b5a1a"
+    },
+    "M": {
+      "path": "artifacts/frozen/metaphoricity_predictions.csv",
+      "sha256": "6e2a512aa4ca0b9640da3969a0d0d02d9ca554067d12a8a804e884be88ef82ac"
+    }
+  },
+  "output": {
+    "path": "artifacts/frozen/submission.csv",
+    "sha256": "a907f25bf82577065e024438c54a47358c31203c539465fbc2037c8c33fa5a42",
+    "rows": 62,
+    "columns": ["id", "TCC", "MS", "M", "VC", "VA", "VE"]
+  },
+  "distributions": {
+    "TCC": {"0": 0, "1": 32, "2": 30},
+    "MS": {"0": 2, "1": 10, "2": 50},
+    "M": {"0": 8, "1": 6, "2": 48}
+  },
+  "verification": {
+    "component_vectors_match_submission": true,
+    "contiguous_ids": "0..61",
+    "manual_id_overrides_in_active_scoring": false
+  }
+}

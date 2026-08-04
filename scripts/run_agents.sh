@@ -5,7 +5,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 PYTHON_BIN="${PYTHON_BIN:-${REPO_DIR}/.venv/bin/python}"
 RUN_DIR="${REPO_DIR}/runs/recomputed"
-MAPPING_STRENGTH_CACHE_DIR="${REPO_DIR}/artifacts/mapping_strength_evidence/cache"
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then
   echo "Python environment not found: ${PYTHON_BIN}" >&2
@@ -27,7 +26,6 @@ cd "${REPO_DIR}"
 EXTRA_ARGS=()
 if [[ "${REFRESH_CACHE:-0}" == "1" ]]; then
   EXTRA_ARGS+=(--refresh-cache)
-  MAPPING_STRENGTH_CACHE_DIR="${REPO_DIR}/.agent_cache"
 fi
 
 "${PYTHON_BIN}" run_text_agents.py \
@@ -35,15 +33,16 @@ fi
   --split test \
   --sample-concurrency 12 \
   --max-concurrency 12 \
+  --reasoning-effort medium \
   --output-dir "${RUN_DIR}/target_coverage" \
   "${EXTRA_ARGS[@]}"
 
 "${PYTHON_BIN}" run_text_agents.py \
-  --mode mapping-strength \
+  --mode mapping-strength-native \
   --split test \
   --sample-concurrency 12 \
   --max-concurrency 12 \
-  --cache-dir "${MAPPING_STRENGTH_CACHE_DIR}" \
+  --reasoning-effort medium \
   --output-dir "${RUN_DIR}/mapping_strength" \
   "${EXTRA_ARGS[@]}"
 
@@ -52,6 +51,7 @@ fi
   --split test \
   --sample-concurrency 12 \
   --max-concurrency 12 \
+  --reasoning-effort high \
   --output-dir "${RUN_DIR}/metaphoricity" \
   "${EXTRA_ARGS[@]}"
 

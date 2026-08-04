@@ -5,10 +5,14 @@ from pathlib import Path
 
 from analogy_agents.pipeline import (
     facet_audit_to_coverage_audit,
+    load_frozen_original_ms,
     load_split,
     m_score_from_ordinal,
+    ms_score_from_zero_gate,
     v1_conservative_tcc_correction,
 )
+from analogy_agents.ms_corrective_schemas import MSZeroGateAudit
+from analogy_agents.ms_native_schemas import MSBlindSourceFrame, MSImportedDetail
 from analogy_agents.prompts import M_CALIBRATION_ANCHORS, m_calibration_anchors
 from analogy_agents.schemas import (
     ConceptDecomposition,
@@ -34,6 +38,77 @@ class ActivePolicyTest(unittest.TestCase):
     def test_text_splits_are_complete(self) -> None:
         self.assertEqual(len(self.validation), 12)
         self.assertEqual(len(self.test), 62)
+
+    def test_zero_gate_loads_tracked_v1_evidence(self) -> None:
+        validation = load_frozen_original_ms("validation")
+        test = load_frozen_original_ms("test")
+        self.assertEqual(len(validation), 12)
+        self.assertEqual(len(test), 62)
+        self.assertEqual(test[15]["target"].lower(), "recursion")
+        self.assertEqual(
+            test[15]["agents"]["ms_judge_v1_exact"]["recommended_score"],
+            1,
+        )
+
+    def test_ms_zero_gate_catches_missing_recursive_identity(self) -> None:
+        audit = self._zero_gate_audit(
+            counterfactual_result="collapses",
+            self_reference_target="yes",
+            same_process_on_smaller_instance="no",
+            native_nesting_or_self_reference="no",
+            linear_handoff_only="yes",
+            failure_type="missing_core_mechanism",
+        )
+        self.assertEqual(
+            ms_score_from_zero_gate(
+                1,
+                audit,
+                self._blind_source_frame(),
+                "People pass a request up and a result back down.",
+            ),
+            0,
+        )
+
+    def test_ms_zero_gate_catches_decisive_formal_import(self) -> None:
+        audit = self._zero_gate_audit(
+            native_structural_support="limited",
+            target_import_dependency="decisive",
+            counterfactual_result="weakened",
+        )
+        source_frame = self._blind_source_frame(
+            imported_target_details=[
+                MSImportedDetail(
+                    detail="gradient calculation",
+                    why_not_native="Workers do not calculate derivatives.",
+                    import_kind="formal_calculation",
+                    dependency="essential",
+                )
+            ]
+        )
+        self.assertEqual(
+            ms_score_from_zero_gate(
+                1,
+                audit,
+                source_frame,
+                "The feedback is described as a gradient and derivative.",
+            ),
+            0,
+        )
+
+    def test_ms_zero_gate_preserves_a_usable_native_mechanism(self) -> None:
+        audit = self._zero_gate_audit(
+            native_structural_support="limited",
+            counterfactual_result="weakened",
+        )
+        self.assertEqual(
+            ms_score_from_zero_gate(
+                1,
+                audit,
+                self._blind_source_frame(),
+                "Items can be added to and removed from a physical cart.",
+            ),
+            1,
+        )
 
     def test_tcc_correction_promotes_only_a_clear_score_one(self) -> None:
         decomposition = ConceptDecomposition(
@@ -211,6 +286,46 @@ class ActivePolicyTest(unittest.TestCase):
             confidence=0.9,
             rationale="Boundary test.",
         )
+
+    @staticmethod
+    def _blind_source_frame(
+        *,
+        imported_target_details: list[MSImportedDetail] | None = None,
+    ) -> MSBlindSourceFrame:
+        return MSBlindSourceFrame(
+            literal_source_domain="ordinary physical activity",
+            source_ontology="ordinary_real_world",
+            fictional_mechanism_coherence="not_applicable",
+            literal_source_summary="People perform an ordinary source action.",
+            ordinary_source_goal="Complete the source-domain task.",
+            native_mechanism="A native source operation remains.",
+            native_roles_and_operations=["actor performs source action"],
+            removed_mapping_language=[],
+            imported_target_details=imported_target_details or [],
+            source_story_coherence="coherent",
+        )
+
+    @staticmethod
+    def _zero_gate_audit(**overrides: str) -> MSZeroGateAudit:
+        values = {
+            "defining_target_operation": "A defining operation.",
+            "literal_source_remainder": "A native source operation remains.",
+            "native_structural_support": "substantial",
+            "target_import_dependency": "none",
+            "core_relation": "consistent",
+            "counterfactual_result": "intact",
+            "self_reference_target": "no",
+            "same_process_on_smaller_instance": "not_applicable",
+            "native_nesting_or_self_reference": "not_applicable",
+            "linear_handoff_only": "not_applicable",
+            "failure_type": "none",
+            "strongest_surviving_evidence": "The source operation survives.",
+            "strongest_failure_evidence": "No decisive failure.",
+            "confidence": 0.9,
+            "rationale": "Policy boundary test.",
+        }
+        values.update(overrides)
+        return MSZeroGateAudit(**values)
 
 
 if __name__ == "__main__":

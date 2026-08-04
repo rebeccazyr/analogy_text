@@ -30,7 +30,9 @@ CACHE_ROOT = (
     / "artifacts/mapping_strength_evidence/cache/original_prompt"
     / "openai_gpt_oss_120b"
 )
-ARCHIVED_TEST = REPO / "artifacts/frozen/mapping_strength_predictions.csv"
+ARCHIVED_TEST = (
+    REPO / "artifacts/frozen/mapping_strength_v1_baseline_predictions.csv"
+)
 VALIDATION_AUDIT = (
     REPO / "artifacts/frozen/original_pipeline_validation_scores.json"
 )
