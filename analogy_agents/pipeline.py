@@ -610,9 +610,28 @@ class SixAgentPipeline:
                     flush=True,
                 )
 
-                content = response.choices[0].message.content
+                choice = response.choices[0]
+                message = choice.message
+                content = message.content
+                reasoning = getattr(message, "reasoning", None) or ""
+                usage = _usage_dict(response)
+                print(
+                    f"[agent output] id={example_id} agent={agent_name} "
+                    f"finish_reason={getattr(choice, 'finish_reason', None)} "
+                    f"content_chars={len(content or '')} "
+                    f"reasoning_chars={len(reasoning)} "
+                    f"prompt_tokens={usage.get('prompt_tokens')} "
+                    f"completion_tokens={usage.get('completion_tokens')}",
+                    flush=True,
+                )
                 if not content:
-                    raise ValueError(f"{agent_name} returned empty content")
+                    raise ValueError(
+                        f"{agent_name} returned empty content "
+                        f"(finish_reason={getattr(choice, 'finish_reason', None)}, "
+                        f"reasoning_chars={len(reasoning)}, "
+                        f"completion_tokens={usage.get('completion_tokens')}, "
+                        f"max_tokens={self.config.max_tokens})"
+                    )
                 result = output_model.model_validate_json(content)
                 if validate_result is not None:
                     validate_result(result)

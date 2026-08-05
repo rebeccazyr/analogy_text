@@ -144,7 +144,8 @@ calibrated constants. Run the 12-row validation split first:
 .venv/bin/python run_text_agents.py \
   --mode m-cosine \
   --split validation \
-  --reasoning-effort high \
+  --reasoning-effort medium \
+  --max-tokens 5000 \
   --embedding-device cuda:0 \
   --m-concept-weight 0.5 \
   --m-cosine-threshold 0.35 \

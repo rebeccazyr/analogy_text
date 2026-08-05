@@ -10,6 +10,8 @@ EMBEDDING_MODEL="${EMBEDDING_MODEL:-BAAI/bge-large-en-v1.5}"
 EMBEDDING_DEVICE="${EMBEDDING_DEVICE:-cuda:0}"
 SAMPLE_CONCURRENCY="${SAMPLE_CONCURRENCY:-1}"
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-1}"
+REASONING_EFFORT="${REASONING_EFFORT:-medium}"
+MAX_TOKENS="${MAX_TOKENS:-5000}"
 WEIGHT_TAG="${M_CONCEPT_WEIGHT//./p}"
 THRESHOLD_TAG="${M_COSINE_THRESHOLD//./p}"
 OUTPUT_DIR="${OUTPUT_DIR:-${SCRIPT_DIR}/runs/m_cosine_validation_w${WEIGHT_TAG}_t${THRESHOLD_TAG}}"
@@ -37,6 +39,7 @@ echo "  domain weight: 1 - ${M_CONCEPT_WEIGHT}"
 echo "  threshold: ${M_COSINE_THRESHOLD}"
 echo "  embedding: ${EMBEDDING_MODEL} on ${EMBEDDING_DEVICE}"
 echo "  concurrency: samples=${SAMPLE_CONCURRENCY}, api=${MAX_CONCURRENCY}"
+echo "  LLM: reasoning=${REASONING_EFFORT}, max_tokens=${MAX_TOKENS}"
 echo "  output: ${OUTPUT_DIR}"
 
 cd "${SCRIPT_DIR}"
@@ -44,7 +47,8 @@ cd "${SCRIPT_DIR}"
   --mode m-cosine \
   --split validation \
   --model openai/gpt-oss-120b \
-  --reasoning-effort high \
+  --reasoning-effort "${REASONING_EFFORT}" \
+  --max-tokens "${MAX_TOKENS}" \
   --embedding-model "${EMBEDDING_MODEL}" \
   --embedding-device "${EMBEDDING_DEVICE}" \
   --m-concept-weight "${M_CONCEPT_WEIGHT}" \
