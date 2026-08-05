@@ -16,7 +16,7 @@ from typing import Any, Callable, TypeVar
 import pyarrow.parquet as pq
 from pydantic import BaseModel
 from scipy.stats import kendalltau, spearmanr
-from together import AsyncTogether
+from together import Together
 
 from .metaphoricity_cosine import (
     DEFAULT_M_CONCEPT_WEIGHT,
@@ -344,7 +344,7 @@ class SixAgentPipeline:
     def __init__(self, config: PipelineConfig):
         self.config = config
         api_key = os.environ.get("TOGETHER_API_KEY")
-        self.client = AsyncTogether(api_key=api_key) if api_key else None
+        self.client = Together(api_key=api_key) if api_key else None
         self.semaphore = asyncio.Semaphore(config.max_concurrency)
         self.embedding_semaphore = asyncio.Semaphore(1)
         self._embedding_encoder: Any | None = None
@@ -576,13 +576,18 @@ class SixAgentPipeline:
                         f"[agent request] id={example_id} agent={agent_name} "
                         f"attempt={attempt}/{self.config.max_retries} "
                         f"model={self.config.model} "
-                        f"reasoning={self.config.reasoning_effort}",
+                        f"reasoning={self.config.reasoning_effort} "
+                        "client=sync-threaded",
                         flush=True,
                     )
-                    response = await self.client.chat.completions.create(
+                    response = await asyncio.to_thread(
+                        self.client.chat.completions.create,
                         model=self.config.model,
                         messages=[
-                            {"role": "system", "content": system + schema_instruction},
+                            {
+                                "role": "system",
+                                "content": system + schema_instruction,
+                            },
                             {"role": "user", "content": user},
                         ],
                         response_format={

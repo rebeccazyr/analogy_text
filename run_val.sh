@@ -8,6 +8,8 @@ M_CONCEPT_WEIGHT="${M_CONCEPT_WEIGHT:-0.5}"
 M_COSINE_THRESHOLD="${M_COSINE_THRESHOLD:-0.35}"
 EMBEDDING_MODEL="${EMBEDDING_MODEL:-BAAI/bge-large-en-v1.5}"
 EMBEDDING_DEVICE="${EMBEDDING_DEVICE:-cuda:0}"
+SAMPLE_CONCURRENCY="${SAMPLE_CONCURRENCY:-1}"
+MAX_CONCURRENCY="${MAX_CONCURRENCY:-1}"
 WEIGHT_TAG="${M_CONCEPT_WEIGHT//./p}"
 THRESHOLD_TAG="${M_COSINE_THRESHOLD//./p}"
 OUTPUT_DIR="${OUTPUT_DIR:-${SCRIPT_DIR}/runs/m_cosine_validation_w${WEIGHT_TAG}_t${THRESHOLD_TAG}}"
@@ -34,6 +36,7 @@ echo "  concept weight: ${M_CONCEPT_WEIGHT}"
 echo "  domain weight: 1 - ${M_CONCEPT_WEIGHT}"
 echo "  threshold: ${M_COSINE_THRESHOLD}"
 echo "  embedding: ${EMBEDDING_MODEL} on ${EMBEDDING_DEVICE}"
+echo "  concurrency: samples=${SAMPLE_CONCURRENCY}, api=${MAX_CONCURRENCY}"
 echo "  output: ${OUTPUT_DIR}"
 
 cd "${SCRIPT_DIR}"
@@ -46,8 +49,8 @@ cd "${SCRIPT_DIR}"
   --embedding-device "${EMBEDDING_DEVICE}" \
   --m-concept-weight "${M_CONCEPT_WEIGHT}" \
   --m-cosine-threshold "${M_COSINE_THRESHOLD}" \
-  --sample-concurrency 3 \
-  --max-concurrency 6 \
+  --sample-concurrency "${SAMPLE_CONCURRENCY}" \
+  --max-concurrency "${MAX_CONCURRENCY}" \
   --output-dir "${OUTPUT_DIR}"
 
 echo "Scores: ${OUTPUT_DIR}/validation_m_scores.json"
