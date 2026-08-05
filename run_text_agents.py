@@ -692,11 +692,27 @@ async def run_m_examples(
                 json.dumps(result, ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
-            print(
-                f"  id={example_id} -> M={result['prediction']['M']} "
-                f"latent={result['latent_scores']['M']:.3f}",
-                flush=True,
-            )
+            if use_cosine:
+                policy = result["m_cosine_policy"]
+                print(
+                    f"  id={example_id} -> M={result['prediction']['M']} "
+                    f"literal={policy['literal_instance']} "
+                    f"concept_d={policy['concept_distance']:.4f} "
+                    f"(w={policy['concept_weight']:.2f}) "
+                    f"domain_d={policy['domain_distance']:.4f} "
+                    f"(w={policy['domain_weight']:.2f}) "
+                    f"combined_d={policy['combined_distance']:.4f} "
+                    f"threshold={policy['nonliteral_threshold']:.4f} "
+                    f"margin={policy['threshold_margin']:+.4f} "
+                    f"latent={result['latent_scores']['M']:.3f}",
+                    flush=True,
+                )
+            else:
+                print(
+                    f"  id={example_id} -> M={result['prediction']['M']} "
+                    f"latent={result['latent_scores']['M']:.3f}",
+                    flush=True,
+                )
             return result
 
     return list(
