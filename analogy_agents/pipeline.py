@@ -408,15 +408,33 @@ class SixAgentPipeline:
                 and cached.get("embedding_backend") == M_EMBEDDING_BACKEND
                 and cached.get("embedding_model") == self.config.embedding_model
             ):
+                print(
+                    f"[m embedding cache-hit] id={example_id} "
+                    f"model={self.config.embedding_model}",
+                    flush=True,
+                )
                 return {
                     name: [float(value) for value in cached["embeddings"][name]]
                     for name in ordered_names
                 }
 
+        print(
+            f"[m embedding waiting] id={example_id} "
+            f"model={self.config.embedding_model} "
+            f"device={self.config.embedding_device}",
+            flush=True,
+        )
         async with self.embedding_semaphore:
+            started = time.monotonic()
+            print(f"[m embedding start] id={example_id}", flush=True)
             vectors = await asyncio.to_thread(
                 self._encode_m_cosine_texts_locally,
                 ordered_texts,
+            )
+            print(
+                f"[m embedding response] id={example_id} "
+                f"elapsed={time.monotonic() - started:.1f}s",
+                flush=True,
             )
         if len(vectors) != len(ordered_names):
             raise ValueError(
@@ -466,9 +484,20 @@ class SixAgentPipeline:
                 if self.config.embedding_device == DEFAULT_M_EMBEDDING_DEVICE
                 else self.config.embedding_device
             )
+            started = time.monotonic()
+            print(
+                f"[m embedding model-load] model={self.config.embedding_model} "
+                f"device={self.config.embedding_device}",
+                flush=True,
+            )
             self._embedding_encoder = SentenceTransformer(
                 self.config.embedding_model,
                 device=device,
+            )
+            print(
+                f"[m embedding model-ready] model={self.config.embedding_model} "
+                f"elapsed={time.monotonic() - started:.1f}s",
+                flush=True,
             )
 
         encoded = self._embedding_encoder.encode(
@@ -505,12 +534,20 @@ class SixAgentPipeline:
             if cached.get("prompt_hash") == current_hash:
                 cached_result = output_model.model_validate(cached["result"])
                 if validate_result is None:
+                    print(
+                        f"[agent cache-hit] id={example_id} agent={agent_name}",
+                        flush=True,
+                    )
                     return cached_result
                 try:
                     validate_result(cached_result)
                 except ValueError:
                     pass
                 else:
+                    print(
+                        f"[agent cache-hit] id={example_id} agent={agent_name}",
+                        flush=True,
+                    )
                     return cached_result
 
         if self.client is None:
@@ -526,8 +563,22 @@ class SixAgentPipeline:
 
         last_error: Exception | None = None
         for attempt in range(1, self.config.max_retries + 1):
+            request_started: float | None = None
             try:
+                print(
+                    f"[agent waiting] id={example_id} agent={agent_name} "
+                    f"attempt={attempt}/{self.config.max_retries}",
+                    flush=True,
+                )
                 async with self.semaphore:
+                    request_started = time.monotonic()
+                    print(
+                        f"[agent request] id={example_id} agent={agent_name} "
+                        f"attempt={attempt}/{self.config.max_retries} "
+                        f"model={self.config.model} "
+                        f"reasoning={self.config.reasoning_effort}",
+                        flush=True,
+                    )
                     response = await self.client.chat.completions.create(
                         model=self.config.model,
                         messages=[
@@ -547,6 +598,12 @@ class SixAgentPipeline:
                         max_tokens=self.config.max_tokens,
                         seed=self.config.seed + attempt - 1,
                     )
+                print(
+                    f"[agent response] id={example_id} agent={agent_name} "
+                    f"attempt={attempt}/{self.config.max_retries} "
+                    f"elapsed={time.monotonic() - request_started:.1f}s",
+                    flush=True,
+                )
 
                 content = response.choices[0].message.content
                 if not content:
@@ -566,9 +623,24 @@ class SixAgentPipeline:
                         "result": result.model_dump(),
                     },
                 )
+                print(
+                    f"[agent cached] id={example_id} agent={agent_name}",
+                    flush=True,
+                )
                 return result
             except Exception as error:
                 last_error = error
+                elapsed = (
+                    f"{time.monotonic() - request_started:.1f}s"
+                    if request_started is not None
+                    else "not-started"
+                )
+                print(
+                    f"[agent error] id={example_id} agent={agent_name} "
+                    f"attempt={attempt}/{self.config.max_retries} "
+                    f"elapsed={elapsed} error={type(error).__name__}: {error}",
+                    flush=True,
+                )
                 if attempt == self.config.max_retries:
                     break
                 await asyncio.sleep(2 ** (attempt - 1))
@@ -1569,6 +1641,11 @@ class SixAgentPipeline:
         description = example["description"]
         analogy = example["analogy"]
 
+        print(
+            f"[m llm-evidence start] id={example_id} "
+            "agents=source_domain_classifier,literal_instance_judge",
+            flush=True,
+        )
         domain_messages = domain_classifier_prompt(target, description, analogy)
         literal_messages = literal_instance_prompt(target, description, analogy)
         domain, literal = await asyncio.gather(
@@ -1589,6 +1666,7 @@ class SixAgentPipeline:
                 user=literal_messages[1],
             ),
         )
+        print(f"[m llm-evidence ready] id={example_id}", flush=True)
 
         embedding_texts = m_cosine_embedding_texts(domain)
         embeddings = await self._embed_m_cosine_texts(
