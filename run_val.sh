@@ -12,7 +12,13 @@ WEIGHT_TAG="${M_CONCEPT_WEIGHT//./p}"
 THRESHOLD_TAG="${M_COSINE_THRESHOLD//./p}"
 OUTPUT_DIR="${OUTPUT_DIR:-${SCRIPT_DIR}/runs/m_cosine_validation_w${WEIGHT_TAG}_t${THRESHOLD_TAG}}"
 
-if [[ ! -x "${PYTHON_BIN}" ]]; then
+if [[ "${PYTHON_BIN}" == */* ]]; then
+  RESOLVED_PYTHON_BIN="${PYTHON_BIN}"
+else
+  RESOLVED_PYTHON_BIN="$(command -v "${PYTHON_BIN}" || true)"
+fi
+
+if [[ -z "${RESOLVED_PYTHON_BIN}" || ! -x "${RESOLVED_PYTHON_BIN}" ]]; then
   echo "Python environment not found: ${PYTHON_BIN}" >&2
   echo "Set PYTHON_BIN or create .venv and install requirements.txt." >&2
   exit 1
@@ -31,7 +37,7 @@ echo "  embedding: ${EMBEDDING_MODEL} on ${EMBEDDING_DEVICE}"
 echo "  output: ${OUTPUT_DIR}"
 
 cd "${SCRIPT_DIR}"
-"${PYTHON_BIN}" run_text_agents.py \
+"${RESOLVED_PYTHON_BIN}" run_text_agents.py \
   --mode m-cosine \
   --split validation \
   --model openai/gpt-oss-120b \
