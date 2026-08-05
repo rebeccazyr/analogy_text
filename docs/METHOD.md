@@ -63,6 +63,15 @@ otherwise                                             -> 2
 Validation anchors are physically leave-one-out. Test inference uses all 12
 anchors. The active test run uses high reasoning.
 
+Experimental `m-cosine` keeps the same literal-instance gate for `M=0`, then
+uses a configurable weighted average of concept and domain `1-cosine`
+distances for the `M=1/2` boundary. It uses no ordinal LLM judge after the
+structured domain and literal evidence has been extracted. Embeddings run
+locally through sentence-transformers (`BAAI/bge-large-en-v1.5` by default),
+while Together is used only for those two structured LLM calls. The initial
+weight and threshold are research defaults and must be evaluated on validation
+before any test run; this mode is not part of the frozen submission.
+
 ## Frozen output distributions
 
 | Metric | 0 | 1 | 2 |

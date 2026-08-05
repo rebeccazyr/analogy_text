@@ -18,6 +18,18 @@ from pydantic import BaseModel
 from scipy.stats import kendalltau, spearmanr
 from together import AsyncTogether
 
+from .metaphoricity_cosine import (
+    DEFAULT_M_CONCEPT_WEIGHT,
+    DEFAULT_M_COSINE_THRESHOLD,
+    DEFAULT_M_EMBEDDING_DEVICE,
+    DEFAULT_M_EMBEDDING_MODEL,
+    M_COSINE_POLICY_VERSION,
+    M_EMBEDDING_BACKEND,
+    cosine_distance,
+    m_cosine_embedding_texts,
+    m_cosine_latent_score,
+    m_score_from_cosine,
+)
 from .metaphoricity_taxonomy import (
     M_CONCEPTUAL_DISTANCE_CACHE_NAMESPACE,
     M_CONCEPTUAL_DISTANCE_CRITIC_CACHE_NAMESPACE,
@@ -176,6 +188,20 @@ class PipelineConfig:
     max_retries: int = 3
     cache_dir: Path = Path(".agent_cache")
     refresh_cache: bool = False
+    embedding_model: str = DEFAULT_M_EMBEDDING_MODEL
+    embedding_device: str = DEFAULT_M_EMBEDDING_DEVICE
+    m_concept_weight: float = DEFAULT_M_CONCEPT_WEIGHT
+    m_cosine_threshold: float = DEFAULT_M_COSINE_THRESHOLD
+
+    def __post_init__(self) -> None:
+        if not 0.0 <= self.m_concept_weight <= 1.0:
+            raise ValueError("m_concept_weight must be in [0, 1]")
+        if not 0.0 <= self.m_cosine_threshold <= 2.0:
+            raise ValueError("m_cosine_threshold must be in [0, 2]")
+        if not self.embedding_model.strip():
+            raise ValueError("embedding_model must be non-empty")
+        if not self.embedding_device.strip():
+            raise ValueError("embedding_device must be non-empty")
 
 
 def load_split(dataset_dir: Path, split: str) -> list[dict[str, Any]]:
@@ -320,6 +346,8 @@ class SixAgentPipeline:
         api_key = os.environ.get("TOGETHER_API_KEY")
         self.client = AsyncTogether(api_key=api_key) if api_key else None
         self.semaphore = asyncio.Semaphore(config.max_concurrency)
+        self.embedding_semaphore = asyncio.Semaphore(1)
+        self._embedding_encoder: Any | None = None
 
     def _cache_path(
         self,
@@ -336,6 +364,121 @@ class SixAgentPipeline:
             / f"{example_id:03d}"
             / f"{agent_name}.json"
         )
+
+    def _embedding_cache_path(
+        self,
+        split: str,
+        example_id: int,
+    ) -> Path:
+        return (
+            self.config.cache_dir
+            / M_COSINE_POLICY_VERSION
+            / _slug(self.config.embedding_model)
+            / split
+            / f"{example_id:03d}"
+            / "concept_domain_embeddings.json"
+        )
+
+    async def _embed_m_cosine_texts(
+        self,
+        *,
+        split: str,
+        example_id: int,
+        texts: dict[str, str],
+    ) -> dict[str, list[float]]:
+        ordered_names = [
+            "source_concept",
+            "target_concept",
+            "source_domain",
+            "target_domain",
+        ]
+        if list(texts) != ordered_names:
+            raise ValueError(
+                f"Unexpected M cosine text order: {list(texts)!r}"
+            )
+        ordered_texts = [texts[name].replace("\n", " ") for name in ordered_names]
+        input_hash = hashlib.sha256(
+            json.dumps(ordered_texts, ensure_ascii=False).encode("utf-8")
+        ).hexdigest()[:16]
+        cache_path = self._embedding_cache_path(split, example_id)
+        if cache_path.exists() and not self.config.refresh_cache:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+            if (
+                cached.get("input_hash") == input_hash
+                and cached.get("embedding_backend") == M_EMBEDDING_BACKEND
+                and cached.get("embedding_model") == self.config.embedding_model
+            ):
+                return {
+                    name: [float(value) for value in cached["embeddings"][name]]
+                    for name in ordered_names
+                }
+
+        async with self.embedding_semaphore:
+            vectors = await asyncio.to_thread(
+                self._encode_m_cosine_texts_locally,
+                ordered_texts,
+            )
+        if len(vectors) != len(ordered_names):
+            raise ValueError(
+                "Local embedding model returned an unexpected number of vectors: "
+                f"{len(vectors)} != {len(ordered_names)}"
+            )
+        embeddings = {
+            name: [float(value) for value in vector]
+            for name, vector in zip(ordered_names, vectors)
+        }
+        dimensions = {len(vector) for vector in embeddings.values()}
+        if len(dimensions) != 1 or not next(iter(dimensions)):
+            raise ValueError(
+                f"Embedding dimensions must match and be non-zero: {dimensions}"
+            )
+        _atomic_write_json(
+            cache_path,
+            {
+                "policy_version": M_COSINE_POLICY_VERSION,
+                "embedding_backend": M_EMBEDDING_BACKEND,
+                "embedding_model": self.config.embedding_model,
+                "embedding_device": self.config.embedding_device,
+                "input_hash": input_hash,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "texts": texts,
+                "embeddings": embeddings,
+            },
+        )
+        return embeddings
+
+    def _encode_m_cosine_texts_locally(
+        self,
+        texts: list[str],
+    ) -> list[list[float]]:
+        """Encode one M example locally, lazily loading one shared model."""
+        if self._embedding_encoder is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+            except ImportError as error:
+                raise RuntimeError(
+                    "Local M embeddings require sentence-transformers. "
+                    "Install the project requirements before using --mode m-cosine."
+                ) from error
+
+            device = (
+                None
+                if self.config.embedding_device == DEFAULT_M_EMBEDDING_DEVICE
+                else self.config.embedding_device
+            )
+            self._embedding_encoder = SentenceTransformer(
+                self.config.embedding_model,
+                device=device,
+            )
+
+        encoded = self._embedding_encoder.encode(
+            texts,
+            batch_size=len(texts),
+            convert_to_numpy=True,
+            normalize_embeddings=True,
+            show_progress_bar=False,
+        )
+        return encoded.tolist()
 
     async def _call_structured(
         self,
@@ -1412,6 +1555,101 @@ class SixAgentPipeline:
                 "source_domain_classifier": domain.model_dump(),
                 "literal_instance_judge": literal.model_dump(),
                 "m_ordinal_judge": ordinal.model_dump(),
+            },
+        }
+
+    async def evaluate_m_cosine(
+        self,
+        example: dict[str, Any],
+        split: str,
+    ) -> dict[str, Any]:
+        """Run the current literal gate plus deterministic concept/domain cosine."""
+        example_id = int(example["id"])
+        target = example["target"]
+        description = example["description"]
+        analogy = example["analogy"]
+
+        domain_messages = domain_classifier_prompt(target, description, analogy)
+        literal_messages = literal_instance_prompt(target, description, analogy)
+        domain, literal = await asyncio.gather(
+            self._call_structured(
+                split=split,
+                example_id=example_id,
+                agent_name="source_domain_classifier",
+                output_model=DomainAnalysis,
+                system=domain_messages[0],
+                user=domain_messages[1],
+            ),
+            self._call_structured(
+                split=split,
+                example_id=example_id,
+                agent_name="literal_instance_judge",
+                output_model=LiteralInstanceJudgment,
+                system=literal_messages[0],
+                user=literal_messages[1],
+            ),
+        )
+
+        embedding_texts = m_cosine_embedding_texts(domain)
+        embeddings = await self._embed_m_cosine_texts(
+            split=split,
+            example_id=example_id,
+            texts=embedding_texts,
+        )
+        concept_distance = cosine_distance(
+            embeddings["source_concept"],
+            embeddings["target_concept"],
+        )
+        domain_distance = cosine_distance(
+            embeddings["source_domain"],
+            embeddings["target_domain"],
+        )
+        m_score, combined_distance = m_score_from_cosine(
+            literal_instance=literal.literal_instance,
+            concept_distance=concept_distance,
+            domain_distance=domain_distance,
+            concept_weight=self.config.m_concept_weight,
+            nonliteral_threshold=self.config.m_cosine_threshold,
+        )
+        latent_score = m_cosine_latent_score(
+            literal.literal_instance,
+            combined_distance,
+        )
+        decisive_rule = (
+            "literal_instance"
+            if literal.literal_instance == "yes"
+            else (
+                "nonliteral_distance_at_or_below_threshold"
+                if m_score == 1
+                else "nonliteral_distance_above_threshold"
+            )
+        )
+        return {
+            "id": example_id,
+            "target": target,
+            "prediction": {"M": m_score},
+            "latent_scores": {"M": latent_score},
+            "confidence": {"M": literal.confidence},
+            "m_cosine_policy": {
+                "version": M_COSINE_POLICY_VERSION,
+                "decisive_rule": decisive_rule,
+                "literal_instance": literal.literal_instance,
+                "embedding_backend": M_EMBEDDING_BACKEND,
+                "embedding_model": self.config.embedding_model,
+                "embedding_device": self.config.embedding_device,
+                "concept_weight": self.config.m_concept_weight,
+                "domain_weight": 1.0 - self.config.m_concept_weight,
+                "nonliteral_threshold": self.config.m_cosine_threshold,
+                "concept_distance": concept_distance,
+                "domain_distance": domain_distance,
+                "combined_distance": combined_distance,
+                "threshold_margin": combined_distance
+                - self.config.m_cosine_threshold,
+                "embedding_texts": embedding_texts,
+            },
+            "agents": {
+                "source_domain_classifier": domain.model_dump(),
+                "literal_instance_judge": literal.model_dump(),
             },
         }
 

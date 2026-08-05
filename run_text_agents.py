@@ -83,6 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
             "tcc-v1-prompt-conservative",
             "tcc-v1-facet-conservative",
             "m",
+            "m-cosine",
             "m-taxonomy",
             "m-taxonomy-agent",
             "m-conceptual-distance",
@@ -100,6 +101,7 @@ def build_parser() -> argparse.ArgumentParser:
             "facet-level coverage-audit experiment, the hash-verified original "
             "v1 Mapping Strength path, the three-vote counterfactual Mapping "
             "Strength zero gate, the v7 metaphoricity path, "
+            "the literal-gate concept/domain cosine experiment, "
             "the fixed-rule taxonomy path, or the taxonomy path with an "
             "independent final M agent, or the overall conceptual-distance "
             "agent path, or that path with a native-neighborhood critic and "
@@ -129,6 +131,37 @@ def build_parser() -> argparse.ArgumentParser:
         "--output-dir", type=Path, default=Path("runs/gpt_oss_120b_v1")
     )
     parser.add_argument("--model", default="openai/gpt-oss-120b")
+    parser.add_argument(
+        "--embedding-model",
+        default="BAAI/bge-large-en-v1.5",
+        help="Local sentence-transformers model used by --mode m-cosine.",
+    )
+    parser.add_argument(
+        "--embedding-device",
+        default="auto",
+        help=(
+            "Local embedding device for --mode m-cosine, e.g. auto, cuda, "
+            "cuda:0, or cpu. auto lets sentence-transformers select CUDA."
+        ),
+    )
+    parser.add_argument(
+        "--m-concept-weight",
+        type=float,
+        default=0.5,
+        help=(
+            "Concept cosine weight for --mode m-cosine; domain weight is "
+            "one minus this value."
+        ),
+    )
+    parser.add_argument(
+        "--m-cosine-threshold",
+        type=float,
+        default=0.35,
+        help=(
+            "Nonliteral combined-distance cutoff for --mode m-cosine: "
+            "at or below is M=1, above is M=2."
+        ),
+    )
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--reasoning-effort", default="medium")
     parser.add_argument("--max-tokens", type=int, default=2200)
@@ -619,6 +652,7 @@ async def run_m_examples(
     use_native_scope_audit: bool = False,
     use_two_gate: bool = False,
     use_relation_gate: bool = False,
+    use_cosine: bool = False,
 ) -> list[dict]:
     sample_dir = output_dir / "metaphoricity_samples"
     sample_dir.mkdir(parents=True, exist_ok=True)
@@ -632,7 +666,9 @@ async def run_m_examples(
                 f"id={example_id} target={row['target']}",
                 flush=True,
             )
-            if use_relation_gate:
+            if use_cosine:
+                evaluator = pipeline.evaluate_m_cosine
+            elif use_relation_gate:
                 evaluator = pipeline.evaluate_m_relation_gate
             elif use_two_gate:
                 evaluator = pipeline.evaluate_m_two_gate
@@ -870,6 +906,19 @@ def main() -> None:
                     "It is the only component that assigns M.",
                 ),
             }
+        elif args.mode == "m-cosine":
+            prompts = {
+                "source_domain_classifier": domain_classifier_prompt(
+                    first["target"], first["description"], first["analogy"]
+                ),
+                "literal_instance_judge": literal_instance_prompt(
+                    first["target"], first["description"], first["analogy"]
+                ),
+                "concept_domain_embeddings": (
+                    "Embed structured source/target concept and domain texts.",
+                    "Python applies normalized cosine distance and the literal-first rule.",
+                ),
+            }
         elif args.mode in {
             "m",
             "metaphoricity",
@@ -967,6 +1016,8 @@ def main() -> None:
                         for name, (system, user) in prompts.items()
                     },
                     "model": args.model,
+                    "embedding_model": args.embedding_model,
+                    "embedding_device": args.embedding_device,
                 },
                 ensure_ascii=False,
                 indent=2,
@@ -982,6 +1033,10 @@ def main() -> None:
         max_concurrency=args.max_concurrency,
         cache_dir=args.cache_dir,
         refresh_cache=args.refresh_cache,
+        embedding_model=args.embedding_model,
+        embedding_device=args.embedding_device,
+        m_concept_weight=args.m_concept_weight,
+        m_cosine_threshold=args.m_cosine_threshold,
     )
     pipeline = SixAgentPipeline(config)
     if args.mode in {
@@ -1058,6 +1113,7 @@ def main() -> None:
         )
     elif args.mode in {
         "m",
+        "m-cosine",
         "metaphoricity",
         "m-taxonomy",
         "m-taxonomy-agent",
@@ -1092,6 +1148,7 @@ def main() -> None:
                 args.mode == "m-native-scope-audit",
                 args.mode == "m-two-gate",
                 args.mode == "m-relation-gate",
+                args.mode == "m-cosine",
             )
         )
         details_path, predictions_path = write_m_outputs(
@@ -1135,6 +1192,7 @@ def main() -> None:
             )
         elif args.mode in {
             "m",
+            "m-cosine",
             "metaphoricity",
             "m-taxonomy",
             "m-taxonomy-agent",

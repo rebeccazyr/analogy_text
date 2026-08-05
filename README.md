@@ -123,6 +123,43 @@ Validation uses leave-one-out calibration anchors. Test inference uses all 12
 validation anchors. The active M v7.1 run is the **only component run with high
 reasoning**.
 
+### Experimental M cosine baseline
+
+`--mode m-cosine` keeps the current literal-instance judge for the `M=0`
+boundary, but replaces the nonliteral `M=1/2` LLM judgment with deterministic
+cosine scoring:
+
+1. Reuse `DomainAnalysis` to form symmetric source/target concept texts and
+   source/target domain texts.
+2. Embed the four texts locally with sentence-transformers and
+   `BAAI/bge-large-en-v1.5` by default.
+3. Compute `1 - cosine_similarity` for concept and domain separately.
+4. Average the two distances by default. A nonliteral distance at or below
+   `0.35` receives `M=1`; a larger distance receives `M=2`.
+
+The weight and threshold are explicit experimental parameters, not claimed
+calibrated constants. Run the 12-row validation split first:
+
+```bash
+.venv/bin/python run_text_agents.py \
+  --mode m-cosine \
+  --split validation \
+  --reasoning-effort high \
+  --embedding-device cuda:0 \
+  --m-concept-weight 0.5 \
+  --m-cosine-threshold 0.35 \
+  --output-dir runs/m_cosine_validation
+```
+
+Together is used only for the structured domain analysis and literal-instance
+gate; embedding inference does not call the Together API. The local model is
+loaded once per process, uses CUDA automatically when available, and can be
+pinned to the single H100 with `--embedding-device cuda:0`. The structured LLM
+evidence and embedding vectors are cached separately. Each
+details row records the concept, domain, and combined distances, the literal
+gate result, threshold margin, embedding model, weight, and cutoff. This mode
+does not change the active frozen submission.
+
 ## Install and test
 
 Run commands from the repository root with Python 3.10 or newer:
