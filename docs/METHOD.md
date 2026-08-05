@@ -72,6 +72,15 @@ while Together is used only for those two structured LLM calls. The initial
 weight and threshold are research defaults and must be evaluated on validation
 before any test run; this mode is not part of the frozen submission.
 
+The follow-up `m-features` ablation keeps that literal gate and compares five
+pre-registered feature groups. E1 uses mechanism cosine only; E2 uses the
+LLM-extracted native-relation mismatch only; E3 combines mechanism and
+relation; E4 adds role-type shift; and E5 adds low-weight concept and domain
+cosines. Cosine distances are clipped to `[0,1]`; categorical evidence uses
+`0`, `0.5`, and `1` for M1-directed, unclear, and M2-directed values. One run
+shares the same two LLM calls and local embeddings across all five variants,
+so the ablation itself does not multiply API calls.
+
 ## Frozen output distributions
 
 | Metric | 0 | 1 | 2 |

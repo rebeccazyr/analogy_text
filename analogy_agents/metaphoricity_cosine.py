@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from typing import Protocol, Sequence
+from typing import Mapping, Protocol, Sequence
 
 
 class DomainAnalysisLike(Protocol):
@@ -16,11 +16,44 @@ class DomainAnalysisLike(Protocol):
 
 
 M_COSINE_POLICY_VERSION = "m_v19_literal_gate_domain_cosine_v2_local"
+M_FEATURE_POLICY_VERSION = "m_v20_literal_gate_feature_ablation_v1_local"
 M_EMBEDDING_BACKEND = "sentence-transformers"
 DEFAULT_M_EMBEDDING_MODEL = "BAAI/bge-large-en-v1.5"
 DEFAULT_M_EMBEDDING_DEVICE = "auto"
 DEFAULT_M_CONCEPT_WEIGHT = 0.5
 DEFAULT_M_COSINE_THRESHOLD = 0.35
+
+# Pre-registered feature combinations for the small-data ablation.  Every
+# feature points in the same direction: 0 is closer to M=1 and 1 is closer to
+# M=2.  Keeping the weights fixed leaves only the cutoff to calibrate later.
+M_FEATURE_WEIGHTS: dict[str, dict[str, float]] = {
+    "e1": {"mechanism_distance": 1.0},
+    "e2": {"native_relation_mismatch": 1.0},
+    "e3": {
+        "mechanism_distance": 0.60,
+        "native_relation_mismatch": 0.40,
+    },
+    "e4": {
+        "mechanism_distance": 0.50,
+        "native_relation_mismatch": 0.30,
+        "role_type_shift": 0.20,
+    },
+    "e5": {
+        "mechanism_distance": 0.45,
+        "native_relation_mismatch": 0.25,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.075,
+        "domain_distance": 0.075,
+    },
+}
+
+DEFAULT_M_FEATURE_THRESHOLDS: dict[str, float] = {
+    "e1": 0.35,
+    "e2": 0.50,
+    "e3": 0.35,
+    "e4": 0.35,
+    "e5": 0.35,
+}
 
 
 def m_cosine_embedding_texts(domain: DomainAnalysisLike) -> dict[str, str]:
@@ -34,6 +67,18 @@ def m_cosine_embedding_texts(domain: DomainAnalysisLike) -> dict[str, str]:
             f"Concept: {domain.target_concept}. "
             f"Defining mechanism: {domain.target_signature}."
         ),
+        "source_domain": f"Domain: {domain.source_domain}.",
+        "target_domain": f"Domain: {domain.target_domain}.",
+    }
+
+
+def m_feature_embedding_texts(domain: DomainAnalysisLike) -> dict[str, str]:
+    """Build disentangled mechanism, concept, and domain embedding texts."""
+    return {
+        "source_mechanism": f"Mechanism: {domain.source_mechanism}.",
+        "target_mechanism": f"Mechanism: {domain.target_signature}.",
+        "source_concept": f"Concept: {domain.source_concept}.",
+        "target_concept": f"Concept: {domain.target_concept}.",
         "source_domain": f"Domain: {domain.source_domain}.",
         "target_domain": f"Domain: {domain.target_domain}.",
     }
@@ -120,3 +165,92 @@ def m_cosine_latent_score(
     if literal_instance == "yes":
         return 0.0
     return 1.0 + combined_distance / 2.0
+
+
+def bounded_cosine_feature(distance: float) -> float:
+    """Put cosine distance on the shared [0, 1] feature scale."""
+    if not 0.0 <= distance <= 2.0:
+        raise ValueError("Cosine distance must be in [0, 2]")
+    return min(distance, 1.0)
+
+
+def native_relation_mismatch(value: str) -> float:
+    """Map native-relation evidence to an M=2-directed numeric feature."""
+    try:
+        return {"yes": 0.0, "unclear": 0.5, "no": 1.0}[value]
+    except KeyError as error:
+        raise ValueError(f"Unsupported native_relation_match: {value!r}") from error
+
+
+def role_type_shift(value: str) -> float:
+    """Map role-preservation evidence to an M=2-directed numeric feature."""
+    try:
+        return {
+            "none_or_one_shift": 0.0,
+            "unclear": 0.5,
+            "multiple_type_changes": 1.0,
+        }[value]
+    except KeyError as error:
+        raise ValueError(f"Unsupported role_type_preservation: {value!r}") from error
+
+
+def combine_m_features(
+    feature_values: Mapping[str, float],
+    weights: Mapping[str, float],
+) -> tuple[float, dict[str, float]]:
+    """Combine normalized features and return score plus contributions."""
+    if not weights:
+        raise ValueError("Feature weights must be non-empty")
+    if not math.isclose(sum(weights.values()), 1.0, abs_tol=1e-9):
+        raise ValueError("Feature weights must sum to 1")
+
+    contributions: dict[str, float] = {}
+    for name, weight in weights.items():
+        if name not in feature_values:
+            raise ValueError(f"Missing feature value: {name}")
+        value = feature_values[name]
+        if not 0.0 <= value <= 1.0:
+            raise ValueError(f"Feature {name} must be in [0, 1]")
+        if weight < 0.0:
+            raise ValueError(f"Feature weight {name} must be non-negative")
+        contributions[name] = weight * value
+    return sum(contributions.values()), contributions
+
+
+def score_m_feature_experiment(
+    *,
+    experiment: str,
+    literal_instance: str,
+    feature_values: Mapping[str, float],
+    threshold: float | None = None,
+) -> tuple[int, float, dict[str, float], float]:
+    """Score one E1--E5 configuration behind the shared literal M=0 gate."""
+    if experiment not in M_FEATURE_WEIGHTS:
+        raise ValueError(f"Unsupported M feature experiment: {experiment!r}")
+    if literal_instance not in {"yes", "no", "unclear"}:
+        raise ValueError(f"Unsupported literal_instance: {literal_instance!r}")
+
+    cutoff = (
+        DEFAULT_M_FEATURE_THRESHOLDS[experiment]
+        if threshold is None
+        else threshold
+    )
+    if not 0.0 <= cutoff <= 1.0:
+        raise ValueError("M feature threshold must be in [0, 1]")
+
+    combined, contributions = combine_m_features(
+        feature_values,
+        M_FEATURE_WEIGHTS[experiment],
+    )
+    if literal_instance == "yes":
+        return 0, combined, contributions, cutoff
+    return (1 if combined <= cutoff else 2), combined, contributions, cutoff
+
+
+def m_feature_latent_score(literal_instance: str, combined_score: float) -> float:
+    """Map the shared [0,1] nonliteral score to the ordinal [1,2] interval."""
+    if not 0.0 <= combined_score <= 1.0:
+        raise ValueError("combined_score must be in [0, 1]")
+    if literal_instance == "yes":
+        return 0.0
+    return 1.0 + combined_score

@@ -12,11 +12,13 @@ from analogy_agents.pipeline import (
     SixAgentPipeline,
     load_archived_v1_tcc,
     load_split,
+    score_m_feature_validation,
     score_m_validation,
     score_ms_validation,
     score_validation,
     score_tcc_validation,
     write_m_outputs,
+    write_m_feature_outputs,
     write_ms_outputs,
     write_run_outputs,
     write_tcc_outputs,
@@ -84,6 +86,7 @@ def build_parser() -> argparse.ArgumentParser:
             "tcc-v1-facet-conservative",
             "m",
             "m-cosine",
+            "m-features",
             "m-taxonomy",
             "m-taxonomy-agent",
             "m-conceptual-distance",
@@ -102,6 +105,7 @@ def build_parser() -> argparse.ArgumentParser:
             "v1 Mapping Strength path, the three-vote counterfactual Mapping "
             "Strength zero gate, the v7 metaphoricity path, "
             "the literal-gate concept/domain cosine experiment, "
+            "the shared-evidence E1--E5 M feature ablation, "
             "the fixed-rule taxonomy path, or the taxonomy path with an "
             "independent final M agent, or the overall conceptual-distance "
             "agent path, or that path with a native-neighborhood critic and "
@@ -160,6 +164,24 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Nonliteral combined-distance cutoff for --mode m-cosine: "
             "at or below is M=1, above is M=2."
+        ),
+    )
+    parser.add_argument(
+        "--m-feature-set",
+        choices=["all", "e1", "e2", "e3", "e4", "e5"],
+        default="all",
+        help=(
+            "Feature experiment(s) for --mode m-features. 'all' computes "
+            "E1--E5 from one shared LLM/embedding pass."
+        ),
+    )
+    parser.add_argument(
+        "--m-feature-threshold",
+        type=float,
+        default=None,
+        help=(
+            "Optional [0,1] threshold override for --mode m-features. "
+            "When omitted, each experiment uses its pre-registered default."
         ),
     )
     parser.add_argument("--temperature", type=float, default=0.2)
@@ -661,11 +683,8 @@ async def run_m_examples(
     async def judge_one(position: int, example_id: int) -> dict:
         async with sample_semaphore:
             row = rows_by_id[example_id]
-            print(
-                f"[m {position}/{len(selected_ids)}] "
-                f"id={example_id} target={row['target']}",
-                flush=True,
-            )
+            # Per-stage progress is intentionally quiet. The completed analysis
+            # line below contains the fields needed for M-cosine inspection.
             if use_cosine:
                 evaluator = pipeline.evaluate_m_cosine
             elif use_relation_gate:
@@ -694,8 +713,9 @@ async def run_m_examples(
             )
             if use_cosine:
                 policy = result["m_cosine_policy"]
+                gold = row.get("M") if split == "validation" else None
                 print(
-                    f"  id={example_id} -> M={result['prediction']['M']} "
+                    f"[m result] id={example_id} target={row['target']!r} "
                     f"literal={policy['literal_instance']} "
                     f"concept_d={policy['concept_distance']:.4f} "
                     f"(w={policy['concept_weight']:.2f}) "
@@ -704,7 +724,9 @@ async def run_m_examples(
                     f"combined_d={policy['combined_distance']:.4f} "
                     f"threshold={policy['nonliteral_threshold']:.4f} "
                     f"margin={policy['threshold_margin']:+.4f} "
-                    f"latent={result['latent_scores']['M']:.3f}",
+                    f"latent={result['latent_scores']['M']:.3f} "
+                    f"predict={result['prediction']['M']} "
+                    f"gold={gold if gold is not None else 'n/a'}",
                     flush=True,
                 )
             else:
@@ -722,6 +744,60 @@ async def run_m_examples(
                 for position, example_id in enumerate(
                     selected_ids, start=1
                 )
+            ]
+        )
+    )
+
+
+async def run_m_feature_examples(
+    pipeline: SixAgentPipeline,
+    rows_by_id: dict[int, dict],
+    selected_ids: list[int],
+    split: str,
+    output_dir: Path,
+    sample_concurrency: int,
+) -> list[dict]:
+    """Compute E1--E5 from one shared evidence pass per example."""
+    sample_dir = output_dir / "m_feature_samples"
+    sample_dir.mkdir(parents=True, exist_ok=True)
+    sample_semaphore = asyncio.Semaphore(sample_concurrency)
+
+    async def judge_one(example_id: int) -> dict:
+        async with sample_semaphore:
+            row = rows_by_id[example_id]
+            result = await pipeline.evaluate_m_feature_experiments(row, split)
+            if split == "validation":
+                result["gold"] = int(row["M"])
+            sample_path = sample_dir / f"{example_id:03d}.json"
+            sample_path.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            features = result["feature_values"]
+            experiment_text = " ".join(
+                f"{name.upper()}={payload['combined_score']:.3f}"
+                f"->{payload['prediction']}"
+                for name, payload in result["experiments"].items()
+            )
+            gold = row.get("M") if split == "validation" else None
+            print(
+                f"[m features] id={example_id} target={row['target']!r} "
+                f"literal={result['literal_instance']} "
+                f"mechanism={features['mechanism_distance']:.3f} "
+                f"relation={features['native_relation_mismatch']:.1f} "
+                f"role={features['role_type_shift']:.1f} "
+                f"concept={features['concept_distance']:.3f} "
+                f"domain={features['domain_distance']:.3f} "
+                f"{experiment_text} gold={gold if gold is not None else 'n/a'}",
+                flush=True,
+            )
+            return result
+
+    return list(
+        await asyncio.gather(
+            *[
+                asyncio.create_task(judge_one(example_id))
+                for example_id in selected_ids
             ]
         )
     )
@@ -922,7 +998,7 @@ def main() -> None:
                     "It is the only component that assigns M.",
                 ),
             }
-        elif args.mode == "m-cosine":
+        elif args.mode in {"m-cosine", "m-features"}:
             prompts = {
                 "source_domain_classifier": domain_classifier_prompt(
                     first["target"], first["description"], first["analogy"]
@@ -930,9 +1006,13 @@ def main() -> None:
                 "literal_instance_judge": literal_instance_prompt(
                     first["target"], first["description"], first["analogy"]
                 ),
-                "concept_domain_embeddings": (
-                    "Embed structured source/target concept and domain texts.",
-                    "Python applies normalized cosine distance and the literal-first rule.",
+                "local_embeddings": (
+                    "Embed structured source/target mechanism, concept, and domain texts.",
+                    (
+                        "Python computes E1--E5 behind the literal-first rule."
+                        if args.mode == "m-features"
+                        else "Python applies concept/domain cosine and the literal-first rule."
+                    ),
                 ),
             }
         elif args.mode in {
@@ -1053,6 +1133,8 @@ def main() -> None:
         embedding_device=args.embedding_device,
         m_concept_weight=args.m_concept_weight,
         m_cosine_threshold=args.m_cosine_threshold,
+        m_feature_set=args.m_feature_set,
+        m_feature_threshold=args.m_feature_threshold,
     )
     pipeline = SixAgentPipeline(config)
     if args.mode in {
@@ -1125,6 +1207,20 @@ def main() -> None:
             )
         )
         details_path, predictions_path = write_ms_outputs(
+            results, args.output_dir, args.split
+        )
+    elif args.mode == "m-features":
+        results = asyncio.run(
+            run_m_feature_examples(
+                pipeline,
+                rows_by_id,
+                selected_ids,
+                args.split,
+                args.output_dir,
+                args.sample_concurrency,
+            )
+        )
+        details_path, predictions_path = write_m_feature_outputs(
             results, args.output_dir, args.split
         )
     elif args.mode in {
@@ -1206,6 +1302,9 @@ def main() -> None:
             score_path = (
                 args.output_dir / "validation_mapping_strength_scores.json"
             )
+        elif args.mode == "m-features":
+            scores = score_m_feature_validation(results, rows)
+            score_path = args.output_dir / "validation_m_feature_scores.json"
         elif args.mode in {
             "m",
             "m-cosine",

@@ -25,10 +25,18 @@ from .metaphoricity_cosine import (
     DEFAULT_M_EMBEDDING_MODEL,
     M_COSINE_POLICY_VERSION,
     M_EMBEDDING_BACKEND,
+    M_FEATURE_POLICY_VERSION,
+    M_FEATURE_WEIGHTS,
+    bounded_cosine_feature,
     cosine_distance,
     m_cosine_embedding_texts,
     m_cosine_latent_score,
+    m_feature_embedding_texts,
+    m_feature_latent_score,
     m_score_from_cosine,
+    native_relation_mismatch,
+    role_type_shift,
+    score_m_feature_experiment,
 )
 from .metaphoricity_taxonomy import (
     M_CONCEPTUAL_DISTANCE_CACHE_NAMESPACE,
@@ -192,12 +200,23 @@ class PipelineConfig:
     embedding_device: str = DEFAULT_M_EMBEDDING_DEVICE
     m_concept_weight: float = DEFAULT_M_CONCEPT_WEIGHT
     m_cosine_threshold: float = DEFAULT_M_COSINE_THRESHOLD
+    m_feature_set: str = "all"
+    m_feature_threshold: float | None = None
 
     def __post_init__(self) -> None:
         if not 0.0 <= self.m_concept_weight <= 1.0:
             raise ValueError("m_concept_weight must be in [0, 1]")
         if not 0.0 <= self.m_cosine_threshold <= 2.0:
             raise ValueError("m_cosine_threshold must be in [0, 2]")
+        if self.m_feature_set not in {"all", *M_FEATURE_WEIGHTS}:
+            raise ValueError(
+                f"Unsupported m_feature_set: {self.m_feature_set!r}"
+            )
+        if (
+            self.m_feature_threshold is not None
+            and not 0.0 <= self.m_feature_threshold <= 1.0
+        ):
+            raise ValueError("m_feature_threshold must be in [0, 1]")
         if not self.embedding_model.strip():
             raise ValueError("embedding_model must be non-empty")
         if not self.embedding_device.strip():
@@ -340,6 +359,12 @@ def _usage_dict(response: Any) -> dict[str, Any]:
     }
 
 
+def _debug_progress(message: str) -> None:
+    """Enable temporarily when API/cache stage-level diagnostics are needed."""
+    # print(message, flush=True)
+    return None
+
+
 class SixAgentPipeline:
     def __init__(self, config: PipelineConfig):
         self.config = config
@@ -379,6 +404,90 @@ class SixAgentPipeline:
             / "concept_domain_embeddings.json"
         )
 
+    def _feature_embedding_cache_path(
+        self,
+        split: str,
+        example_id: int,
+    ) -> Path:
+        return (
+            self.config.cache_dir
+            / M_FEATURE_POLICY_VERSION
+            / _slug(self.config.embedding_model)
+            / split
+            / f"{example_id:03d}"
+            / "feature_embeddings.json"
+        )
+
+    async def _embed_m_feature_texts(
+        self,
+        *,
+        split: str,
+        example_id: int,
+        texts: dict[str, str],
+    ) -> dict[str, list[float]]:
+        ordered_names = [
+            "source_mechanism",
+            "target_mechanism",
+            "source_concept",
+            "target_concept",
+            "source_domain",
+            "target_domain",
+        ]
+        if list(texts) != ordered_names:
+            raise ValueError(
+                f"Unexpected M feature text order: {list(texts)!r}"
+            )
+        ordered_texts = [texts[name].replace("\n", " ") for name in ordered_names]
+        input_hash = hashlib.sha256(
+            json.dumps(ordered_texts, ensure_ascii=False).encode("utf-8")
+        ).hexdigest()[:16]
+        cache_path = self._feature_embedding_cache_path(split, example_id)
+        if cache_path.exists() and not self.config.refresh_cache:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+            if (
+                cached.get("input_hash") == input_hash
+                and cached.get("embedding_backend") == M_EMBEDDING_BACKEND
+                and cached.get("embedding_model") == self.config.embedding_model
+            ):
+                return {
+                    name: [float(value) for value in cached["embeddings"][name]]
+                    for name in ordered_names
+                }
+
+        async with self.embedding_semaphore:
+            vectors = await asyncio.to_thread(
+                self._encode_m_cosine_texts_locally,
+                ordered_texts,
+            )
+        if len(vectors) != len(ordered_names):
+            raise ValueError(
+                "Local embedding model returned an unexpected number of vectors: "
+                f"{len(vectors)} != {len(ordered_names)}"
+            )
+        embeddings = {
+            name: [float(value) for value in vector]
+            for name, vector in zip(ordered_names, vectors)
+        }
+        dimensions = {len(vector) for vector in embeddings.values()}
+        if len(dimensions) != 1 or not next(iter(dimensions)):
+            raise ValueError(
+                f"Embedding dimensions must match and be non-zero: {dimensions}"
+            )
+        _atomic_write_json(
+            cache_path,
+            {
+                "policy_version": M_FEATURE_POLICY_VERSION,
+                "embedding_backend": M_EMBEDDING_BACKEND,
+                "embedding_model": self.config.embedding_model,
+                "embedding_device": self.config.embedding_device,
+                "input_hash": input_hash,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "texts": texts,
+                "embeddings": embeddings,
+            },
+        )
+        return embeddings
+
     async def _embed_m_cosine_texts(
         self,
         *,
@@ -408,33 +517,30 @@ class SixAgentPipeline:
                 and cached.get("embedding_backend") == M_EMBEDDING_BACKEND
                 and cached.get("embedding_model") == self.config.embedding_model
             ):
-                print(
+                _debug_progress(
                     f"[m embedding cache-hit] id={example_id} "
-                    f"model={self.config.embedding_model}",
-                    flush=True,
+                    f"model={self.config.embedding_model}"
                 )
                 return {
                     name: [float(value) for value in cached["embeddings"][name]]
                     for name in ordered_names
                 }
 
-        print(
+        _debug_progress(
             f"[m embedding waiting] id={example_id} "
             f"model={self.config.embedding_model} "
-            f"device={self.config.embedding_device}",
-            flush=True,
+            f"device={self.config.embedding_device}"
         )
         async with self.embedding_semaphore:
             started = time.monotonic()
-            print(f"[m embedding start] id={example_id}", flush=True)
+            _debug_progress(f"[m embedding start] id={example_id}")
             vectors = await asyncio.to_thread(
                 self._encode_m_cosine_texts_locally,
                 ordered_texts,
             )
-            print(
+            _debug_progress(
                 f"[m embedding response] id={example_id} "
-                f"elapsed={time.monotonic() - started:.1f}s",
-                flush=True,
+                f"elapsed={time.monotonic() - started:.1f}s"
             )
         if len(vectors) != len(ordered_names):
             raise ValueError(
@@ -485,19 +591,17 @@ class SixAgentPipeline:
                 else self.config.embedding_device
             )
             started = time.monotonic()
-            print(
+            _debug_progress(
                 f"[m embedding model-load] model={self.config.embedding_model} "
-                f"device={self.config.embedding_device}",
-                flush=True,
+                f"device={self.config.embedding_device}"
             )
             self._embedding_encoder = SentenceTransformer(
                 self.config.embedding_model,
                 device=device,
             )
-            print(
+            _debug_progress(
                 f"[m embedding model-ready] model={self.config.embedding_model} "
-                f"elapsed={time.monotonic() - started:.1f}s",
-                flush=True,
+                f"elapsed={time.monotonic() - started:.1f}s"
             )
 
         encoded = self._embedding_encoder.encode(
@@ -534,9 +638,8 @@ class SixAgentPipeline:
             if cached.get("prompt_hash") == current_hash:
                 cached_result = output_model.model_validate(cached["result"])
                 if validate_result is None:
-                    print(
-                        f"[agent cache-hit] id={example_id} agent={agent_name}",
-                        flush=True,
+                    _debug_progress(
+                        f"[agent cache-hit] id={example_id} agent={agent_name}"
                     )
                     return cached_result
                 try:
@@ -544,9 +647,8 @@ class SixAgentPipeline:
                 except ValueError:
                     pass
                 else:
-                    print(
-                        f"[agent cache-hit] id={example_id} agent={agent_name}",
-                        flush=True,
+                    _debug_progress(
+                        f"[agent cache-hit] id={example_id} agent={agent_name}"
                     )
                     return cached_result
 
@@ -565,20 +667,18 @@ class SixAgentPipeline:
         for attempt in range(1, self.config.max_retries + 1):
             request_started: float | None = None
             try:
-                print(
+                _debug_progress(
                     f"[agent waiting] id={example_id} agent={agent_name} "
-                    f"attempt={attempt}/{self.config.max_retries}",
-                    flush=True,
+                    f"attempt={attempt}/{self.config.max_retries}"
                 )
                 async with self.semaphore:
                     request_started = time.monotonic()
-                    print(
+                    _debug_progress(
                         f"[agent request] id={example_id} agent={agent_name} "
                         f"attempt={attempt}/{self.config.max_retries} "
                         f"model={self.config.model} "
                         f"reasoning={self.config.reasoning_effort} "
-                        "client=sync-threaded",
-                        flush=True,
+                        "client=sync-threaded"
                     )
                     response = await asyncio.to_thread(
                         self.client.chat.completions.create,
@@ -603,11 +703,10 @@ class SixAgentPipeline:
                         max_tokens=self.config.max_tokens,
                         seed=self.config.seed + attempt - 1,
                     )
-                print(
+                _debug_progress(
                     f"[agent response] id={example_id} agent={agent_name} "
                     f"attempt={attempt}/{self.config.max_retries} "
-                    f"elapsed={time.monotonic() - request_started:.1f}s",
-                    flush=True,
+                    f"elapsed={time.monotonic() - request_started:.1f}s"
                 )
 
                 choice = response.choices[0]
@@ -615,14 +714,13 @@ class SixAgentPipeline:
                 content = message.content
                 reasoning = getattr(message, "reasoning", None) or ""
                 usage = _usage_dict(response)
-                print(
+                _debug_progress(
                     f"[agent output] id={example_id} agent={agent_name} "
                     f"finish_reason={getattr(choice, 'finish_reason', None)} "
                     f"content_chars={len(content or '')} "
                     f"reasoning_chars={len(reasoning)} "
                     f"prompt_tokens={usage.get('prompt_tokens')} "
-                    f"completion_tokens={usage.get('completion_tokens')}",
-                    flush=True,
+                    f"completion_tokens={usage.get('completion_tokens')}"
                 )
                 if not content:
                     raise ValueError(
@@ -647,9 +745,8 @@ class SixAgentPipeline:
                         "result": result.model_dump(),
                     },
                 )
-                print(
-                    f"[agent cached] id={example_id} agent={agent_name}",
-                    flush=True,
+                _debug_progress(
+                    f"[agent cached] id={example_id} agent={agent_name}"
                 )
                 return result
             except Exception as error:
@@ -1665,10 +1762,9 @@ class SixAgentPipeline:
         description = example["description"]
         analogy = example["analogy"]
 
-        print(
+        _debug_progress(
             f"[m llm-evidence start] id={example_id} "
-            "agents=source_domain_classifier,literal_instance_judge",
-            flush=True,
+            "agents=source_domain_classifier,literal_instance_judge"
         )
         domain_messages = domain_classifier_prompt(target, description, analogy)
         literal_messages = literal_instance_prompt(target, description, analogy)
@@ -1690,7 +1786,7 @@ class SixAgentPipeline:
                 user=literal_messages[1],
             ),
         )
-        print(f"[m llm-evidence ready] id={example_id}", flush=True)
+        _debug_progress(f"[m llm-evidence ready] id={example_id}")
 
         embedding_texts = m_cosine_embedding_texts(domain)
         embeddings = await self._embed_m_cosine_texts(
@@ -1747,6 +1843,126 @@ class SixAgentPipeline:
                 "combined_distance": combined_distance,
                 "threshold_margin": combined_distance
                 - self.config.m_cosine_threshold,
+                "embedding_texts": embedding_texts,
+            },
+            "agents": {
+                "source_domain_classifier": domain.model_dump(),
+                "literal_instance_judge": literal.model_dump(),
+            },
+        }
+
+    async def evaluate_m_feature_experiments(
+        self,
+        example: dict[str, Any],
+        split: str,
+    ) -> dict[str, Any]:
+        """Evaluate pre-registered E1--E5 combinations from shared evidence."""
+        example_id = int(example["id"])
+        target = example["target"]
+        description = example["description"]
+        analogy = example["analogy"]
+
+        domain_messages = domain_classifier_prompt(target, description, analogy)
+        literal_messages = literal_instance_prompt(target, description, analogy)
+        domain, literal = await asyncio.gather(
+            self._call_structured(
+                split=split,
+                example_id=example_id,
+                agent_name="source_domain_classifier",
+                output_model=DomainAnalysis,
+                system=domain_messages[0],
+                user=domain_messages[1],
+            ),
+            self._call_structured(
+                split=split,
+                example_id=example_id,
+                agent_name="literal_instance_judge",
+                output_model=LiteralInstanceJudgment,
+                system=literal_messages[0],
+                user=literal_messages[1],
+            ),
+        )
+
+        embedding_texts = m_feature_embedding_texts(domain)
+        embeddings = await self._embed_m_feature_texts(
+            split=split,
+            example_id=example_id,
+            texts=embedding_texts,
+        )
+        raw_distances = {
+            "mechanism_distance": cosine_distance(
+                embeddings["source_mechanism"],
+                embeddings["target_mechanism"],
+            ),
+            "concept_distance": cosine_distance(
+                embeddings["source_concept"],
+                embeddings["target_concept"],
+            ),
+            "domain_distance": cosine_distance(
+                embeddings["source_domain"],
+                embeddings["target_domain"],
+            ),
+        }
+        feature_values = {
+            "mechanism_distance": bounded_cosine_feature(
+                raw_distances["mechanism_distance"]
+            ),
+            "native_relation_mismatch": native_relation_mismatch(
+                literal.native_relation_match
+            ),
+            "role_type_shift": role_type_shift(
+                literal.role_type_preservation
+            ),
+            "concept_distance": bounded_cosine_feature(
+                raw_distances["concept_distance"]
+            ),
+            "domain_distance": bounded_cosine_feature(
+                raw_distances["domain_distance"]
+            ),
+        }
+
+        experiments = (
+            list(M_FEATURE_WEIGHTS)
+            if self.config.m_feature_set == "all"
+            else [self.config.m_feature_set]
+        )
+        experiment_results: dict[str, dict[str, Any]] = {}
+        for experiment in experiments:
+            prediction, combined, contributions, threshold = (
+                score_m_feature_experiment(
+                    experiment=experiment,
+                    literal_instance=literal.literal_instance,
+                    feature_values=feature_values,
+                    threshold=self.config.m_feature_threshold,
+                )
+            )
+            experiment_results[experiment] = {
+                "prediction": prediction,
+                "latent_score": m_feature_latent_score(
+                    literal.literal_instance,
+                    combined,
+                ),
+                "combined_score": combined,
+                "threshold": threshold,
+                "threshold_margin": combined - threshold,
+                "weights": M_FEATURE_WEIGHTS[experiment],
+                "contributions": contributions,
+            }
+
+        return {
+            "id": example_id,
+            "target": target,
+            "literal_instance": literal.literal_instance,
+            "feature_values": feature_values,
+            "raw_cosine_distances": raw_distances,
+            "experiments": experiment_results,
+            "m_feature_policy": {
+                "version": M_FEATURE_POLICY_VERSION,
+                "embedding_backend": M_EMBEDDING_BACKEND,
+                "embedding_model": self.config.embedding_model,
+                "embedding_device": self.config.embedding_device,
+                "selected_experiments": experiments,
+                "threshold_override": self.config.m_feature_threshold,
                 "embedding_texts": embedding_texts,
             },
             "agents": {
@@ -3519,6 +3735,60 @@ def write_m_outputs(
     return jsonl_path, csv_path
 
 
+def write_m_feature_outputs(
+    results: list[dict[str, Any]], output_dir: Path, split: str
+) -> tuple[Path, Path]:
+    """Write one shared evidence trace and one E1--E5 prediction table."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    jsonl_path = output_dir / f"{split}_m_feature_details.jsonl"
+    csv_path = output_dir / f"{split}_m_feature_predictions.csv"
+    ordered_results = sorted(results, key=lambda item: item["id"])
+    experiment_names = list(ordered_results[0]["experiments"])
+    feature_names = list(ordered_results[0]["feature_values"])
+
+    with jsonl_path.open("w", encoding="utf-8") as handle:
+        for result in ordered_results:
+            handle.write(json.dumps(result, ensure_ascii=False) + "\n")
+
+    with csv_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "id",
+                "target",
+                "literal_instance",
+                "gold",
+                *feature_names,
+                *[
+                    field
+                    for name in experiment_names
+                    for field in (
+                        f"{name.upper()}_score",
+                        f"{name.upper()}_threshold",
+                        f"{name.upper()}_prediction",
+                    )
+                ],
+            ],
+        )
+        writer.writeheader()
+        for result in ordered_results:
+            row: dict[str, Any] = {
+                "id": result["id"],
+                "target": result["target"],
+                "literal_instance": result["literal_instance"],
+                "gold": result.get("gold", ""),
+                **result["feature_values"],
+            }
+            for name in experiment_names:
+                experiment = result["experiments"][name]
+                prefix = name.upper()
+                row[f"{prefix}_score"] = experiment["combined_score"]
+                row[f"{prefix}_threshold"] = experiment["threshold"]
+                row[f"{prefix}_prediction"] = experiment["prediction"]
+            writer.writerow(row)
+    return jsonl_path, csv_path
+
+
 def score_validation(
     results: list[dict[str, Any]], validation_rows: list[dict[str, Any]]
 ) -> dict[str, Any]:
@@ -3626,6 +3896,52 @@ def score_m_validation(
             "predicted": y_pred,
         }
     }
+
+
+def score_m_feature_validation(
+    results: list[dict[str, Any]], validation_rows: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """Score every selected E experiment without choosing a winner."""
+    gold_by_id = {row["id"]: row for row in validation_rows}
+    y_true = [gold_by_id[result["id"]]["M"] for result in results]
+    experiment_names = list(results[0]["experiments"])
+    scores: dict[str, Any] = {}
+    for experiment in experiment_names:
+        y_pred = [
+            result["experiments"][experiment]["prediction"]
+            for result in results
+        ]
+        if len(y_true) < 2:
+            tau = rho = float("nan")
+        else:
+            tau = float(kendalltau(y_true, y_pred).statistic)
+            rho = float(spearmanr(y_true, y_pred).statistic)
+        recalls = []
+        for gold_class in sorted(set(y_true)):
+            class_pairs = [
+                prediction == gold
+                for prediction, gold in zip(y_pred, y_true)
+                if gold == gold_class
+            ]
+            recalls.append(sum(class_pairs) / len(class_pairs))
+        scores[experiment.upper()] = {
+            "kendall": 0.0 if tau != tau else tau,
+            "spearman": 0.0 if rho != rho else rho,
+            "accuracy": sum(
+                prediction == gold
+                for prediction, gold in zip(y_pred, y_true)
+            )
+            / len(y_true),
+            "balanced_accuracy": sum(recalls) / len(recalls),
+            "ordinal_mae": sum(
+                abs(prediction - gold)
+                for prediction, gold in zip(y_pred, y_true)
+            )
+            / len(y_true),
+            "gold": y_true,
+            "predicted": y_pred,
+        }
+    return scores
 
 
 def timed_run(coroutine: Any) -> tuple[Any, float]:

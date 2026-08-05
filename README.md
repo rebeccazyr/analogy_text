@@ -161,6 +161,34 @@ details row records the concept, domain, and combined distances, the literal
 gate result, threshold margin, embedding model, weight, and cutoff. This mode
 does not change the active frozen submission.
 
+### E1--E5 M feature ablation
+
+`--mode m-features` reuses the same domain analysis and literal-instance
+judgment, embeds the structured texts once, and evaluates these fixed
+nonliteral feature combinations together:
+
+| Experiment | Fixed weights |
+| --- | --- |
+| E1 | mechanism distance = 1.00 |
+| E2 | native-relation mismatch = 1.00 |
+| E3 | mechanism = 0.60, relation = 0.40 |
+| E4 | mechanism = 0.50, relation = 0.30, role shift = 0.20 |
+| E5 | mechanism = 0.45, relation = 0.25, role shift = 0.15, concept = 0.075, domain = 0.075 |
+
+All features point toward `M=2` and are bounded to `[0,1]`. The shared
+literal-instance gate assigns `M=0` before any feature score is thresholded.
+Run all five configurations in one pass:
+
+```bash
+PYTHON_BIN=python ./run_m_features.sh
+```
+
+The output directory contains a CSV with E1--E5 predictions, a JSONL evidence
+trace with every raw feature and weighted contribution, and a score JSON with
+accuracy, balanced accuracy, ordinal MAE, Kendall, and Spearman for each
+experiment. Set `M_FEATURE_SET=e3` to run one configuration or
+`M_FEATURE_THRESHOLD=0.45` to apply an explicit exploratory cutoff override.
+
 ## Install and test
 
 Run commands from the repository root with Python 3.10 or newer:
