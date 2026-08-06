@@ -1,0 +1,177 @@
+{
+  "id": 1,
+  "target": "Transfer learning",
+  "literal_instance": "no",
+  "feature_values": {
+    "mechanism_distance": 0.3447887614349071,
+    "native_relation_mismatch": 0.0,
+    "role_type_shift": 1.0,
+    "concept_distance": 0.35355989210733707,
+    "domain_distance": 0.3422337598706664
+  },
+  "raw_cosine_distances": {
+    "mechanism_distance": 0.3447887614349071,
+    "concept_distance": 0.35355989210733707,
+    "domain_distance": 0.3422337598706664
+  },
+  "experiments": {
+    "e1": {
+      "prediction": 1,
+      "latent_score": 1.344788761434907,
+      "combined_score": 0.3447887614349071,
+      "threshold": 0.35,
+      "threshold_margin": -0.005211238565092868,
+      "weights": {
+        "mechanism_distance": 1.0
+      },
+      "contributions": {
+        "mechanism_distance": 0.3447887614349071
+      }
+    },
+    "e2": {
+      "prediction": 1,
+      "latent_score": 1.0,
+      "combined_score": 0.0,
+      "threshold": 0.5,
+      "threshold_margin": -0.5,
+      "weights": {
+        "native_relation_mismatch": 1.0
+      },
+      "contributions": {
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e3": {
+      "prediction": 1,
+      "latent_score": 1.2068732568609444,
+      "combined_score": 0.20687325686094427,
+      "threshold": 0.35,
+      "threshold_margin": -0.1431267431390557,
+      "weights": {
+        "mechanism_distance": 0.6,
+        "native_relation_mismatch": 0.4
+      },
+      "contributions": {
+        "mechanism_distance": 0.20687325686094427,
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e4": {
+      "prediction": 2,
+      "latent_score": 1.3723943807174535,
+      "combined_score": 0.37239438071745357,
+      "threshold": 0.35,
+      "threshold_margin": 0.022394380717453588,
+      "weights": {
+        "mechanism_distance": 0.5,
+        "native_relation_mismatch": 0.3,
+        "role_type_shift": 0.2
+      },
+      "contributions": {
+        "mechanism_distance": 0.17239438071745355,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.2
+      }
+    },
+    "e5": {
+      "prediction": 2,
+      "latent_score": 1.3573394665440586,
+      "combined_score": 0.35733946654405846,
+      "threshold": 0.35,
+      "threshold_margin": 0.007339466544058482,
+      "weights": {
+        "mechanism_distance": 0.45,
+        "native_relation_mismatch": 0.25,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.075,
+        "domain_distance": 0.075
+      },
+      "contributions": {
+        "mechanism_distance": 0.1551549426457082,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.02651699190805028,
+        "domain_distance": 0.025667531990299978
+      }
+    }
+  },
+  "m_feature_policy": {
+    "version": "m_v20_literal_gate_feature_ablation_v1_local",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "selected_experiments": [
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5"
+    ],
+    "threshold_override": null,
+    "embedding_texts": {
+      "source_mechanism": "Mechanism: applying previously mastered scales and chord progressions to a new piece.",
+      "target_mechanism": "Mechanism: reusing knowledge from a source task to accelerate learning on a related target task.",
+      "source_concept": "Concept: basic piano skills.",
+      "target_concept": "Concept: Transfer learning.",
+      "source_domain": "Domain: piano practice.",
+      "target_domain": "Domain: machine learning."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "You first master basic scales and chord progressions on the piano. Later, when you tackle a complex classical piece, you draw on those mastered scales, finger positions, and rhythm, so you learn the new piece faster by linking familiar patterns to the new music.",
+      "source_concept": "basic piano skills",
+      "source_mechanism": "applying previously mastered scales and chord progressions to a new piece",
+      "target_concept": "Transfer learning",
+      "target_signature": "reusing knowledge from a source task to accelerate learning on a related target task",
+      "source_domain": "piano practice",
+      "target_domain": "machine learning",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "basic piano skills (scales, chord progressions)",
+          "target_role": "knowledge learned from a source task",
+          "semantic_relation": "preserved",
+          "rationale": "Both are learned patterns that can be transferred to a new activity."
+        },
+        {
+          "source_role": "classical piece (new musical task)",
+          "target_role": "new related task",
+          "semantic_relation": "preserved",
+          "rationale": "Each represents a target task that the learner/model must acquire."
+        },
+        {
+          "source_role": "faster acquisition of the new piece",
+          "target_role": "accelerated learning on the new task",
+          "semantic_relation": "preserved",
+          "rationale": "Both describe the outcome of leveraging prior knowledge to reduce learning time."
+        },
+        {
+          "source_role": "linking familiar patterns to unfamiliar ones (adapting pre‑learned features)",
+          "target_role": "model adapts pre‑learned features to a new task",
+          "semantic_relation": "preserved",
+          "rationale": "The process of mapping known structures onto new ones is analogous in both domains."
+        },
+        {
+          "source_role": "piano playing as the shared activity for both tasks",
+          "target_role": "requirement that source and target domains be related",
+          "semantic_relation": "replaced",
+          "rationale": "The concrete activity (piano) stands for an abstract condition (domain relatedness) in the target domain."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A pianist first practices basic scales and chord progressions, building finger positioning, note, and rhythm knowledge, and then applies that prior skill to learn a new classical piece more quickly than starting from scratch.",
+      "target_defining_mechanism": "In machine learning, transfer learning reuses a model or its learned representations from a source task to initialize or fine‑tune on a related target task, thereby accelerating or improving learning on the new task.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "yes",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "multiple_type_changes",
+      "evidence": "Both the piano practice scenario and transfer learning involve the same relational pattern: an agent acquires knowledge in a first task and then reuses that knowledge to speed up learning in a second, related task. However, the agents differ (human pianist vs. ML model) and the nature of the knowledge differs (musical technique vs. model parameters), constituting more than one semantic type shift. The behavior of knowledge reuse matches, but the source activity lies outside the professional scope of machine‑learning techniques, so it is not a literal instance of transfer learning.",
+      "confidence": 0.9
+    }
+  },
+  "gold": 1
+}

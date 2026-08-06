@@ -1,0 +1,84 @@
+{
+  "id": 11,
+  "target": "Internet Protocol (IP) address",
+  "prediction": {
+    "M": 1
+  },
+  "latent_scores": {
+    "M": 1.1479073576318026
+  },
+  "confidence": {
+    "M": 0.9
+  },
+  "m_cosine_policy": {
+    "version": "m_v19_literal_gate_domain_cosine_v2_local",
+    "decisive_rule": "nonliteral_distance_at_or_below_threshold",
+    "literal_instance": "no",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "concept_weight": 0.5,
+    "domain_weight": 0.5,
+    "nonliteral_threshold": 0.35,
+    "concept_distance": 0.23746931370748758,
+    "domain_distance": 0.3541601168197228,
+    "combined_distance": 0.2958147152636052,
+    "threshold_margin": -0.05418528473639478,
+    "embedding_texts": {
+      "source_concept": "Concept: memory address. Defining mechanism: using the numeric address to directly locate and access a specific byte in RAM.",
+      "target_concept": "Concept: IP address. Defining mechanism: numeric label used to route packets to and from networked devices.",
+      "source_domain": "Domain: computer memory architecture.",
+      "target_domain": "Domain: networking / internet protocols."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "A CPU accesses a specific byte in RAM by sending a request containing the byte’s numeric memory address; the memory controller uses that address to go directly to the byte’s location.",
+      "source_concept": "memory address",
+      "source_mechanism": "using the numeric address to directly locate and access a specific byte in RAM",
+      "target_concept": "IP address",
+      "target_signature": "numeric label used to route packets to and from networked devices",
+      "source_domain": "computer memory architecture",
+      "target_domain": "networking / internet protocols",
+      "domain_distance": "related",
+      "role_alignments": [
+        {
+          "source_role": "memory address",
+          "target_role": "IP address",
+          "semantic_relation": "preserved",
+          "rationale": "Both are numeric identifiers that uniquely locate a resource (a byte in RAM or a networked device) for direct access."
+        },
+        {
+          "source_role": "CPU (requesting agent)",
+          "target_role": "host or sending device (requesting agent)",
+          "semantic_relation": "preserved",
+          "rationale": "Both act as the initiator that issues a request containing the address to retrieve or send data."
+        },
+        {
+          "source_role": "memory controller",
+          "target_role": "router",
+          "semantic_relation": "preserved",
+          "rationale": "Both forward traffic based on the provided address, directing the request to the appropriate location."
+        },
+        {
+          "source_role": "byte (data location)",
+          "target_role": "networked device (endpoint)",
+          "semantic_relation": "replaced",
+          "rationale": "A byte is a unit of memory storing data, whereas a networked device is a physical endpoint that can hold or receive data; the roles differ in kind."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A CPU sends a request containing a numeric memory address; the memory controller uses that address to locate and read/write a specific byte in RAM.",
+      "target_defining_mechanism": "A numeric label (IP address) that identifies a networked device so that packets can be routed to and from it.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "yes",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "none_or_one_shift",
+      "evidence": "Both mechanisms employ a numeric identifier to direct data to a particular location: memory addressing directs data to a byte within RAM, while IP addressing directs packets to a device on a network. The core relation is \"addressing\"—mapping an identifier to a destination for data transfer. However, IP addresses operate in the networking domain, not in memory management, so the behavior is outside the ordinary professional scope of IP addresses. The roles (address identifier and destination) are preserved, with only the destination type shifting from a memory cell to a networked device.",
+      "confidence": 0.9
+    }
+  }
+}

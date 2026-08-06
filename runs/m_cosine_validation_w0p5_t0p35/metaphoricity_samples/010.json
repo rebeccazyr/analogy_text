@@ -1,0 +1,102 @@
+{
+  "id": 10,
+  "target": "Cloud computing",
+  "prediction": {
+    "M": 0
+  },
+  "latent_scores": {
+    "M": 0.0
+  },
+  "confidence": {
+    "M": 0.96
+  },
+  "m_cosine_policy": {
+    "version": "m_v19_literal_gate_domain_cosine_v2_local",
+    "decisive_rule": "literal_instance",
+    "literal_instance": "yes",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "concept_weight": 0.5,
+    "domain_weight": 0.5,
+    "nonliteral_threshold": 0.35,
+    "concept_distance": 0.22872554638505882,
+    "domain_distance": 0.24989002582131659,
+    "combined_distance": 0.2393077861031877,
+    "threshold_margin": -0.11069221389681227,
+    "embedding_texts": {
+      "source_concept": "Concept: build server. Defining mechanism: allocating temporary compute, storage, and networking resources for a job.",
+      "target_concept": "Concept: cloud computing. Defining mechanism: on-demand delivery of computing resources (compute, storage, networking, software) over the internet with elastic scaling.",
+      "source_domain": "Domain: software build infrastructure.",
+      "target_domain": "Domain: cloud computing."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "You use a local command line to send a request to a shared build server. The server finds available processing power, allocates temporary disk space, uses its network connection, creates isolated build environments for each job, and removes them when the job finishes.",
+      "source_concept": "build server",
+      "source_mechanism": "allocating temporary compute, storage, and networking resources for a job",
+      "target_concept": "cloud computing",
+      "target_signature": "on-demand delivery of computing resources (compute, storage, networking, software) over the internet with elastic scaling",
+      "source_domain": "software build infrastructure",
+      "target_domain": "cloud computing",
+      "domain_distance": "related",
+      "role_alignments": [
+        {
+          "source_role": "local command line",
+          "target_role": "client request interface",
+          "semantic_relation": "preserved",
+          "rationale": "Both act as the user's way to issue a request for computing resources."
+        },
+        {
+          "source_role": "shared build server",
+          "target_role": "cloud provider",
+          "semantic_relation": "preserved",
+          "rationale": "Both serve as the entity that supplies compute, storage, and networking resources."
+        },
+        {
+          "source_role": "allocation of processing power",
+          "target_role": "provisioning compute resources",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve assigning CPU cycles to a job on demand."
+        },
+        {
+          "source_role": "allocation of temporary disk space",
+          "target_role": "provisioning storage",
+          "semantic_relation": "preserved",
+          "rationale": "Both assign storage for a task temporarily and release it after use."
+        },
+        {
+          "source_role": "use of high-speed connection",
+          "target_role": "networking provision",
+          "semantic_relation": "preserved",
+          "rationale": "Both provide the network connectivity needed for the job."
+        },
+        {
+          "source_role": "creation of isolated build environments",
+          "target_role": "creation of isolated virtual machines or containers",
+          "semantic_relation": "preserved",
+          "rationale": "Both instantiate separate execution contexts for individual jobs."
+        },
+        {
+          "source_role": "automatic provisioning of multiple environments for concurrent builds",
+          "target_role": "elastic scaling of resources",
+          "semantic_relation": "preserved",
+          "rationale": "Both dynamically adjust the number of isolated environments based on workload."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A local command-line request is sent to a shared build server, which on receipt allocates compute power, temporary storage, and network bandwidth for the job, creates isolated build environments as needed, and tears them down when the job finishes.",
+      "target_defining_mechanism": "On-demand delivery of computing resources (compute, storage, networking, software) over the internet with elastic scaling.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "yes",
+      "target_scope_match": "yes",
+      "literal_instance": "yes",
+      "native_relation_match": "no",
+      "role_type_preservation": "none_or_one_shift",
+      "evidence": "The source operation directly performs on-demand provisioning of compute, storage, and networking resources and automatically scales the number of isolated environments to match workload, which aligns precisely with the defining behavior of cloud computing. Providing these resources via a remote command fits within the ordinary professional scope of cloud services (e.g., build-as-a-service, CI/CD platforms).",
+      "confidence": 0.96
+    }
+  }
+}

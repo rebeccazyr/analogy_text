@@ -1,0 +1,195 @@
+{
+  "id": 3,
+  "target": "object-oriented analysis and design (OOAD)",
+  "literal_instance": "no",
+  "feature_values": {
+    "mechanism_distance": 0.18670907405275639,
+    "native_relation_mismatch": 0.0,
+    "role_type_shift": 0.0,
+    "concept_distance": 0.2927906301620812,
+    "domain_distance": 0.2687420039111714
+  },
+  "raw_cosine_distances": {
+    "mechanism_distance": 0.18670907405275639,
+    "concept_distance": 0.2927906301620812,
+    "domain_distance": 0.2687420039111714
+  },
+  "experiments": {
+    "e1": {
+      "prediction": 1,
+      "latent_score": 1.1867090740527564,
+      "combined_score": 0.18670907405275639,
+      "threshold": 0.35,
+      "threshold_margin": -0.1632909259472436,
+      "weights": {
+        "mechanism_distance": 1.0
+      },
+      "contributions": {
+        "mechanism_distance": 0.18670907405275639
+      }
+    },
+    "e2": {
+      "prediction": 1,
+      "latent_score": 1.0,
+      "combined_score": 0.0,
+      "threshold": 0.5,
+      "threshold_margin": -0.5,
+      "weights": {
+        "native_relation_mismatch": 1.0
+      },
+      "contributions": {
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e3": {
+      "prediction": 1,
+      "latent_score": 1.1120254444316537,
+      "combined_score": 0.11202544443165383,
+      "threshold": 0.35,
+      "threshold_margin": -0.23797455556834615,
+      "weights": {
+        "mechanism_distance": 0.6,
+        "native_relation_mismatch": 0.4
+      },
+      "contributions": {
+        "mechanism_distance": 0.11202544443165383,
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e4": {
+      "prediction": 1,
+      "latent_score": 1.0933545370263782,
+      "combined_score": 0.09335453702637819,
+      "threshold": 0.35,
+      "threshold_margin": -0.2566454629736218,
+      "weights": {
+        "mechanism_distance": 0.5,
+        "native_relation_mismatch": 0.3,
+        "role_type_shift": 0.2
+      },
+      "contributions": {
+        "mechanism_distance": 0.09335453702637819,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.0
+      }
+    },
+    "e5": {
+      "prediction": 1,
+      "latent_score": 1.1261340308792342,
+      "combined_score": 0.12613403087923433,
+      "threshold": 0.35,
+      "threshold_margin": -0.22386596912076565,
+      "weights": {
+        "mechanism_distance": 0.45,
+        "native_relation_mismatch": 0.25,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.075,
+        "domain_distance": 0.075
+      },
+      "contributions": {
+        "mechanism_distance": 0.08401908332374038,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.0,
+        "concept_distance": 0.021959297262156088,
+        "domain_distance": 0.020155650293337855
+      }
+    }
+  },
+  "m_feature_policy": {
+    "version": "m_v20_literal_gate_feature_ablation_v1_local",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "selected_experiments": [
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5"
+    ],
+    "threshold_override": null,
+    "embedding_texts": {
+      "source_mechanism": "Mechanism: creating a blueprint that organizes components and shows relationships.",
+      "target_mechanism": "Mechanism: applying object-oriented principles and visual modeling throughout the development process.",
+      "source_concept": "Concept: architectural blueprinting.",
+      "target_concept": "Concept: object-oriented analysis and design.",
+      "source_domain": "Domain: architecture / building design.",
+      "target_domain": "Domain: software engineering / systems analysis."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "In the architectural process, one walks around a neighborhood to identify different house types, notes each type's characteristics and capabilities, creates detailed blueprints that reuse standard components, organizes the blueprints into sections, shows how rooms connect, and reviews the blueprints with stakeholders.",
+      "source_concept": "architectural blueprinting",
+      "source_mechanism": "creating a blueprint that organizes components and shows relationships",
+      "target_concept": "object-oriented analysis and design",
+      "target_signature": "applying object-oriented principles and visual modeling throughout the development process",
+      "source_domain": "architecture / building design",
+      "target_domain": "software engineering / systems analysis",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "identifying house types",
+          "target_role": "identifying classes",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve surveying a domain to discover distinct categories that will be modeled."
+        },
+        {
+          "source_role": "noticing characteristics of house types",
+          "target_role": "defining attributes of classes",
+          "semantic_relation": "preserved",
+          "rationale": "Both assign descriptive properties to the identified categories."
+        },
+        {
+          "source_role": "recognizing capabilities of houses (e.g., heating systems)",
+          "target_role": "defining methods of classes",
+          "semantic_relation": "preserved",
+          "rationale": "Both capture functional behaviors associated with each category."
+        },
+        {
+          "source_role": "creating detailed blueprints",
+          "target_role": "creating visual models/diagrams",
+          "semantic_relation": "preserved",
+          "rationale": "Both produce design artifacts that represent the system before construction."
+        },
+        {
+          "source_role": "reusing standard components in blueprints",
+          "target_role": "using inheritance to reuse code",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve leveraging existing, generic parts to avoid duplication."
+        },
+        {
+          "source_role": "organizing blueprint sections",
+          "target_role": "encapsulating object details",
+          "semantic_relation": "preserved",
+          "rationale": "Both group related information so that only relevant parties need to see it."
+        },
+        {
+          "source_role": "showing how rooms connect",
+          "target_role": "showing relationships between objects",
+          "semantic_relation": "preserved",
+          "rationale": "Both depict connections and interactions among components of the system."
+        },
+        {
+          "source_role": "reviewing blueprints with stakeholders",
+          "target_role": "reviewing models with stakeholders",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve communicating the design to non‑technical participants for validation."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "Walking around a neighborhood to identify different types of houses, noting each house type's characteristics (attributes) and capabilities (methods); creating detailed architectural blueprints that reuse standard components, organize sections (e.g., plumbing, electrical) to encapsulate concerns, depict relationships between rooms and systems, and reviewing the blueprints with stakeholders such as the family, contractors, and inspectors.",
+      "target_defining_mechanism": "Analyzing a software or business system to identify classes with attributes and methods, then designing models that employ inheritance, encapsulation, relationships, and polymorphism, and communicating the design through visual models to stakeholders.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "no",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "none_or_one_shift",
+      "evidence": "The source describes the literal practice of architectural analysis and blueprint creation, which does not actually perform software class identification, inheritance, or polymorphism, so it fails the behavior and scope checks. However, both architecture and OOAD share the recognized relation of \"analysis and design of a complex system using models\"; the central roles (analyst, identified components, relationships, stakeholder review) remain the same, with only a shift from physical houses to abstract software classes, constituting at most one type change.",
+      "confidence": 0.9
+    }
+  },
+  "gold": 2
+}

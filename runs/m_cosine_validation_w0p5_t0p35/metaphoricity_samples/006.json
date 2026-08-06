@@ -1,0 +1,90 @@
+{
+  "id": 6,
+  "target": "list",
+  "prediction": {
+    "M": 0
+  },
+  "latent_scores": {
+    "M": 0.0
+  },
+  "confidence": {
+    "M": 0.95
+  },
+  "m_cosine_policy": {
+    "version": "m_v19_literal_gate_domain_cosine_v2_local",
+    "decisive_rule": "literal_instance",
+    "literal_instance": "yes",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "concept_weight": 0.5,
+    "domain_weight": 0.5,
+    "nonliteral_threshold": 0.35,
+    "concept_distance": 0.23169270302391032,
+    "domain_distance": 0.36190834694035345,
+    "combined_distance": 0.2968005249821319,
+    "threshold_margin": -0.05319947501786809,
+    "embedding_texts": {
+      "source_concept": "Concept: shopping cart. Defining mechanism: adding items to the cart sequentially while preserving their order.",
+      "target_concept": "Concept: list. Defining mechanism: storing ordered values of arbitrary size.",
+      "source_domain": "Domain: retail (shopping).",
+      "target_domain": "Domain: computer science (data structures)."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "You push a shopping cart down the aisle. Each product you drop into it is a piece of information you want to keep. You place the products in one by one and keep track of the exact order they went in—first, second, third, and so on. There’s no strict limit on how many products your cart can hold; it can grow as big as you need. At any time, you can check the items in the order they were placed, remove some, or add new ones, all while maintaining that original sequence.",
+      "source_concept": "shopping cart",
+      "source_mechanism": "adding items to the cart sequentially while preserving their order",
+      "target_concept": "list",
+      "target_signature": "storing ordered values of arbitrary size",
+      "source_domain": "retail (shopping)",
+      "target_domain": "computer science (data structures)",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "shopping cart (container)",
+          "target_role": "list (container)",
+          "semantic_relation": "replaced",
+          "rationale": "The cart is a physical object that holds tangible goods, whereas a list is an abstract data structure that holds values; they belong to different semantic categories."
+        },
+        {
+          "source_role": "product (item)",
+          "target_role": "value/element (item)",
+          "semantic_relation": "replaced",
+          "rationale": "A product is a concrete, physical good, while a value is an abstract datum; the two are different kinds of items."
+        },
+        {
+          "source_role": "adding a product to the cart sequentially",
+          "target_role": "inserting an element into the list preserving order",
+          "semantic_relation": "preserved",
+          "rationale": "Both actions involve inserting items one by one while maintaining the order of insertion."
+        },
+        {
+          "source_role": "checking items in the cart in order",
+          "target_role": "reading list elements in order",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve accessing stored items following their original sequence."
+        },
+        {
+          "source_role": "removing a product from the cart while keeping remaining order",
+          "target_role": "removing an element from the list while preserving order",
+          "semantic_relation": "preserved",
+          "rationale": "Both actions delete an item without disrupting the relative order of the remaining items."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A person pushes a shopping cart and places products into it one by one, keeping the order of insertion; the cart can hold an unbounded number of items, and items can be inspected, added, or removed while preserving the original sequence.",
+      "target_defining_mechanism": "A list is an abstract data structure that stores values in a specific order, allows an arbitrary number of elements, and supports insertion, deletion, and traversal while maintaining that order.",
+      "target_scope_type": "general_formal_or_practice",
+      "behavior_match": "yes",
+      "target_scope_match": "yes",
+      "literal_instance": "yes",
+      "native_relation_match": "yes",
+      "role_type_preservation": "multiple_type_changes",
+      "evidence": "The shopping cart physically embodies an ordered collection: items are added sequentially, the collection can grow without a fixed limit, and items can be inspected, added, or removed while preserving order—behaviors that match the defining operations of a list data structure. However, both the container (cart vs list) and the elements (products vs data values) differ in ontological type, constituting more than one role‑type shift.",
+      "confidence": 0.95
+    }
+  }
+}

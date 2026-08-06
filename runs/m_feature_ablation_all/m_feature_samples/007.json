@@ -1,0 +1,165 @@
+{
+  "id": 7,
+  "target": "Token (in AI/LLMs)",
+  "literal_instance": "no",
+  "feature_values": {
+    "mechanism_distance": 0.14166754855179708,
+    "native_relation_mismatch": 0.0,
+    "role_type_shift": 0.0,
+    "concept_distance": 0.2816584626571299,
+    "domain_distance": 0.37656330322871934
+  },
+  "raw_cosine_distances": {
+    "mechanism_distance": 0.14166754855179708,
+    "concept_distance": 0.2816584626571299,
+    "domain_distance": 0.37656330322871934
+  },
+  "experiments": {
+    "e1": {
+      "prediction": 1,
+      "latent_score": 1.141667548551797,
+      "combined_score": 0.14166754855179708,
+      "threshold": 0.35,
+      "threshold_margin": -0.2083324514482029,
+      "weights": {
+        "mechanism_distance": 1.0
+      },
+      "contributions": {
+        "mechanism_distance": 0.14166754855179708
+      }
+    },
+    "e2": {
+      "prediction": 1,
+      "latent_score": 1.0,
+      "combined_score": 0.0,
+      "threshold": 0.5,
+      "threshold_margin": -0.5,
+      "weights": {
+        "native_relation_mismatch": 1.0
+      },
+      "contributions": {
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e3": {
+      "prediction": 1,
+      "latent_score": 1.0850005291310783,
+      "combined_score": 0.08500052913107825,
+      "threshold": 0.35,
+      "threshold_margin": -0.2649994708689217,
+      "weights": {
+        "mechanism_distance": 0.6,
+        "native_relation_mismatch": 0.4
+      },
+      "contributions": {
+        "mechanism_distance": 0.08500052913107825,
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e4": {
+      "prediction": 1,
+      "latent_score": 1.0708337742758984,
+      "combined_score": 0.07083377427589854,
+      "threshold": 0.35,
+      "threshold_margin": -0.27916622572410144,
+      "weights": {
+        "mechanism_distance": 0.5,
+        "native_relation_mismatch": 0.3,
+        "role_type_shift": 0.2
+      },
+      "contributions": {
+        "mechanism_distance": 0.07083377427589854,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.0
+      }
+    },
+    "e5": {
+      "prediction": 1,
+      "latent_score": 1.1131170292897474,
+      "combined_score": 0.11311702928974737,
+      "threshold": 0.35,
+      "threshold_margin": -0.2368829707102526,
+      "weights": {
+        "mechanism_distance": 0.45,
+        "native_relation_mismatch": 0.25,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.075,
+        "domain_distance": 0.075
+      },
+      "contributions": {
+        "mechanism_distance": 0.06375039684830869,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.0,
+        "concept_distance": 0.02112438469928474,
+        "domain_distance": 0.028242247742153948
+      }
+    }
+  },
+  "m_feature_policy": {
+    "version": "m_v20_literal_gate_feature_ablation_v1_local",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "selected_experiments": [
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5"
+    ],
+    "threshold_override": null,
+    "embedding_texts": {
+      "source_mechanism": "Mechanism: scanning source code and breaking it into a sequence of standardized units.",
+      "target_mechanism": "Mechanism: scanning raw text and breaking it into a sequence of standardized units (tokens).",
+      "source_concept": "Concept: compiler.",
+      "target_concept": "Concept: token (in AI/LLMs).",
+      "source_domain": "Domain: software compilation.",
+      "target_domain": "Domain: AI language model tokenization."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "The compiler receives raw source code, interprets its overall meaning, then scans the code and breaks it into a sequence of standardized units that the rest of the compiler can process.",
+      "source_concept": "compiler",
+      "source_mechanism": "scanning source code and breaking it into a sequence of standardized units",
+      "target_concept": "token (in AI/LLMs)",
+      "target_signature": "scanning raw text and breaking it into a sequence of standardized units (tokens)",
+      "source_domain": "software compilation",
+      "target_domain": "AI language model tokenization",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "compiler (software that processes source code)",
+          "target_role": "tokenizer (software component that processes raw text)",
+          "semantic_relation": "preserved",
+          "rationale": "Both are software agents that transform raw textual input into standardized units for downstream processing."
+        },
+        {
+          "source_role": "raw source code (input text)",
+          "target_role": "raw text (input)",
+          "semantic_relation": "preserved",
+          "rationale": "Both serve as the initial textual input that is fed into the processing system."
+        },
+        {
+          "source_role": "standardized units produced for the rest of the compiler",
+          "target_role": "standardized units (tokens) produced for the model",
+          "semantic_relation": "preserved",
+          "rationale": "Both are the output tokens that serve as the only format usable by subsequent stages of the system."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "Lexical analysis (tokenization) performed by a compiler, which scans source code and breaks it into a sequence of standardized lexical tokens.",
+      "target_defining_mechanism": "Tokenization in AI/LLMs, where a tokenizer scans raw text, splits it into standardized units (words, subwords, characters), and maps each unit to an integer ID.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "yes",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "none_or_one_shift",
+      "evidence": "Both the compiler lexer and the LLM tokenizer perform the same core operation: scanning a character stream, segmenting it into discrete units, and assigning a symbolic representation (tokens). The lexer operates on programming language source code, while the LLM tokenizer operates on natural language text, but the relation of \"text → tokens\" is the same and the roles (input text, processing agent, output tokens) remain the same type.",
+      "confidence": 0.9
+    }
+  },
+  "gold": 2
+}

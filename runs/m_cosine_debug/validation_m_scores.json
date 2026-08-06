@@ -1,0 +1,13 @@
+{
+  "M": {
+    "kendall": 0.0,
+    "spearman": 0.0,
+    "accuracy": 0.0,
+    "gold": [
+      2
+    ],
+    "predicted": [
+      1
+    ]
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "id": 2,
+  "target": "Universal Design for Learning (UDL)",
+  "prediction": {
+    "M": 1
+  },
+  "latent_scores": {
+    "M": 1.1375493797689733
+  },
+  "confidence": {
+    "M": 0.9
+  },
+  "m_cosine_policy": {
+    "version": "m_v19_literal_gate_domain_cosine_v2_local",
+    "decisive_rule": "nonliteral_distance_at_or_below_threshold",
+    "literal_instance": "no",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "concept_weight": 0.5,
+    "domain_weight": 0.5,
+    "nonliteral_threshold": 0.35,
+    "concept_distance": 0.25610503028551,
+    "domain_distance": 0.2940924887903833,
+    "combined_distance": 0.27509875953794666,
+    "threshold_margin": -0.07490124046205332,
+    "embedding_texts": {
+      "source_concept": "Concept: playground. Defining mechanism: providing multiple alternative pathways and options for participation.",
+      "target_concept": "Concept: Universal Design for Learning (UDL). Defining mechanism: creating multiple pathways for learners to engage with content, express understanding, and become expert learners.",
+      "source_domain": "Domain: playground design.",
+      "target_domain": "Domain: educational learning environments."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "A playground that offers several ways to reach the slide—stairs, a gentle ramp, and climbing holds—provides benches of different heights, quiet corners with books, active zones with musical and spinning equipment, and gives instructions using pictures, words, and tactile symbols, allowing each child to choose the path or activity that suits them.",
+      "source_concept": "playground",
+      "source_mechanism": "providing multiple alternative pathways and options for participation",
+      "target_concept": "Universal Design for Learning (UDL)",
+      "target_signature": "creating multiple pathways for learners to engage with content, express understanding, and become expert learners",
+      "source_domain": "playground design",
+      "target_domain": "educational learning environments",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "multiple physical access routes (stairs, ramp, climbing holds)",
+          "target_role": "multiple means of representation (pictures, words, tactile symbols)",
+          "semantic_relation": "replaced",
+          "rationale": "The source provides literal, physical ways to reach equipment, while the target provides informational formats for presenting content; the semantic kinds differ (physical access vs. representational media)."
+        },
+        {
+          "source_role": "various seating options (benches of different heights)",
+          "target_role": "multiple ways to express understanding (written, oral, artistic)",
+          "semantic_relation": "replaced",
+          "rationale": "Seating is a physical comfort provision, whereas expression methods are communicative actions; the roles belong to different semantic categories."
+        },
+        {
+          "source_role": "quiet corners offering low sensory stimulation",
+          "target_role": "low‑distraction learning spaces or alternative modalities for focus",
+          "semantic_relation": "preserved",
+          "rationale": "Both are environments deliberately designed to reduce sensory load and support concentration, preserving the role of a calming space."
+        },
+        {
+          "source_role": "active zones with musical and spinning equipment",
+          "target_role": "interactive learning activities that stimulate engagement",
+          "semantic_relation": "preserved",
+          "rationale": "Each provides an engaging, stimulating option that invites active participation; the role of an engagement opportunity is maintained across domains."
+        },
+        {
+          "source_role": "instructions presented through pictures, words, and tactile symbols",
+          "target_role": "content presented through multiple representational formats (visual, auditory, textual)",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve delivering information via several representational channels, preserving the role of multimodal instruction."
+        },
+        {
+          "source_role": "children choose preferred path or equipment",
+          "target_role": "learners choose preferred method to engage or demonstrate learning",
+          "semantic_relation": "preserved",
+          "rationale": "The act of selecting a personal participation method is common to both contexts, keeping the role of choice intact."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "Providing multiple physical access routes and activity options in a playground (e.g., stairs, ramp, climbing holds, varied seating, quiet corners, multimodal instructions) so that children can engage according to their abilities and preferences.",
+      "target_defining_mechanism": "Providing multiple means of representation, engagement, and expression in learning environments so that all learners can access, participate in, and demonstrate understanding.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "yes",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "none_or_one_shift",
+      "evidence": "Both the playground and UDL aim to offer multiple pathways for participation. The playground does this through physical routes and equipment; UDL does this through instructional means. The core relation—‘inclusive provision of alternative access options for participants’—is the same, though the mechanism type shifts from physical structures to instructional media. Because UDL is an educational framework, a literal instance must occur within an educational setting, which the playground does not, so literal_instance is no, but the native relation matches.",
+      "confidence": 0.9
+    }
+  }
+}

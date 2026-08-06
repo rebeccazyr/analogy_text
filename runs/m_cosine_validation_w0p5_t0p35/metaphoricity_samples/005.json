@@ -1,0 +1,84 @@
+{
+  "id": 5,
+  "target": "firewall",
+  "prediction": {
+    "M": 1
+  },
+  "latent_scores": {
+    "M": 1.147991444425773
+  },
+  "confidence": {
+    "M": 0.95
+  },
+  "m_cosine_policy": {
+    "version": "m_v19_literal_gate_domain_cosine_v2_local",
+    "decisive_rule": "nonliteral_distance_at_or_below_threshold",
+    "literal_instance": "no",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "concept_weight": 0.5,
+    "domain_weight": 0.5,
+    "nonliteral_threshold": 0.35,
+    "concept_distance": 0.21983561133263207,
+    "domain_distance": 0.37213016637046026,
+    "combined_distance": 0.29598288885154617,
+    "threshold_margin": -0.05401711114845381,
+    "embedding_texts": {
+      "source_concept": "Concept: doorman. Defining mechanism: checking a list of rules and blocking anyone or anything that fails to meet them.",
+      "target_concept": "Concept: firewall. Defining mechanism: controlling incoming and outgoing network traffic according to rules.",
+      "source_domain": "Domain: hospitality (restaurant entrance).",
+      "target_domain": "Domain: network security."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "A strict doorman at the entrance of a fancy restaurant checks a list of rules about who is on the VIP list, who looks suspicious, and what items are allowed in or out, stopping anyone or anything that doesn’t fit the rules at the door.",
+      "source_concept": "doorman",
+      "source_mechanism": "checking a list of rules and blocking anyone or anything that fails to meet them",
+      "target_concept": "firewall",
+      "target_signature": "controlling incoming and outgoing network traffic according to rules",
+      "source_domain": "hospitality (restaurant entrance)",
+      "target_domain": "network security",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "doorman",
+          "target_role": "firewall",
+          "semantic_relation": "replaced",
+          "rationale": "The doorman is a human person who controls entry, while the firewall is a software/hardware system; they differ in entity type."
+        },
+        {
+          "source_role": "list of rules",
+          "target_role": "rules (policy)",
+          "semantic_relation": "preserved",
+          "rationale": "Both are collections of criteria used to decide who or what may pass; they serve the same function as rule specifications."
+        },
+        {
+          "source_role": "checking (applying the list)",
+          "target_role": "evaluating traffic against rules",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve applying the rule set to decide allow or deny, representing the same decision‑making action."
+        },
+        {
+          "source_role": "door (entrance)",
+          "target_role": "network gateway/port",
+          "semantic_relation": "preserved",
+          "rationale": "Both are points of passage that entities must traverse; they function as gateways controlling entry and exit."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A doorman at a restaurant entrance checks a list of rules (VIP list, suspicious appearance, allowed items) and stops anyone or anything that does not satisfy the rules from entering or leaving.",
+      "target_defining_mechanism": "A firewall applies a set of security rules to incoming and outgoing network traffic, allowing packets that match the policy and blocking those that do not.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "yes",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "multiple_type_changes",
+      "evidence": "Both the doorman and the firewall perform rule‑based admission control: they examine each incoming entity (person/item vs network packet) against a policy and either permit or deny passage. The doorman is a human gatekeeper handling people and physical items, whereas the firewall is a software/hardware system handling data packets, representing a shift in actor and client types.",
+      "confidence": 0.95
+    }
+  }
+}

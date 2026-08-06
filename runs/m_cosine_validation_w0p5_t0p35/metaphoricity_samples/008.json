@@ -1,0 +1,90 @@
+{
+  "id": 8,
+  "target": "Boolean logic",
+  "prediction": {
+    "M": 0
+  },
+  "latent_scores": {
+    "M": 0.0
+  },
+  "confidence": {
+    "M": 0.97
+  },
+  "m_cosine_policy": {
+    "version": "m_v19_literal_gate_domain_cosine_v2_local",
+    "decisive_rule": "literal_instance",
+    "literal_instance": "yes",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "concept_weight": 0.5,
+    "domain_weight": 0.5,
+    "nonliteral_threshold": 0.35,
+    "concept_distance": 0.35484136053016657,
+    "domain_distance": 0.32235582902770665,
+    "combined_distance": 0.3385985947789366,
+    "threshold_margin": -0.011401405221063365,
+    "embedding_texts": {
+      "source_concept": "Concept: terminal command execution. Defining mechanism: conditional execution based on a command's exit status.",
+      "target_concept": "Concept: Boolean logic. Defining mechanism: combining truth values with logical operators AND, OR, and NOT to evaluate propositions to a single true or false result.",
+      "source_domain": "Domain: computer command-line interface.",
+      "target_domain": "Domain: formal logic / Boolean algebra."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "Running commands in a terminal shell where each command returns a success or failure status, and commands can be chained so that the next command runs only if the previous succeeded (AND) or only if it failed (OR); a backup command can be run to invert the overall result (NOT).",
+      "source_concept": "terminal command execution",
+      "source_mechanism": "conditional execution based on a command's exit status",
+      "target_concept": "Boolean logic",
+      "target_signature": "combining truth values with logical operators AND, OR, and NOT to evaluate propositions to a single true or false result",
+      "source_domain": "computer command-line interface",
+      "target_domain": "formal logic / Boolean algebra",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "command (a unit that produces a success/failure outcome)",
+          "target_role": "proposition (a statement that is true or false)",
+          "semantic_relation": "preserved",
+          "rationale": "Both are discrete items whose evaluation yields a binary outcome."
+        },
+        {
+          "source_role": "success/failure status of a command",
+          "target_role": "truth value (true/false)",
+          "semantic_relation": "preserved",
+          "rationale": "Both represent a binary result that can be used in further reasoning."
+        },
+        {
+          "source_role": "conditional execution that runs the next command only if the previous succeeded (AND)",
+          "target_role": "logical conjunction (AND)",
+          "semantic_relation": "replaced",
+          "rationale": "The source role is a control‑flow rule for running commands, whereas the target role is a logical operator; they differ in semantic type."
+        },
+        {
+          "source_role": "conditional execution that runs the next command only if the previous failed (OR)",
+          "target_role": "logical disjunction (OR)",
+          "semantic_relation": "replaced",
+          "rationale": "One is a runtime decision about command execution, the other is a logical connective; they are not the same kind of entity."
+        },
+        {
+          "source_role": "running a backup command to flip the overall outcome (NOT)",
+          "target_role": "logical negation (NOT)",
+          "semantic_relation": "replaced",
+          "rationale": "The source role is an action (executing a command) that causes inversion, while the target role is an abstract operator that directly inverts a truth value."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "Shell commands return an exit status (0 for success, non‑zero for failure). Using && runs the next command only if the previous succeeded (logical AND); using || runs the next command only if the previous failed (logical OR); prefixing a command with ! inverts its exit status (logical NOT). The combined exit status of the chain is a single success/failure result.",
+      "target_defining_mechanism": "Boolean logic evaluates propositions that are true or false using the operators AND, OR, and NOT to produce a single true/false outcome.",
+      "target_scope_type": "general_formal_or_practice",
+      "behavior_match": "yes",
+      "target_scope_match": "yes",
+      "literal_instance": "yes",
+      "native_relation_match": "no",
+      "role_type_preservation": "none_or_one_shift",
+      "evidence": "The shell’s conditional execution operators directly map to Boolean conjunction, disjunction, and negation on the boolean values represented by command exit statuses. This is an implementation of Boolean logic in a concrete computing environment, matching the formal system’s defining behavior within its general formal scope.",
+      "confidence": 0.97
+    }
+  }
+}

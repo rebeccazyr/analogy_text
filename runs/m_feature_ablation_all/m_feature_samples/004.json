@@ -1,0 +1,177 @@
+{
+  "id": 4,
+  "target": "symbolic computation",
+  "literal_instance": "no",
+  "feature_values": {
+    "mechanism_distance": 0.22075191656178383,
+    "native_relation_mismatch": 0.0,
+    "role_type_shift": 1.0,
+    "concept_distance": 0.34678846502204885,
+    "domain_distance": 0.3693939225960263
+  },
+  "raw_cosine_distances": {
+    "mechanism_distance": 0.22075191656178383,
+    "concept_distance": 0.34678846502204885,
+    "domain_distance": 0.3693939225960263
+  },
+  "experiments": {
+    "e1": {
+      "prediction": 1,
+      "latent_score": 1.2207519165617837,
+      "combined_score": 0.22075191656178383,
+      "threshold": 0.35,
+      "threshold_margin": -0.12924808343821614,
+      "weights": {
+        "mechanism_distance": 1.0
+      },
+      "contributions": {
+        "mechanism_distance": 0.22075191656178383
+      }
+    },
+    "e2": {
+      "prediction": 1,
+      "latent_score": 1.0,
+      "combined_score": 0.0,
+      "threshold": 0.5,
+      "threshold_margin": -0.5,
+      "weights": {
+        "native_relation_mismatch": 1.0
+      },
+      "contributions": {
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e3": {
+      "prediction": 1,
+      "latent_score": 1.1324511499370704,
+      "combined_score": 0.1324511499370703,
+      "threshold": 0.35,
+      "threshold_margin": -0.21754885006292968,
+      "weights": {
+        "mechanism_distance": 0.6,
+        "native_relation_mismatch": 0.4
+      },
+      "contributions": {
+        "mechanism_distance": 0.1324511499370703,
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e4": {
+      "prediction": 1,
+      "latent_score": 1.310375958280892,
+      "combined_score": 0.31037595828089193,
+      "threshold": 0.35,
+      "threshold_margin": -0.03962404171910805,
+      "weights": {
+        "mechanism_distance": 0.5,
+        "native_relation_mismatch": 0.3,
+        "role_type_shift": 0.2
+      },
+      "contributions": {
+        "mechanism_distance": 0.11037595828089192,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.2
+      }
+    },
+    "e5": {
+      "prediction": 1,
+      "latent_score": 1.3030520415241584,
+      "combined_score": 0.3030520415241584,
+      "threshold": 0.35,
+      "threshold_margin": -0.0469479584758416,
+      "weights": {
+        "mechanism_distance": 0.45,
+        "native_relation_mismatch": 0.25,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.075,
+        "domain_distance": 0.075
+      },
+      "contributions": {
+        "mechanism_distance": 0.09933836245280273,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.026009134876653663,
+        "domain_distance": 0.027704544194701974
+      }
+    }
+  },
+  "m_feature_policy": {
+    "version": "m_v20_literal_gate_feature_ablation_v1_local",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "selected_experiments": [
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5"
+    ],
+    "threshold_override": null,
+    "embedding_texts": {
+      "source_mechanism": "Mechanism: using exact measurements to manipulate ingredients without approximation.",
+      "target_mechanism": "Mechanism: manipulating mathematical expressions in exact symbolic form rather than using numerical approximations.",
+      "source_concept": "Concept: chef.",
+      "target_concept": "Concept: symbolic computation.",
+      "source_domain": "Domain: culinary arts.",
+      "target_domain": "Domain: computer algebra / symbolic computation."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "A chef works with precise recipes, using exact measurements like \"1 cup plus 2 tablespoons\" instead of approximations, keeps symbols such as \"π\" in the recipe, combines ingredients while preserving the exact quantities, and simplifies complex recipes without losing precision.",
+      "source_concept": "chef",
+      "source_mechanism": "using exact measurements to manipulate ingredients without approximation",
+      "target_concept": "symbolic computation",
+      "target_signature": "manipulating mathematical expressions in exact symbolic form rather than using numerical approximations",
+      "source_domain": "culinary arts",
+      "target_domain": "computer algebra / symbolic computation",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "chef",
+          "target_role": "symbolic computation system",
+          "semantic_relation": "replaced",
+          "rationale": "A chef is a human agent performing cooking, while a symbolic computation system is software that manipulates symbols; they belong to different semantic categories."
+        },
+        {
+          "source_role": "recipe ingredients",
+          "target_role": "mathematical expressions",
+          "semantic_relation": "replaced",
+          "rationale": "Ingredients are tangible food items, whereas mathematical expressions are abstract symbolic objects."
+        },
+        {
+          "source_role": "exact measurements",
+          "target_role": "exact symbolic form",
+          "semantic_relation": "replaced",
+          "rationale": "Exact measurements are numeric quantities, while exact symbolic form refers to non‑numeric symbolic representations of mathematical entities."
+        },
+        {
+          "source_role": "combining ingredients",
+          "target_role": "performing operations on expressions",
+          "semantic_relation": "replaced",
+          "rationale": "The physical act of mixing ingredients differs in nature from the abstract mathematical operation on symbols."
+        },
+        {
+          "source_role": "simplifying a recipe",
+          "target_role": "simplifying a mathematical expression",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve a transformation that reduces complexity while preserving the underlying meaning or equivalence of the original item."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A chef uses exact measurements and symbolic quantities in recipes, preserving precise amounts while combining ingredients and simplifying recipes without rounding or approximation.",
+      "target_defining_mechanism": "Symbolic computation manipulates mathematical expressions in exact symbolic form, preserving exactness and simplifying expressions without numerical approximation.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "no",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "multiple_type_changes",
+      "evidence": "The source describes a chef who keeps precise, symbolic-like measurements (e.g., \"1 cup plus 2 tablespoons\", \"√2 cups\") and manipulates ingredients while preserving that exactness, which mirrors the defining behavior of symbolic computation—manipulating mathematical expressions symbolically without numeric approximation. However, the chef is not actually performing mathematical symbolic manipulation; the activity is culinary, not computational. Therefore the source does not perform the target's defining behavior, and it lies outside the professional scope of symbolic computation. Nonetheless, both domains share the conventional relation of \"preserving exact representations while transforming them,\" a recognized relation. The central roles shift: the agent changes from a human chef to a software system, and the objects shift from food ingredients to mathematical expressions, constituting multiple type changes.",
+      "confidence": 0.9
+    }
+  },
+  "gold": 2
+}

@@ -1,0 +1,90 @@
+{
+  "id": 4,
+  "target": "symbolic computation",
+  "prediction": {
+    "M": 1
+  },
+  "latent_scores": {
+    "M": 1.1555158097281195
+  },
+  "confidence": {
+    "M": 0.9
+  },
+  "m_cosine_policy": {
+    "version": "m_v19_literal_gate_domain_cosine_v2_local",
+    "decisive_rule": "nonliteral_distance_at_or_below_threshold",
+    "literal_instance": "no",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "concept_weight": 0.5,
+    "domain_weight": 0.5,
+    "nonliteral_threshold": 0.35,
+    "concept_distance": 0.25266937431781167,
+    "domain_distance": 0.3693938645946664,
+    "combined_distance": 0.31103161945623903,
+    "threshold_margin": -0.03896838054376095,
+    "embedding_texts": {
+      "source_concept": "Concept: chef. Defining mechanism: using exact measurements to manipulate ingredients without approximation.",
+      "target_concept": "Concept: symbolic computation. Defining mechanism: manipulating mathematical expressions in exact symbolic form rather than using numerical approximations.",
+      "source_domain": "Domain: culinary arts.",
+      "target_domain": "Domain: computer algebra / symbolic computation."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "A chef works with precise recipes, using exact measurements like \"1 cup plus 2 tablespoons\" instead of approximations, keeps symbols such as \"π\" in the recipe, combines ingredients while preserving the exact quantities, and simplifies complex recipes without losing precision.",
+      "source_concept": "chef",
+      "source_mechanism": "using exact measurements to manipulate ingredients without approximation",
+      "target_concept": "symbolic computation",
+      "target_signature": "manipulating mathematical expressions in exact symbolic form rather than using numerical approximations",
+      "source_domain": "culinary arts",
+      "target_domain": "computer algebra / symbolic computation",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "chef",
+          "target_role": "symbolic computation system",
+          "semantic_relation": "replaced",
+          "rationale": "A chef is a human agent performing cooking, while a symbolic computation system is software that manipulates symbols; they belong to different semantic categories."
+        },
+        {
+          "source_role": "recipe ingredients",
+          "target_role": "mathematical expressions",
+          "semantic_relation": "replaced",
+          "rationale": "Ingredients are tangible food items, whereas mathematical expressions are abstract symbolic objects."
+        },
+        {
+          "source_role": "exact measurements",
+          "target_role": "exact symbolic form",
+          "semantic_relation": "replaced",
+          "rationale": "Exact measurements are numeric quantities, while exact symbolic form refers to non‑numeric symbolic representations of mathematical entities."
+        },
+        {
+          "source_role": "combining ingredients",
+          "target_role": "performing operations on expressions",
+          "semantic_relation": "replaced",
+          "rationale": "The physical act of mixing ingredients differs in nature from the abstract mathematical operation on symbols."
+        },
+        {
+          "source_role": "simplifying a recipe",
+          "target_role": "simplifying a mathematical expression",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve a transformation that reduces complexity while preserving the underlying meaning or equivalence of the original item."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A chef uses exact measurements and symbolic quantities in recipes, preserving precise amounts while combining ingredients and simplifying recipes without rounding or approximation.",
+      "target_defining_mechanism": "Symbolic computation manipulates mathematical expressions in exact symbolic form, preserving exactness and simplifying expressions without numerical approximation.",
+      "target_scope_type": "domain_specific",
+      "behavior_match": "no",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "multiple_type_changes",
+      "evidence": "The source describes a chef who keeps precise, symbolic-like measurements (e.g., \"1 cup plus 2 tablespoons\", \"√2 cups\") and manipulates ingredients while preserving that exactness, which mirrors the defining behavior of symbolic computation—manipulating mathematical expressions symbolically without numeric approximation. However, the chef is not actually performing mathematical symbolic manipulation; the activity is culinary, not computational. Therefore the source does not perform the target's defining behavior, and it lies outside the professional scope of symbolic computation. Nonetheless, both domains share the conventional relation of \"preserving exact representations while transforming them,\" a recognized relation. The central roles shift: the agent changes from a human chef to a software system, and the objects shift from food ingredients to mathematical expressions, constituting multiple type changes.",
+      "confidence": 0.9
+    }
+  }
+}

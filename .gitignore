@@ -4,6 +4,5 @@ __pycache__/
 *.py[cod]
 .agent_cache/
 .pytest_cache/
-runs/
 output/
 .DS_Store

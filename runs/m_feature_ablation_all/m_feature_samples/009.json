@@ -1,0 +1,171 @@
+{
+  "id": 9,
+  "target": "Parallel computing",
+  "literal_instance": "no",
+  "feature_values": {
+    "mechanism_distance": 0.337051651106856,
+    "native_relation_mismatch": 0.0,
+    "role_type_shift": 1.0,
+    "concept_distance": 0.4086584756684203,
+    "domain_distance": 0.3858077505325104
+  },
+  "raw_cosine_distances": {
+    "mechanism_distance": 0.337051651106856,
+    "concept_distance": 0.4086584756684203,
+    "domain_distance": 0.3858077505325104
+  },
+  "experiments": {
+    "e1": {
+      "prediction": 1,
+      "latent_score": 1.337051651106856,
+      "combined_score": 0.337051651106856,
+      "threshold": 0.35,
+      "threshold_margin": -0.012948348893144002,
+      "weights": {
+        "mechanism_distance": 1.0
+      },
+      "contributions": {
+        "mechanism_distance": 0.337051651106856
+      }
+    },
+    "e2": {
+      "prediction": 1,
+      "latent_score": 1.0,
+      "combined_score": 0.0,
+      "threshold": 0.5,
+      "threshold_margin": -0.5,
+      "weights": {
+        "native_relation_mismatch": 1.0
+      },
+      "contributions": {
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e3": {
+      "prediction": 1,
+      "latent_score": 1.2022309906641135,
+      "combined_score": 0.20223099066411357,
+      "threshold": 0.35,
+      "threshold_margin": -0.1477690093358864,
+      "weights": {
+        "mechanism_distance": 0.6,
+        "native_relation_mismatch": 0.4
+      },
+      "contributions": {
+        "mechanism_distance": 0.20223099066411357,
+        "native_relation_mismatch": 0.0
+      }
+    },
+    "e4": {
+      "prediction": 2,
+      "latent_score": 1.368525825553428,
+      "combined_score": 0.368525825553428,
+      "threshold": 0.35,
+      "threshold_margin": 0.01852582555342802,
+      "weights": {
+        "mechanism_distance": 0.5,
+        "native_relation_mismatch": 0.3,
+        "role_type_shift": 0.2
+      },
+      "contributions": {
+        "mechanism_distance": 0.168525825553428,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.2
+      }
+    },
+    "e5": {
+      "prediction": 2,
+      "latent_score": 1.361258209963155,
+      "combined_score": 0.361258209963155,
+      "threshold": 0.35,
+      "threshold_margin": 0.01125820996315502,
+      "weights": {
+        "mechanism_distance": 0.45,
+        "native_relation_mismatch": 0.25,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.075,
+        "domain_distance": 0.075
+      },
+      "contributions": {
+        "mechanism_distance": 0.15167324299808518,
+        "native_relation_mismatch": 0.0,
+        "role_type_shift": 0.15,
+        "concept_distance": 0.03064938567513152,
+        "domain_distance": 0.028935581289938277
+      }
+    }
+  },
+  "m_feature_policy": {
+    "version": "m_v20_literal_gate_feature_ablation_v1_local",
+    "embedding_backend": "sentence-transformers",
+    "embedding_model": "BAAI/bge-large-en-v1.5",
+    "embedding_device": "cuda:0",
+    "selected_experiments": [
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5"
+    ],
+    "threshold_override": null,
+    "embedding_texts": {
+      "source_mechanism": "Mechanism: delegating individual cooking tasks to chefs who work concurrently.",
+      "target_mechanism": "Mechanism: Coordinating multiple processors or cores to work simultaneously on different parts of a problem..",
+      "source_concept": "Concept: head chef.",
+      "target_concept": "Concept: parallel computing.",
+      "source_domain": "Domain: culinary arts (restaurant kitchen).",
+      "target_domain": "Domain: computer science (parallel computing)."
+    }
+  },
+  "agents": {
+    "source_domain_classifier": {
+      "literal_source_summary": "A head chef in a busy restaurant kitchen prepares for a huge banquet. The chef breaks down the banquet into smaller, manageable tasks and assigns one chef to chop vegetables, another to grill steaks, and a third to prepare dessert. All the chefs work at their stations at the same time on their specific tasks. The chef coordinates the multiple chefs to ensure the banquet is ready much faster than if one person did it all alone.",
+      "source_concept": "head chef",
+      "source_mechanism": "delegating individual cooking tasks to chefs who work concurrently",
+      "target_concept": "parallel computing",
+      "target_signature": "Coordinating multiple processors or cores to work simultaneously on different parts of a problem.",
+      "source_domain": "culinary arts (restaurant kitchen)",
+      "target_domain": "computer science (parallel computing)",
+      "domain_distance": "different",
+      "role_alignments": [
+        {
+          "source_role": "head chef",
+          "target_role": "main program",
+          "semantic_relation": "replaced",
+          "rationale": "The head chef is a human coordinator, while the main program is software; they serve the same coordinating function but belong to different semantic categories."
+        },
+        {
+          "source_role": "chef (worker)",
+          "target_role": "processor core",
+          "semantic_relation": "replaced",
+          "rationale": "A chef is a person performing manual cooking work, whereas a processor core is a hardware execution unit; both act as workers but are different kinds of entities."
+        },
+        {
+          "source_role": "cooking task (e.g., chopping vegetables)",
+          "target_role": "subproblem of a computation",
+          "semantic_relation": "preserved",
+          "rationale": "Both are sub‑tasks that constitute parts of a larger problem; the role of a subtask is the same across domains."
+        },
+        {
+          "source_role": "coordination of chefs",
+          "target_role": "coordination of cores",
+          "semantic_relation": "preserved",
+          "rationale": "Both involve managing multiple workers to achieve a common goal, preserving the coordinating role across the source and target."
+        }
+      ]
+    },
+    "literal_instance_judge": {
+      "literal_source_mechanism": "A head chef breaks down a banquet into smaller tasks, assigns each chef to a specific task, and the chefs work simultaneously at their stations on their assigned parts.",
+      "target_defining_mechanism": "Coordinating multiple processors or cores to work simultaneously on different parts of a problem.",
+      "target_scope_type": "general_formal_or_practice",
+      "behavior_match": "yes",
+      "target_scope_match": "no",
+      "literal_instance": "no",
+      "native_relation_match": "yes",
+      "role_type_preservation": "multiple_type_changes",
+      "evidence": "Both the kitchen scenario and parallel computing involve a coordinator dividing a larger task into sub‑tasks and having multiple agents execute those sub‑tasks concurrently. The core relation—division of labor with concurrent execution—is the same. However, the agents differ in type (human chefs vs. processor cores, head chef vs. main program), constituting more than one role‑type shift, and the kitchen activity lies outside the professional domain of parallel computing, so it is not a literal instance.",
+      "confidence": 0.93
+    }
+  },
+  "gold": 2
+}
