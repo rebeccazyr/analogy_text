@@ -12,6 +12,7 @@ from analogy_agents.pipeline import (
     SixAgentPipeline,
     load_archived_v1_tcc,
     load_split,
+    reconcile_m_duplicate_source_groups,
     score_m_validation,
     score_ms_validation,
     score_validation,
@@ -45,6 +46,12 @@ from analogy_agents.original_mapping_strength_prompts import (
 from analogy_agents.ms_corrective_prompts import (
     ms_corrective_blind_source_prompt,
 )
+from analogy_agents.shared_prompts import (
+    SHARED_SEMANTIC_FRONTEND_VERSION,
+    shared_mapping_frame_prompt,
+    shared_source_frame_prompt,
+    shared_target_frame_prompt,
+)
 
 
 def parse_ids(value: str | None, row_count: int) -> list[int]:
@@ -73,6 +80,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--mode",
         choices=[
             "all",
+            "shared-active",
             "target-coverage",
             "mapping-strength",
             "mapping-strength-native",
@@ -91,6 +99,7 @@ def build_parser() -> argparse.ArgumentParser:
             "m-native-scope-audit",
             "m-two-gate",
             "m-relation-gate",
+            "m-evidence-reconciled",
         ],
         default="all",
         help=(
@@ -110,6 +119,8 @@ def build_parser() -> argparse.ArgumentParser:
             "applying literal and native-neighborhood boundaries."
             " The relation-gate path replaces role counting with native "
             "relation identity and carrier constraints."
+            " The evidence-reconciled path retains v7.1 and resolves only "
+            "high-precision disagreements among its existing agents."
         ),
     )
     parser.add_argument(
@@ -131,8 +142,31 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--model", default="openai/gpt-oss-120b")
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--reasoning-effort", default="medium")
+    parser.add_argument(
+        "--m-reasoning-effort",
+        default="high",
+        help=(
+            "Reasoning effort for M in --mode shared-active. The shared "
+            "front end, TCC, and MS use --reasoning-effort."
+        ),
+    )
     parser.add_argument("--max-tokens", type=int, default=2200)
+    parser.add_argument(
+        "--shared-max-tokens",
+        type=int,
+        default=5000,
+        help=(
+            "Structured-output limit for --mode shared-active. Shared frames "
+            "are larger than the individual metric schemas."
+        ),
+    )
     parser.add_argument("--max-concurrency", type=int, default=3)
+    parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=3,
+        help="Maximum attempts for a transient structured API failure.",
+    )
     parser.add_argument(
         "--sample-concurrency",
         type=int,
@@ -194,6 +228,137 @@ async def run_examples(
         for position, example_id in enumerate(selected_ids, start=1)
     ]
     return list(await asyncio.gather(*tasks))
+
+
+async def run_shared_active_examples(
+    medium_pipeline: SixAgentPipeline,
+    high_pipeline: SixAgentPipeline,
+    rows_by_id: dict[int, dict],
+    selected_ids: list[int],
+    split: str,
+    output_dir: Path,
+    sample_concurrency: int,
+) -> list[dict]:
+    """Run all active metric policies from one shared semantic front end."""
+    sample_dir = output_dir / "shared_active_samples"
+    sample_dir.mkdir(parents=True, exist_ok=True)
+    sample_semaphore = asyncio.Semaphore(sample_concurrency)
+
+    groups: dict[tuple[str, str], list[int]] = {}
+    for example_id in selected_ids:
+        key = concept_group_key(rows_by_id[example_id])
+        groups.setdefault(key, []).append(example_id)
+
+    async def prepare_target(key: tuple[str, str], ids: list[int]):
+        async with sample_semaphore:
+            representative = rows_by_id[ids[0]]
+            print(
+                f"[shared target] ids={ids} target={representative['target']}",
+                flush=True,
+            )
+            frame = await medium_pipeline.extract_shared_target_frame(
+                representative,
+                split,
+            )
+            return key, frame
+
+    target_frames = dict(
+        await asyncio.gather(
+            *[
+                asyncio.create_task(prepare_target(key, ids))
+                for key, ids in groups.items()
+            ]
+        )
+    )
+
+    async def run_one(position: int, example_id: int) -> dict:
+        async with sample_semaphore:
+            row = rows_by_id[example_id]
+            print(
+                f"[shared {position}/{len(selected_ids)}] "
+                f"id={example_id} target={row['target']}",
+                flush=True,
+            )
+            shared = await medium_pipeline.analyze_shared_semantics(
+                row,
+                split,
+                target_frames[concept_group_key(row)],
+            )
+            tcc_result, ms_result, m_result = await asyncio.gather(
+                medium_pipeline.evaluate_exact_v1_tcc_with_facet_audit(
+                    row,
+                    split,
+                    shared,
+                ),
+                medium_pipeline.evaluate_ms_native_integrity(
+                    row,
+                    split,
+                    shared,
+                ),
+                high_pipeline.evaluate_m(
+                    row,
+                    split,
+                    shared,
+                ),
+            )
+            result = {
+                "id": example_id,
+                "target": row["target"],
+                "prediction": {
+                    "TCC": tcc_result["prediction"]["TCC"],
+                    "MS": ms_result["prediction"]["MS"],
+                    "M": m_result["prediction"]["M"],
+                },
+                "latent_scores": {
+                    "TCC": tcc_result["latent_scores"]["TCC"],
+                    "MS": ms_result["latent_scores"]["MS"],
+                    "M": m_result["latent_scores"]["M"],
+                },
+                "shared_frontend": {
+                    "version": SHARED_SEMANTIC_FRONTEND_VERSION,
+                    "reasoning_effort": {
+                        "preprocessing": (
+                            medium_pipeline.config.reasoning_effort
+                        ),
+                        "TCC": medium_pipeline.config.reasoning_effort,
+                        "MS": medium_pipeline.config.reasoning_effort,
+                        "M": high_pipeline.config.reasoning_effort,
+                    },
+                    "visibility": {
+                        "target_frame": "TARGET+DESCRIPTION only",
+                        "source_frame": "ANALOGY only",
+                        "mapping_frame": "all fields after blind frames",
+                    },
+                    "analysis": shared.model_dump(),
+                },
+                "metric_results": {
+                    "TCC": tcc_result,
+                    "MS": ms_result,
+                    "M": m_result,
+                },
+            }
+            sample_path = sample_dir / f"{example_id:03d}.json"
+            sample_path.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            print(
+                f"  id={example_id} -> "
+                f"TCC={result['prediction']['TCC']} "
+                f"MS={result['prediction']['MS']} "
+                f"M={result['prediction']['M']}",
+                flush=True,
+            )
+            return result
+
+    return list(
+        await asyncio.gather(
+            *[
+                asyncio.create_task(run_one(position, example_id))
+                for position, example_id in enumerate(selected_ids, start=1)
+            ]
+        )
+    )
 
 
 def concept_group_key(row: dict) -> tuple[str, str]:
@@ -619,6 +784,7 @@ async def run_m_examples(
     use_native_scope_audit: bool = False,
     use_two_gate: bool = False,
     use_relation_gate: bool = False,
+    use_evidence_reconciled: bool = False,
 ) -> list[dict]:
     sample_dir = output_dir / "metaphoricity_samples"
     sample_dir.mkdir(parents=True, exist_ok=True)
@@ -632,7 +798,9 @@ async def run_m_examples(
                 f"id={example_id} target={row['target']}",
                 flush=True,
             )
-            if use_relation_gate:
+            if use_evidence_reconciled:
+                evaluator = pipeline.evaluate_m_reconciled
+            elif use_relation_gate:
                 evaluator = pipeline.evaluate_m_relation_gate
             elif use_two_gate:
                 evaluator = pipeline.evaluate_m_two_gate
@@ -663,7 +831,7 @@ async def run_m_examples(
             )
             return result
 
-    return list(
+    results = list(
         await asyncio.gather(
             *[
                 asyncio.create_task(judge_one(position, example_id))
@@ -673,6 +841,15 @@ async def run_m_examples(
             ]
         )
     )
+    if use_evidence_reconciled:
+        reconcile_m_duplicate_source_groups(results)
+        for result in results:
+            sample_path = sample_dir / f"{int(result['id']):03d}.json"
+            sample_path.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+    return results
 
 
 def main() -> None:
@@ -684,7 +861,27 @@ def main() -> None:
 
     if args.dry_run:
         first = rows_by_id[selected_ids[0]]
-        if args.mode in {
+        if args.mode == "shared-active":
+            prompts = {
+                "shared_target_semantic_extractor": (
+                    shared_target_frame_prompt(
+                        first["target"], first["description"]
+                    )
+                ),
+                "shared_blind_source_semantic_extractor": (
+                    shared_source_frame_prompt(first["analogy"])
+                ),
+                "shared_cross_domain_alignment_extractor": (
+                    shared_mapping_frame_prompt(
+                        first["target"],
+                        first["description"],
+                        first["analogy"],
+                        {"placeholder": "target frame"},
+                        {"placeholder": "blind source frame"},
+                    )
+                ),
+            }
+        elif args.mode in {
             "tcc",
             "tcc-importance",
             "tcc-v1-conservative",
@@ -978,13 +1175,45 @@ def main() -> None:
         model=args.model,
         temperature=args.temperature,
         reasoning_effort=args.reasoning_effort,
-        max_tokens=args.max_tokens,
+        max_tokens=(
+            args.shared_max_tokens
+            if args.mode == "shared-active"
+            else args.max_tokens
+        ),
         max_concurrency=args.max_concurrency,
+        max_retries=args.max_retries,
         cache_dir=args.cache_dir,
         refresh_cache=args.refresh_cache,
     )
     pipeline = SixAgentPipeline(config)
-    if args.mode in {
+    if args.mode == "shared-active":
+        high_pipeline = SixAgentPipeline(
+            PipelineConfig(
+                model=args.model,
+                temperature=args.temperature,
+                reasoning_effort=args.m_reasoning_effort,
+                max_tokens=args.shared_max_tokens,
+                max_concurrency=args.max_concurrency,
+                max_retries=args.max_retries,
+                cache_dir=args.cache_dir,
+                refresh_cache=args.refresh_cache,
+            )
+        )
+        results = asyncio.run(
+            run_shared_active_examples(
+                pipeline,
+                high_pipeline,
+                rows_by_id,
+                selected_ids,
+                args.split,
+                args.output_dir,
+                args.sample_concurrency,
+            )
+        )
+        details_path, predictions_path = write_run_outputs(
+            results, args.output_dir, args.split
+        )
+    elif args.mode in {
         "tcc-v1-prompt-conservative",
         "tcc-v1-facet-conservative",
         "target-coverage",
@@ -1067,6 +1296,7 @@ def main() -> None:
         "m-native-scope-audit",
         "m-two-gate",
         "m-relation-gate",
+        "m-evidence-reconciled",
     }:
         results = asyncio.run(
             run_m_examples(
@@ -1092,6 +1322,7 @@ def main() -> None:
                 args.mode == "m-native-scope-audit",
                 args.mode == "m-two-gate",
                 args.mode == "m-relation-gate",
+                args.mode == "m-evidence-reconciled",
             )
         )
         details_path, predictions_path = write_m_outputs(
@@ -1118,7 +1349,10 @@ def main() -> None:
         print(f"Submission: {submission_path}")
 
     if args.split == "validation":
-        if args.mode in {
+        if args.mode == "shared-active":
+            scores = score_validation(results, rows)
+            score_path = args.output_dir / "validation_shared_scores.json"
+        elif args.mode in {
             "tcc",
             "tcc-importance",
             "tcc-v1-conservative",
@@ -1144,6 +1378,7 @@ def main() -> None:
             "m-native-scope-audit",
             "m-two-gate",
             "m-relation-gate",
+            "m-evidence-reconciled",
         }:
             scores = score_m_validation(results, rows)
             score_path = args.output_dir / "validation_m_scores.json"

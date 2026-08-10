@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "b0ccc11d3326ed04ef64",
+  "created_at": "2026-08-04T08:38:37.036540+00:00",
+  "usage": {
+    "completion_tokens": 994,
+    "prompt_tokens": 1394,
+    "total_tokens": 2388,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I001",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The candidate preserves the core description of overfitting: memorizing noise, excelling on training‑like questions, and failing on novel ones. The source (student/model) and target (overfitting behavior) roles, causal direction, and the mapping between textbook, exam, and data remain unchanged, so TCC, MS, and M are all equivalent."
+      },
+      {
+        "sample_id": "I003",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "This paraphrase retains all essential content of the original analogy. No new concepts are introduced, and the relationships between student, textbook, and exam (model, training data, test data) stay identical, satisfying TCC, MS, and M equivalence."
+      },
+      {
+        "sample_id": "I002",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Although the wording uses “pupil” and “rote‑learns,” the semantic roles, causal chain, and description of noise versus signal are unchanged. The analogy still covers the same description, source‑target mapping, and literal role semantics, making all three metrics equivalent."
+      }
+    ]
+  }
+}

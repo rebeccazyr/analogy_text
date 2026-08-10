@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "6cf2d2c91f3ec679f9bd",
+  "created_at": "2026-08-04T08:38:48.908382+00:00",
+  "usage": {
+    "completion_tokens": 672,
+    "prompt_tokens": 1479,
+    "total_tokens": 2151,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I013",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The candidate repeats the original analogy using synonymous phrasing while preserving all core concepts: initial piano practice as source knowledge, the classical piece as the target task, the causal link that prior skill accelerates new learning, and the requirement that both tasks share the same domain. No content is added, omitted, or altered, so TCC, MS, and M remain equivalent."
+      },
+      {
+        "sample_id": "I011",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "This version is a longer paraphrase but retains the exact same source‑target mapping, relations, and causal direction. The description of knowledge transfer, accelerated learning, and domain similarity is unchanged, so all three metrics are equivalent."
+      },
+      {
+        "sample_id": "I012",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The candidate uses alternative wording (e.g., “drills”, “assignment”) but conveys the identical semantic structure: initial piano drills provide knowledge that speeds up learning a new, related piece. No essential element is lost or modified, preserving TCC, MS, and M equivalence."
+      }
+    ]
+  }
+}

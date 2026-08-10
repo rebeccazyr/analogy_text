@@ -1,0 +1,156 @@
+{
+  "input": {
+    "id": 1,
+    "target": "Transfer learning",
+    "description": "A technique where knowledge gained from training on one task or domain is reused to accelerate or improve learning on a different but related task.",
+    "analogy": "Transfer Learning is Piano Practice Progression.:\nImagine you're learning to play the piano. Instead of starting from scratch with a complex classical piece, you first master basic scales and chord progressions.\n\nWhen you later approach that classical piece, you're not starting from zero - you're transferring your knowledge of notes, finger positioning, and rhythm from your earlier practice. The new piece is different, but your foundational skills make learning it much faster and more effective.\n\nIn transfer learning:\n- The basic piano skills represent the knowledge gained from the initial training task\n- The classical piece represents the new, related task\n- Your ability to learn the new piece faster represents the accelerated learning\n- The connections you make between familiar patterns and new ones represent how the model adapts pre-learned features\n- The fact that both tasks involve piano playing represents how the domains must be related for transfer to work effectively\n\nJust as a pianist doesn't need to relearn how to read music for each new piece, a model using transfer learning doesn't need to relearn basic patterns it has already mastered.",
+    "video": "val_videos/val_1.mp4",
+    "TCC": 1,
+    "MS": 2,
+    "M": 1,
+    "VC": 1,
+    "VA": 1,
+    "VE": 2
+  },
+  "generation": {
+    "variants": [
+      {
+        "variant_id": "P1",
+        "transformation": "prose_restructure",
+        "analogy": "Think of transfer learning as the way a pianist builds skill. At first the student concentrates on elementary scales and chord sequences rather than diving straight into a demanding classical composition. Those elementary exercises give the learner knowledge of note locations, finger placement, and rhythmic timing. When the student finally tackles the classical piece, they are not beginning from a blank slate; they bring forward the earlier acquired piano fundamentals. The new piece differs from the practice material, yet the pre‑learned skills let the student master it more quickly and with greater effectiveness. In the analogy, the elementary piano skills correspond to the knowledge obtained from the initial training task, the classical composition stands for the new, related task, the speedier acquisition mirrors accelerated learning, the linking of familiar patterns to novel ones mirrors how a model adapts pre‑learned features, and the shared piano domain reflects the necessity that both tasks be related for transfer to succeed. Just as a pianist does not have to relearn music notation for each piece, a model does not have to relearn basic patterns when using transfer learning.",
+        "preservation_notes": [
+          "All source concepts and mappings retained",
+          "Causal direction and degree of coverage preserved"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P2",
+        "transformation": "lexical_paraphrase",
+        "analogy": "Transfer Learning resembles a piano study routine. Picture yourself acquiring piano ability. Rather than confronting an intricate classical work immediately, you first perfect simple scales and chord progressions. Those rudimentary drills endow you with awareness of pitch placement, hand posture, and tempo. When you eventually confront the classical work, you are not commencing from nothing—you apply the earlier mastered piano basics. The composition differs from the drills, yet the pre‑existing competence enables you to learn it far more swiftly and efficiently. In this comparison, the simple piano drills symbolize the insight gathered from the first training assignment, the classical work symbolizes the fresh, related assignment, the hastened mastery symbolizes accelerated learning, the bridging of known motifs to unfamiliar ones symbolizes how a model adjusts inherited features, and the common piano context underscores that both assignments must share a domain for transfer to be effective. Just as a pianist need not relearn sheet‑music reading for each new piece, a model employing transfer learning need not relearn elementary patterns it has already mastered.",
+        "preservation_notes": [
+          "All literal source concepts preserved",
+          "Mapping and causal relationships unchanged"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P3",
+        "transformation": "compression_without_information_loss",
+        "analogy": "Transfer Learning is like piano practice. A student first learns basic scales and chords, gaining knowledge of notes, finger placement, and rhythm. When the student later attempts a complex classical piece, they do not start from zero; they apply those foundational skills, allowing faster, more effective learning. In the analogy: basic piano skills = knowledge from the initial training task; the classical piece = the new, related task; quicker mastery = accelerated learning; linking familiar patterns to new ones = how a model adapts pre‑learned features; the shared piano domain = the requirement that both tasks be related for transfer to succeed. Just as a pianist does not need to relearn music reading for each piece, a model using transfer learning does not need to relearn basic patterns it has already mastered.",
+        "preservation_notes": [
+          "Redundant phrasing removed without loss of meaning",
+          "Core claims, mappings, and causal direction fully retained"
+        ],
+        "content_added": false,
+        "content_removed": false
+      }
+    ]
+  },
+  "reviews": [
+    {
+      "assessments": [
+        {
+          "sample_id": "I011",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The candidate restates the original analogy using synonymous phrasing without adding, removing, or altering any of the core description, role mappings, or causal relationships; therefore all three metrics remain equivalent."
+        },
+        {
+          "sample_id": "I013",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "This version preserves the exact same mapping of piano practice elements to transfer‑learning concepts and retains the original causal claim of accelerated learning, so no semantic change occurs across TCC, MS, or M."
+        },
+        {
+          "sample_id": "I012",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The paraphrase maintains all description content, source‑target roles, relations, and the type of mapping present in the original; no new information or omissions are introduced, keeping all metrics invariant."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "I013",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The candidate repeats the original analogy using synonymous phrasing while preserving all core concepts: initial piano practice as source knowledge, the classical piece as the target task, the causal link that prior skill accelerates new learning, and the requirement that both tasks share the same domain. No content is added, omitted, or altered, so TCC, MS, and M remain equivalent."
+        },
+        {
+          "sample_id": "I011",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "This version is a longer paraphrase but retains the exact same source‑target mapping, relations, and causal direction. The description of knowledge transfer, accelerated learning, and domain similarity is unchanged, so all three metrics are equivalent."
+        },
+        {
+          "sample_id": "I012",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The candidate uses alternative wording (e.g., “drills”, “assignment”) but conveys the identical semantic structure: initial piano drills provide knowledge that speeds up learning a new, related piece. No essential element is lost or modified, preserving TCC, MS, and M equivalence."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "I012",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "The candidate preserves every element of the original description – basic scales, chord progressions, note/finger/tempo knowledge, the classical piece, accelerated learning, feature‑adaptation, and domain relatedness – without adding, omitting or altering any role, relation or causal direction. Synonymous wording (hand posture for finger positioning, tempo for rhythm) does not constitute a semantic shift, so all three metrics remain equivalent."
+        },
+        {
+          "sample_id": "I011",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.94,
+          "rationale": "All core content of the original analogy is retained. The source (basic piano drills) and target (new classical piece) roles, their causal link to faster learning, and the mapping to transfer‑learning concepts are unchanged. Minor lexical variations (note locations, rhythmic timing) are synonymous and do not affect the semantics, keeping TCC, MS and M equivalent."
+        },
+        {
+          "sample_id": "I013",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.93,
+          "rationale": "The concise restatement still includes every descriptive element, role, and relational mapping of the original analogy. No information is lost or added, and the central concepts (basic skills, new task, accelerated mastery, feature bridging, shared domain) remain identical, so the three metrics are equivalent."
+        }
+      ]
+    }
+  ]
+}

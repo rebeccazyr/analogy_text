@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "301070023d6177de5a3b",
+  "created_at": "2026-08-04T08:38:28.885636+00:00",
+  "usage": {
+    "completion_tokens": 850,
+    "prompt_tokens": 1390,
+    "total_tokens": 2240,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I002",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The candidate preserves all key description elements, retains the student‑model mapping, training‑data/noise analogy, and causal direction. No content is added, omitted, or weakened; wording changes are synonymous, so all three metrics remain equivalent."
+      },
+      {
+        "sample_id": "I003",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The analogy mirrors the original wording and structure, keeping the same roles, relations, and causal claim. Synonymous phrasing does not alter meaning, so TCC, MS, and M remain fully equivalent."
+      },
+      {
+        "sample_id": "I001",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The candidate restates the original analogy with minor lexical variations but retains all essential description content, source‑target roles, and the underlying causal relationship, resulting in no semantic drift across any metric."
+      }
+    ]
+  }
+}

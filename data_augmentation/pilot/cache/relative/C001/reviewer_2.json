@@ -1,0 +1,77 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "1cbf3bd392a5d1f9fbf0",
+  "created_at": "2026-08-04T08:40:47.432084+00:00",
+  "usage": {
+    "completion_tokens": 2207,
+    "prompt_tokens": 1356,
+    "total_tokens": 3563,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "R0015",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.93,
+        "rationale": "Analogy A directly mirrors the cache‑coherence idea of multiple copies and instant propagation, covering the key description elements, while B describes a lack of propagation. Both use the same library domain, so conceptual distance is equal, but A’s mapping is clearer and more consistent."
+      },
+      {
+        "sample_id": "R0011",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.94,
+        "rationale": "Analogy A captures writes triggering invalidations and maintaining consistency, matching the description. Analogy B flips the mechanism, reducing coverage and internal consistency. Both remain in the distributed‑database domain, so M is unchanged."
+      },
+      {
+        "sample_id": "R0013",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.92,
+        "rationale": "Analogy A stays close to the library‑catalog metaphor and covers the essential coherence steps. Analogy B stretches the mapping to social‑media likes, increasing conceptual distance (higher M) but losing some description coverage and structural tightness."
+      },
+      {
+        "sample_id": "R0012",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.96,
+        "rationale": "Both analogies describe autonomous drones sharing an obstacle map and instantly broadcasting updates. They are virtually identical in content, structure, and domain, yielding equal scores across all metrics."
+      },
+      {
+        "sample_id": "R0014",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [
+          "target_term_injection"
+        ],
+        "confidence": 0.93,
+        "rationale": "Analogy A is a literal description of cache coherence with cores, reads, writes and propagation, covering the description fully. Analogy B uses traffic‑light metaphor, which is farther from the original domain, raising M, while providing less direct coverage and a looser structural mapping."
+      },
+      {
+        "sample_id": "R0016",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.95,
+        "rationale": "The two chef analogies are rephrasings of the same idea: shared recipe copies and instant distribution of changes. They equally cover the description, have identical internal mappings, and remain in the same culinary domain."
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_generator",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "400e064827f3b42d840d",
+  "created_at": "2026-08-04T08:38:13.949555+00:00",
+  "usage": {
+    "completion_tokens": 1378,
+    "prompt_tokens": 785,
+    "total_tokens": 2163,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "variants": [
+      {
+        "variant_id": "P1",
+        "transformation": "prose_restructure",
+        "analogy": "Overfitting is like a student who memorizes a textbook word‑for‑word instead of grasping its concepts. The student (representing the machine‑learning model) studies the entire book so thoroughly that they retain not only the core ideas but also every incidental phrasing and example—essentially the noise in the training data. On an exam that asks questions drawn directly from the text, the student can recite exact passages and score perfectly, mirroring how an overfitted model excels on its training set. Yet, when the exam presents problems that require applying the underlying principles in novel contexts or explaining ideas in the student’s own words, the student falters completely. This failure occurs because the focus on memorizing every detail left no room for understanding the fundamental principles. Consequently, the student shines on questions that match the textbook exactly but performs poorly on new, unseen questions, just as an overfitted model does on data that differ from its training set.",
+        "preservation_notes": [
+          "Kept the mapping of model to student",
+          "Maintained the causal link between memorization and poor generalization",
+          "Retained the contrast between performance on training‑like versus novel examples",
+          "Preserved the notion of noise as irrelevant details"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P2",
+        "transformation": "lexical_paraphrase",
+        "analogy": "Overfitting resembles a pupil who rote‑learns a textbook instead of comprehending its ideas. The pupil (the model) ingests the whole text so exactly that they capture not only the essential concepts but also superfluous wording and specific instances—the noise in the training data. When the exam asks questions that are direct extracts from the book, the pupil can quote passages flawlessly and ace the test, just as an overfitted model performs well on its training data. However, when confronted with questions that demand the application of principles in fresh scenarios or articulation in the pupil’s own language, they are completely at a loss. This shortfall stems from the emphasis on memorizing every nuance, leaving no capacity for grasping the core principles. Thus, the pupil excels on textbook‑identical queries but fails on new, unseen ones, mirroring the behavior of an overfitted model.",
+        "preservation_notes": [
+          "Preserved the student‑model analogy",
+          "Kept the distinction between memorizing noise and understanding principles",
+          "Maintained the cause‑effect relationship of memorization leading to poor performance on novel data",
+          "Retained the example of exam performance on matching versus new questions"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P3",
+        "transformation": "compression_without_information_loss",
+        "analogy": "Overfitting is like a student who memorizes a textbook word‑for‑word rather than learning its concepts. The student (the model) records every detail, including irrelevant phrasing and examples—the noise in the training data. On a test that asks questions taken directly from the book, they answer perfectly, mirroring an overfitted model’s success on its training set. But when the test requires applying ideas to new situations or explaining them in the student’s own words, they fail, because the focus on exact memorization left no understanding of underlying principles. Consequently, they excel on textbook‑identical questions yet perform poorly on unseen ones, just as an overfitted model does on novel data.",
+        "preservation_notes": [
+          "Kept the student‑model mapping",
+          "Preserved the role of noise as irrelevant details",
+          "Maintained the contrast between performance on identical versus novel questions",
+          "Retained the causal link between memorization and lack of generalization"
+        ],
+        "content_added": false,
+        "content_removed": false
+      }
+    ]
+  }
+}

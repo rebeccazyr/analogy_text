@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "ff9e97f098ed585f3bcd",
+  "created_at": "2026-08-04T08:38:41.609191+00:00",
+  "usage": {
+    "completion_tokens": 553,
+    "prompt_tokens": 1475,
+    "total_tokens": 2028,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I011",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The candidate restates the original analogy using synonymous phrasing without adding, removing, or altering any of the core description, role mappings, or causal relationships; therefore all three metrics remain equivalent."
+      },
+      {
+        "sample_id": "I013",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "This version preserves the exact same mapping of piano practice elements to transfer‑learning concepts and retains the original causal claim of accelerated learning, so no semantic change occurs across TCC, MS, or M."
+      },
+      {
+        "sample_id": "I012",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The paraphrase maintains all description content, source‑target roles, relations, and the type of mapping present in the original; no new information or omissions are introduced, keeping all metrics invariant."
+      }
+    ]
+  }
+}

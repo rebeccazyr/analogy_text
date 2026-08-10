@@ -58,7 +58,11 @@ def combine_recomputed_metrics(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=SUBMISSION_COLUMNS)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=SUBMISSION_COLUMNS,
+            lineterminator="\n",
+        )
         writer.writeheader()
         for example_id in sorted(id_sets["TCC"]):
             writer.writerow(

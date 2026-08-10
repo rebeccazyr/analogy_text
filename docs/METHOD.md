@@ -1,12 +1,12 @@
 # Metric method snapshot
 
-Snapshot: 2026-08-04. Model: `openai/gpt-oss-120b`.
+Snapshot: 2026-08-11. Model: `openai/gpt-oss-120b`.
 
 | Metric | Method | Reasoning effort |
 | --- | --- | --- |
 | TCC | `tcc_v1_facet_conservative_v1` | medium |
 | MS | `ms_v3_counterfactual_zero_gate_v8` | medium |
-| M | `v7_1_role_audit_loo` | high |
+| M | `m_v79_existing_evidence_reconciliation_v1` over v7.1 | high |
 
 Only M uses high reasoning; all other active text inference uses medium.
 
@@ -61,7 +61,20 @@ otherwise                                             -> 2
 ```
 
 Validation anchors are physically leave-one-out. Test inference uses all 12
-anchors. The active test run uses high reasoning.
+anchors. The active test run uses high reasoning. A deterministic v79 layer
+then reconciles only high-precision disagreements already present in the v7.1
+domain, literal-instance, and ordinal judgments; it makes no additional model
+call and otherwise preserves the frozen v7.1 score.
+
+Test changes relative to v7.1:
+
+| ID | Target | v7.1 | v79 | Rule |
+| ---: | --- | ---: | ---: | --- |
+| 2 | Hallucination | 1 | 2 | duplicate-source consistency |
+| 44 | Debugging | 2 | 1 | related-domain native evidence |
+| 52 | Large language models (LLMs) | 1 | 0 | two-judge literal consensus |
+
+Validation M Kendall increases from `0.7454` to `0.8666`.
 
 ## Frozen output distributions
 
@@ -69,4 +82,35 @@ anchors. The active test run uses high reasoning.
 | --- | ---: | ---: | ---: |
 | TCC | 0 | 32 | 30 |
 | MS | 2 | 10 | 50 |
-| M | 8 | 6 | 48 |
+| M | 9 | 5 | 48 |
+
+## Shared-front-end candidate
+
+`shared_semantic_frontend_v1` consolidates repeated preprocessing into three
+structured artifacts:
+
+```text
+TARGET + DESCRIPTION -> target topics/concepts/roles/relations
+ANALOGY             -> blind literal source concepts/roles/relations
+both blind frames   -> cross-domain role/relation alignments
+                              |
+                 +------------+------------+
+                 |            |            |
+                TCC           MS           M
+              medium        medium        high
+```
+
+The first two branches never see each other's inputs during extraction. This
+retains the TCC topic-independence and MS/M source-blindness constraints while
+allowing all metric-specific judges to reuse one normalized analysis. The
+candidate is available as `--mode shared-active`; it does not replace the
+frozen leaderboard snapshot until it is evaluated independently.
+
+## Integrated-best control
+
+`scripts/run_integrated_best.py` is the zero-loss control, not a new scoring
+method. It validates the manifest hashes for the frozen TCC, MS, and M vectors,
+combines them by ID, and requires the resulting CSV to be byte-identical to the
+current champion submission. A shared-extraction experiment cannot be promoted
+unless it is compared against this immutable control and satisfies the
+per-metric non-regression gates.

@@ -1,0 +1,162 @@
+{
+  "input": {
+    "id": 4,
+    "target": "symbolic computation",
+    "description": "Also called computer algebra, the field that develops algorithms and software for manipulating mathematical expressions and objects in exact symbolic form rather than numerical approximation.",
+    "analogy": "Symbolic Computation is a Precision Chef.:\nImagine a master chef who works with precise recipes instead of approximations. While most cooks might measure \"about a cup\" of flour (numerical approximation), this chef uses exact measurements like \"1 cup plus 2 tablespoons\" (symbolic form).\n\nIn this kitchen:\n- The chef (symbolic computation system) manipulates exact recipe ingredients (mathematical expressions)\n- Instead of saying \"approximately 3.14\" for pi, the chef keeps it as the symbol \"π\" in the recipe\n- When combining ingredients (performing operations), the chef maintains the precise recipe language rather than rounding or estimating\n- If a recipe calls for \"√2 cups of milk,\" the chef doesn't convert it to 1.414 cups but keeps it in its pure symbolic form\n- The chef can simplify complex recipes (like reducing \"x² + 2x + 1\" to \"(x+1)²\") without losing any precision\n\nJust as this chef preserves the exact relationships between ingredients throughout the cooking process, symbolic computation maintains mathematical expressions in their exact form, allowing for perfect precision in mathematical \"recipes.\"",
+    "video": "val_videos/val_4.mp4",
+    "TCC": 1,
+    "MS": 0,
+    "M": 2,
+    "VC": 2,
+    "VA": 3,
+    "VE": 2
+  },
+  "generation": {
+    "variants": [
+      {
+        "variant_id": "P1",
+        "transformation": "prose_restructure",
+        "analogy": "Think of symbolic computation as a precision chef. This chef follows recipes that specify exact quantities rather than vague estimates. Where an ordinary cook might write “about a cup” of flour, the chef writes “1 cup plus 2 tablespoons,” mirroring how symbolic systems keep expressions in exact form. In this kitchen the chef (the computation system) handles exact ingredients (mathematical expressions). The symbol π stays π instead of being replaced by the decimal 3.14. When operations combine ingredients, the chef retains the precise symbolic language instead of rounding. A recipe that calls for “√2 cups of milk” remains √2 cups, not 1.414 cups. The chef can also simplify a complex recipe, turning “x² + 2x + 1” into “(x+1)²,” without losing any precision. As the chef preserves the exact relationships among ingredients throughout cooking, symbolic computation preserves mathematical expressions in their exact symbolic form, guaranteeing perfect precision in mathematical “recipes.”",
+        "preservation_notes": [
+          "maintains chef↔symbolic computation mapping",
+          "keeps examples π, √2, x²+2x+1→(x+1)²",
+          "preserves causal direction of exactness vs approximation",
+          "retains all claim of precision in operations"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P2",
+        "transformation": "lexical_paraphrase",
+        "analogy": "Symbolic Computation works like a meticulous chef. Picture a culinary expert who records recipes with exact quantities rather than rough guesses. While most cooks might note “about a cup” of flour, this chef writes “1 cup plus 2 tablespoons,” just as a symbolic system retains expressions in precise symbolic notation. In this kitchen: the chef (the symbolic engine) manipulates exact recipe components (mathematical formulas); the constant π remains the symbol “π” instead of the decimal 3.14; when mixing components (performing operations), the chef keeps the exact symbolic language instead of approximating; a directive for “√2 cups of milk” stays as √2 cups, not 1.414 cups; and the chef can condense a tangled recipe, converting “x² + 2x + 1” into “(x+1)²,” without sacrificing accuracy. Just as this chef safeguards the exact relationships among ingredients, symbolic computation safeguards mathematical expressions in their exact symbolic form, ensuring flawless precision in mathematical “recipes.”",
+        "preservation_notes": [
+          "preserves chef↔symbolic computation analogy",
+          "retains all example symbols and transformations",
+          "keeps causal claim of exactness over approximation",
+          "maintains degree of coverage of operations and simplification"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P3",
+        "transformation": "compression_without_information_loss",
+        "analogy": "Symbolic Computation is a Precision Chef. Imagine a master chef who uses exact recipes instead of approximations. While most cooks might write “about a cup” of flour, this chef records “1 cup plus 2 tablespoons,” mirroring how symbolic systems keep expressions in symbolic form. In this kitchen the chef (the computation system) manipulates exact ingredients (mathematical expressions). The symbol π stays π rather than 3.14. When combining ingredients (operations), the chef retains the precise language instead of rounding. A recipe calling for “√2 cups of milk” remains √2 cups, not 1.414 cups. The chef can simplify “x² + 2x + 1” to “(x+1)²” without losing precision. As the chef preserves exact relationships among ingredients, symbolic computation preserves mathematical expressions in their exact symbolic form, guaranteeing perfect precision in mathematical “recipes.”",
+        "preservation_notes": [
+          "keeps chef↔symbolic computation mapping",
+          "includes all example symbols π, √2, x²+2x+1→(x+1)²",
+          "maintains causal direction of exactness vs approximation",
+          "preserves coverage of manipulation, simplification, and precision"
+        ],
+        "content_added": false,
+        "content_removed": false
+      }
+    ]
+  },
+  "reviews": [
+    {
+      "assessments": [
+        {
+          "sample_id": "I041",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The candidate paraphrases the original analogy without adding, omitting, or altering any core elements. The chef metaphor, the mapping of symbolic computation to a precision chef, the handling of exact ingredients, the preservation of symbols like π and √2, and the simplification example are all retained. No description content, role relations, or semantic types are changed, so TCC, MS, and M remain equivalent."
+        },
+        {
+          "sample_id": "I042",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "This candidate uses synonymous phrasing (e.g., “meticulous chef”) but preserves the exact mapping, operations, and causal narrative of the original. No description elements are added or removed, and the source‑target roles and their relations stay identical, yielding full equivalence across all metrics."
+        },
+        {
+          "sample_id": "I043",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The third candidate is a near‑verbatim restatement of the original analogy. All key concepts, role mappings, and illustrative details are unchanged, ensuring semantic invariance for TCC, MS, and M."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "I042",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The candidate retains every core element of the original description—exact‑measurement chef metaphor, mapping of chef to symbolic computation system, symbols π and √2, and the simplification example—without adding, removing, or altering any role, relation, or operation. Only superficial wording changes occur, which do not affect the covered semantics, so TCC, MS, and M remain equivalent."
+        },
+        {
+          "sample_id": "I041",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "All essential content of the original analogy is present: the precise‑chef metaphor, the mapping of chef to symbolic computation, the treatment of π, √2, and polynomial simplification. No new claims or omissions appear, and the source‑target roles and causal direction are unchanged, preserving TCC, MS, and M equivalence."
+        },
+        {
+          "sample_id": "I043",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The third candidate mirrors the original wording and structure, keeping the same metaphor, role mappings, and illustrative examples. No semantic drift, omission, or addition is introduced, so the description coverage, source/target relations, and central role semantics remain fully equivalent."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "I042",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The candidate preserves all description elements, role mappings, and literal relations of the original analogy without addition, omission, or alteration."
+        },
+        {
+          "sample_id": "I043",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The wording mirrors the original closely; no semantic content, role, or mapping changes are introduced, keeping all metrics equivalent."
+        },
+        {
+          "sample_id": "I041",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The analogy restates the original concepts with synonymous phrasing, maintaining full semantic coverage, role structure, and literal mappings."
+        }
+      ]
+    }
+  ]
+}

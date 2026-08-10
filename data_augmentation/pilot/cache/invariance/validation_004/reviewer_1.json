@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "cb2836b6546d2bf06758",
+  "created_at": "2026-08-04T08:38:37.825510+00:00",
+  "usage": {
+    "completion_tokens": 1027,
+    "prompt_tokens": 1525,
+    "total_tokens": 2552,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I041",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The candidate paraphrases the original analogy without adding, omitting, or altering any core elements. The chef metaphor, the mapping of symbolic computation to a precision chef, the handling of exact ingredients, the preservation of symbols like π and √2, and the simplification example are all retained. No description content, role relations, or semantic types are changed, so TCC, MS, and M remain equivalent."
+      },
+      {
+        "sample_id": "I042",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "This candidate uses synonymous phrasing (e.g., “meticulous chef”) but preserves the exact mapping, operations, and causal narrative of the original. No description elements are added or removed, and the source‑target roles and their relations stay identical, yielding full equivalence across all metrics."
+      },
+      {
+        "sample_id": "I043",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The third candidate is a near‑verbatim restatement of the original analogy. All key concepts, role mappings, and illustrative details are unchanged, ensuring semantic invariance for TCC, MS, and M."
+      }
+    ]
+  }
+}

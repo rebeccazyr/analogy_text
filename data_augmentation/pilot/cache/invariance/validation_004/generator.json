@@ -1,0 +1,56 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_generator",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "5f1b2bce908dccdbbedf",
+  "created_at": "2026-08-04T08:38:22.025809+00:00",
+  "usage": {
+    "completion_tokens": 1933,
+    "prompt_tokens": 839,
+    "total_tokens": 2772,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "variants": [
+      {
+        "variant_id": "P1",
+        "transformation": "prose_restructure",
+        "analogy": "Think of symbolic computation as a precision chef. This chef follows recipes that specify exact quantities rather than vague estimates. Where an ordinary cook might write “about a cup” of flour, the chef writes “1 cup plus 2 tablespoons,” mirroring how symbolic systems keep expressions in exact form. In this kitchen the chef (the computation system) handles exact ingredients (mathematical expressions). The symbol π stays π instead of being replaced by the decimal 3.14. When operations combine ingredients, the chef retains the precise symbolic language instead of rounding. A recipe that calls for “√2 cups of milk” remains √2 cups, not 1.414 cups. The chef can also simplify a complex recipe, turning “x² + 2x + 1” into “(x+1)²,” without losing any precision. As the chef preserves the exact relationships among ingredients throughout cooking, symbolic computation preserves mathematical expressions in their exact symbolic form, guaranteeing perfect precision in mathematical “recipes.”",
+        "preservation_notes": [
+          "maintains chef↔symbolic computation mapping",
+          "keeps examples π, √2, x²+2x+1→(x+1)²",
+          "preserves causal direction of exactness vs approximation",
+          "retains all claim of precision in operations"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P2",
+        "transformation": "lexical_paraphrase",
+        "analogy": "Symbolic Computation works like a meticulous chef. Picture a culinary expert who records recipes with exact quantities rather than rough guesses. While most cooks might note “about a cup” of flour, this chef writes “1 cup plus 2 tablespoons,” just as a symbolic system retains expressions in precise symbolic notation. In this kitchen: the chef (the symbolic engine) manipulates exact recipe components (mathematical formulas); the constant π remains the symbol “π” instead of the decimal 3.14; when mixing components (performing operations), the chef keeps the exact symbolic language instead of approximating; a directive for “√2 cups of milk” stays as √2 cups, not 1.414 cups; and the chef can condense a tangled recipe, converting “x² + 2x + 1” into “(x+1)²,” without sacrificing accuracy. Just as this chef safeguards the exact relationships among ingredients, symbolic computation safeguards mathematical expressions in their exact symbolic form, ensuring flawless precision in mathematical “recipes.”",
+        "preservation_notes": [
+          "preserves chef↔symbolic computation analogy",
+          "retains all example symbols and transformations",
+          "keeps causal claim of exactness over approximation",
+          "maintains degree of coverage of operations and simplification"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P3",
+        "transformation": "compression_without_information_loss",
+        "analogy": "Symbolic Computation is a Precision Chef. Imagine a master chef who uses exact recipes instead of approximations. While most cooks might write “about a cup” of flour, this chef records “1 cup plus 2 tablespoons,” mirroring how symbolic systems keep expressions in symbolic form. In this kitchen the chef (the computation system) manipulates exact ingredients (mathematical expressions). The symbol π stays π rather than 3.14. When combining ingredients (operations), the chef retains the precise language instead of rounding. A recipe calling for “√2 cups of milk” remains √2 cups, not 1.414 cups. The chef can simplify “x² + 2x + 1” to “(x+1)²” without losing precision. As the chef preserves exact relationships among ingredients, symbolic computation preserves mathematical expressions in their exact symbolic form, guaranteeing perfect precision in mathematical “recipes.”",
+        "preservation_notes": [
+          "keeps chef↔symbolic computation mapping",
+          "includes all example symbols π, √2, x²+2x+1→(x+1)²",
+          "maintains causal direction of exactness vs approximation",
+          "preserves coverage of manipulation, simplification, and precision"
+        ],
+        "content_added": false,
+        "content_removed": false
+      }
+    ]
+  }
+}

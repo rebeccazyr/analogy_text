@@ -1,0 +1,81 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "1c55ba19bec0fb536f2f",
+  "created_at": "2026-08-04T08:40:14.046451+00:00",
+  "usage": {
+    "completion_tokens": 2357,
+    "prompt_tokens": 2044,
+    "total_tokens": 4401,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "R0054",
+        "tcc_relation": "same",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Analogy A and B both mention sensor detection, set point, corrective response, feedback loop and external perturbations, so content coverage is equivalent. The literal biological example in A aligns more tightly with the description, giving it a stronger structural mapping, while B is a cross‑domain traffic analogy, making its conceptual distance larger."
+      },
+      {
+        "sample_id": "R0056",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.97,
+        "rationale": "Both analogies describe the same water‑supply system with identical components and wording, so they are equal on content, structural consistency and conceptual distance. The near‑identical phrasing suggests a template reuse."
+      },
+      {
+        "sample_id": "R0052",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.97,
+        "rationale": "The two greenhouse analogies are paraphrases of each other, containing the same sensors, set points, corrective actions and external‑weather handling, leading to equal scores on all three metrics. Their similarity indicates a templated construction."
+      },
+      {
+        "sample_id": "R0055",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [
+          "content_omission"
+        ],
+        "confidence": 0.94,
+        "rationale": "Analogy A includes explicit handling of sudden drafts and sunny afternoons, covering the external‑perturbation aspect of the description, which B omits; therefore A has higher content coverage and a tighter structural mapping. Both remain in the same thermostat domain, so conceptual distance is unchanged."
+      },
+      {
+        "sample_id": "R0053",
+        "tcc_relation": "same",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [
+          "carrier_type_change"
+        ],
+        "confidence": 0.96,
+        "rationale": "Both analogies address the five core elements, so content coverage is comparable. The cruise‑control example stays within a single mechanical carrier, preserving structural consistency, whereas the financial portfolio analogy switches to monetary carriers and adds multiple type changes, weakening its mapping. Consequently the financial analogy is conceptually farther from the biological target."
+      },
+      {
+        "sample_id": "R0051",
+        "tcc_relation": "same",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [
+          "feedback_mismatch"
+        ],
+        "confidence": 0.95,
+        "rationale": "The two battery‑management analogies list the same sensors, set points and corrective actions, giving equal content coverage. The first analogy correctly maps overheating to CPU throttling, while the second replaces this with a mere warning, reducing structural consistency. Both stay within the smartphone domain, so conceptual distance is the same."
+      }
+    ]
+  }
+}

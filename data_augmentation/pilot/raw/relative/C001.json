@@ -1,0 +1,286 @@
+{
+  "input": {
+    "concept_id": "C001",
+    "split": "train",
+    "domain": "computer_systems",
+    "target": "cache coherence",
+    "description": "A consistency mechanism that ensures multiple processor caches maintain a compatible view of shared memory when one cache reads or updates a value."
+  },
+  "generation": {
+    "core_facets": [
+      "multiple caches",
+      "shared memory",
+      "read/write consistency",
+      "invalidation or update protocol"
+    ],
+    "pairs": [
+      {
+        "pair_id": "TCC_CORE_DELETION",
+        "metric": "TCC",
+        "expected_relation": "a_higher",
+        "analogy_a": "Imagine a library where several branches keep copies of the same catalog. When one branch updates a book’s availability, an instant notification propagates to all other branches, ensuring every branch sees the same up‑to‑date status across the system.",
+        "analogy_b": "Imagine a library where several branches keep copies of the same catalog. When one branch updates a book’s availability, the change is recorded locally, but other branches are not immediately notified, so they may still show the old status, creating a temporary mismatch.",
+        "controlled_operation": "Removed the instant notification (invalidation) step from B, leaving all other elements unchanged.",
+        "non_target_invariance": [
+          "mapping_structure",
+          "conceptual_distance",
+          "role_translation"
+        ]
+      },
+      {
+        "pair_id": "TCC_SURFACE_INVARIANCE",
+        "metric": "TCC",
+        "expected_relation": "same",
+        "analogy_a": "Think of a team of chefs each holding a copy of the same recipe book. If one chef tweaks the amount of salt in a dish, the revised recipe is instantly shared with the others, so every chef cooks with the same seasoning.",
+        "analogy_b": "Consider several chefs each possessing the identical recipe notebook. When one chef adjusts the salt quantity for a dish, the updated instruction is promptly distributed to the rest, guaranteeing uniform seasoning across all kitchens.",
+        "controlled_operation": "Rephrased the sentences without altering any content or the underlying mapping.",
+        "non_target_invariance": [
+          "content",
+          "mapping_structure",
+          "conceptual_distance"
+        ]
+      },
+      {
+        "pair_id": "MS_ROLE_MISMATCH",
+        "metric": "MS",
+        "expected_relation": "a_higher",
+        "analogy_a": "In a distributed database, each node acts as both reader and writer; when a node writes a new record, all other nodes receive an invalidation message, preventing stale reads and keeping the data consistent.",
+        "analogy_b": "In a distributed database, each node acts as both reader and writer; when a node reads a record, it sends an invalidation message to other nodes, mistakenly blocking future writes and breaking consistency.",
+        "controlled_operation": "Swapped the writer‑triggered invalidation with a reader‑triggered invalidation, creating a central role mismatch.",
+        "non_target_invariance": [
+          "coverage_of_core_facets",
+          "conceptual_distance"
+        ]
+      },
+      {
+        "pair_id": "MS_SURFACE_INVARIANCE",
+        "metric": "MS",
+        "expected_relation": "same",
+        "analogy_a": "Picture a fleet of autonomous drones sharing a map of obstacles. When one drone detects a new obstacle, it broadcasts the update, and all drones instantly adjust their flight paths to avoid the hazard.",
+        "analogy_b": "Envision a squad of self‑piloting drones that maintain a common obstacle map. If any drone spots a fresh barrier, it immediately transmits the information, causing every drone to re‑plan its route accordingly.",
+        "controlled_operation": "Reworded the description while preserving the same mapping strength and structure.",
+        "non_target_invariance": [
+          "mapping_strength",
+          "coverage",
+          "conceptual_distance"
+        ]
+      },
+      {
+        "pair_id": "M_LITERAL_TO_ADJACENT",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "Cache coherence in a multicore processor ensures that when core 0 writes the value 42 to address 0x1000, any subsequent read of that address by core 1 returns 42, because the coherence protocol propagates the update across the private L1 caches.",
+        "analogy_b": "City traffic lights operate like a coherence system: when one intersection turns green for east‑west traffic, neighboring intersections adjust their signals to prevent conflicting flows, keeping the overall traffic state consistent.",
+        "controlled_operation": "Replaced the concrete CPU‑cache example with a traffic‑light coordination analogy, moving to an adjacent but non‑literal relation.",
+        "non_target_invariance": [
+          "coverage_of_core_facets",
+          "mapping_soundness"
+        ]
+      },
+      {
+        "pair_id": "M_ADJACENT_TO_CROSS_DOMAIN",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "A library’s reservation system mirrors cache coherence: each branch holds a copy of the catalog, and when a patron reserves a book at one branch, the system updates the availability flag in all branches, shifting only the carrier from ‘memory line’ to ‘catalog entry’.",
+        "analogy_b": "Social‑media platforms enforce a coherence‑like rule: when a user likes a post, the platform propagates that reaction across friends’ feeds, converting the notion of ‘cache line’ to ‘user interaction’, ‘invalidations’ to ‘notification suppression’, and ‘read/write’ to ‘view/engage’, involving several type changes.",
+        "controlled_operation": "Switched from a library‑catalog analogy to a social‑media interaction analogy, introducing multiple domain‑type transformations beyond a single carrier shift.",
+        "non_target_invariance": [
+          "coverage_of_core_facets",
+          "mapping_soundness"
+        ]
+      }
+    ]
+  },
+  "reviews": [
+    {
+      "assessments": [
+        {
+          "sample_id": "R0012",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "Both analogies describe multiple drones sharing a map, broadcasting updates, and instant adjustment, mirroring cache coherence’s multiple caches, shared memory, and propagation of reads/writes. Their content coverage, structural consistency, and conceptual distance are essentially identical."
+        },
+        {
+          "sample_id": "R0016",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "Each analogy uses chefs with a shared recipe book, instant sharing of a salt adjustment, and uniform seasoning, which aligns closely with the description’s multiple caches, shared state, and immediate update. No difference in coverage, mapping consistency, or abstraction level."
+        },
+        {
+          "sample_id": "R0013",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "target terminology injection"
+          ],
+          "confidence": 0.9,
+          "rationale": "Analogy A mentions a library reservation system and directly maps ‘memory line’ to ‘catalog entry’, preserving the core ideas of shared copies and flag updates, giving higher content coverage and clearer structural mapping. Analogy B introduces many cross‑domain type changes (likes, feeds) making it more conceptually distant, thus higher M, and both analogies inject cache‑coherence terms into the source, flagged as target terminology injection."
+        },
+        {
+          "sample_id": "R0015",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "a_higher",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A accurately reflects immediate propagation of availability updates across library branches, matching the description’s guarantee of a compatible view. Analogy B describes delayed or missing propagation, contradicting coherence, so A outperforms B on coverage, mapping consistency, and stays closer conceptually."
+        },
+        {
+          "sample_id": "R0014",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A uses processor cores, addresses, and cache updates, directly mirroring the description’s technical elements, giving higher content coverage and a tighter structural analogy. Analogy B’s traffic‑light metaphor is more abstract, increasing conceptual distance (higher M) while providing weaker mapping."
+        },
+        {
+          "sample_id": "R0011",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.94,
+          "rationale": "Analogy A correctly models write‑propagation and invalidation in a distributed database, aligning with cache‑coherence behavior. Analogy B reverses the operation, breaking the intended consistency, so A has superior coverage and mapping. Both reside in the same domain, so their conceptual distance is comparable."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "R0015",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.93,
+          "rationale": "Analogy A directly mirrors the cache‑coherence idea of multiple copies and instant propagation, covering the key description elements, while B describes a lack of propagation. Both use the same library domain, so conceptual distance is equal, but A’s mapping is clearer and more consistent."
+        },
+        {
+          "sample_id": "R0011",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.94,
+          "rationale": "Analogy A captures writes triggering invalidations and maintaining consistency, matching the description. Analogy B flips the mechanism, reducing coverage and internal consistency. Both remain in the distributed‑database domain, so M is unchanged."
+        },
+        {
+          "sample_id": "R0013",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.92,
+          "rationale": "Analogy A stays close to the library‑catalog metaphor and covers the essential coherence steps. Analogy B stretches the mapping to social‑media likes, increasing conceptual distance (higher M) but losing some description coverage and structural tightness."
+        },
+        {
+          "sample_id": "R0012",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.96,
+          "rationale": "Both analogies describe autonomous drones sharing an obstacle map and instantly broadcasting updates. They are virtually identical in content, structure, and domain, yielding equal scores across all metrics."
+        },
+        {
+          "sample_id": "R0014",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "target_term_injection"
+          ],
+          "confidence": 0.93,
+          "rationale": "Analogy A is a literal description of cache coherence with cores, reads, writes and propagation, covering the description fully. Analogy B uses traffic‑light metaphor, which is farther from the original domain, raising M, while providing less direct coverage and a looser structural mapping."
+        },
+        {
+          "sample_id": "R0016",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.95,
+          "rationale": "The two chef analogies are rephrasings of the same idea: shared recipe copies and instant distribution of changes. They equally cover the description, have identical internal mappings, and remain in the same culinary domain."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "R0014",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "target_terminology_injection"
+          ],
+          "confidence": 0.9,
+          "rationale": "Analogy A directly mentions cores, caches, reads, writes and propagation, covering all key description elements, while B uses traffic lights which only loosely captures coordination. A's mapping is clearer and internally consistent; B is more distant, increasing conceptual distance (M)."
+        },
+        {
+          "sample_id": "R0011",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A correctly mirrors cache‑coherence with writes causing invalidations, matching the description. Analogy B describes a broken variant that contradicts the intended mechanism, reducing both coverage and structural consistency. Both analogies stay in the same domain, so conceptual distance is equal."
+        },
+        {
+          "sample_id": "R0012",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "duplicate_content"
+          ],
+          "confidence": 0.9,
+          "rationale": "Both analogies describe autonomous drones sharing an obstacle map and broadcasting updates; they cover the same description points, have equally consistent mappings, and remain at the same conceptual distance from cache coherence."
+        },
+        {
+          "sample_id": "R0013",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "target_terminology_injection"
+          ],
+          "confidence": 0.9,
+          "rationale": "The library reservation analogy (A) stays close to the original concepts of copies, updates and flags, providing clearer coverage and a tighter structural mapping. The social‑media analogy (B) injects many target terms and shifts the domain, making it more conceptually distant, thus higher M."
+        },
+        {
+          "sample_id": "R0016",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "duplicate_content"
+          ],
+          "confidence": 0.95,
+          "rationale": "Both chef analogies convey identical ideas—shared recipe copies, instant propagation of a salt adjustment—so they equally cover the description, have equally consistent mappings, and remain at the same conceptual distance."
+        },
+        {
+          "sample_id": "R0015",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A depicts immediate notification across library branches, matching cache‑coherence behavior, while B describes a delayed, inconsistent update, reducing coverage and structural consistency. Both stay within the library domain, so M is unchanged."
+        }
+      ]
+    }
+  ]
+}

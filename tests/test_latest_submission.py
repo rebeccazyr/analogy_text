@@ -73,23 +73,36 @@ class LatestSubmissionSnapshotTest(unittest.TestCase):
         }
         self.assertEqual(changes, {15: (1, 0), 22: (1, 0)})
 
-    def test_reported_text_averages_match_component_metrics(self) -> None:
+    def test_m_reconciliation_changes_only_three_rows(self) -> None:
+        baseline = read_metric(
+            ROOT
+            / "artifacts/frozen/metaphoricity_v7_1_baseline_predictions.csv",
+            "M",
+        )
+        active = read_metric(
+            ROOT / "artifacts/frozen/metaphoricity_predictions.csv",
+            "M",
+        )
+        changes = {
+            example_id: (baseline[example_id], active[example_id])
+            for example_id in baseline
+            if baseline[example_id] != active[example_id]
+        }
+        self.assertEqual(changes, {2: (1, 2), 44: (2, 1), 52: (1, 0)})
+
+    def test_reported_text_average_and_inferred_m_are_consistent(self) -> None:
         metrics = json.loads(
             (ROOT / "artifacts/frozen/leaderboard_metrics.json").read_text()
         )
+        displayed = metrics["as_displayed"]
+        context = metrics["text_component_context"]
+        self.assertEqual(displayed["text_kendall_AVG"], 0.485)
         self.assertAlmostEqual(
-            metrics["text_kendall_AVG"],
-            sum(
-                metrics[name]
-                for name in ("kendall_TCC", "kendall_MS", "kendall_M")
-            )
-            / 3,
-        )
-        self.assertAlmostEqual(
-            metrics["text_spearman_AVG"],
-            sum(
-                metrics[name]
-                for name in ("spearman_TCC", "spearman_MS", "spearman_M")
+            displayed["text_kendall_AVG"],
+            (
+                context["kendall_TCC_unchanged"]
+                + context["kendall_MS_unchanged"]
+                + context["kendall_M_inferred_approx"]
             )
             / 3,
         )

@@ -1,0 +1,75 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "0cc6c3355e8070630c0b",
+  "created_at": "2026-08-04T08:40:52.499764+00:00",
+  "usage": {
+    "completion_tokens": 2028,
+    "prompt_tokens": 1753,
+    "total_tokens": 3781,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "R0023",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Analogy A directly maps unreachable objects to discarded items processed by a recycling centre, covering the description’s core ideas of identification and reclamation. Analogy B adds several intermediate domains (culinary, agricultural, energy), diluting coverage and structural consistency, while increasing conceptual distance."
+      },
+      {
+        "sample_id": "R0022",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.98,
+        "rationale": "Both analogies are virtually identical sentences describing a river that sweeps debris automatically; they provide equal coverage, structural mapping, and conceptual distance, indicating no meaningful difference."
+      },
+      {
+        "sample_id": "R0024",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.94,
+        "rationale": "Analogy A uses a programming‑level description (heap scan, no free()), matching the target description closely. Analogy B uses a garden compost metaphor, which is consistent but less specific, making A higher on coverage and mapping, while B is farther from the memory domain, raising its M score."
+      },
+      {
+        "sample_id": "R0021",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.93,
+        "rationale": "The janitor analogy (A) correctly mirrors automatic removal of unreachable objects, whereas the builder analogy (B) changes the core operation to creation, reducing coverage and mapping quality. Both analogies stay within the office‑building domain, so their conceptual distance is comparable."
+      },
+      {
+        "sample_id": "R0026",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.97,
+        "rationale": "The two librarian analogies are paraphrases of each other, offering identical coverage of automatic removal, identical structural consistency, and identical distance from the memory domain."
+      },
+      {
+        "sample_id": "R0025",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Analogy A includes the crucial claim that the city service prevents street overflow, mirroring the memory‑leak prevention aspect of garbage collection. Analogy B omits this, lowering its coverage and mapping strength, while both remain equally distant in domain."
+      }
+    ]
+  }
+}

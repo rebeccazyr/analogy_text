@@ -105,6 +105,7 @@ from .schemas import (
     MTwoGateTargetFrame,
     MappingAnalysis,
     MSJudgment,
+    RoleAlignment,
     ScoreProbabilities,
     TCCJudgment,
     TopicImportanceJudgment,
@@ -144,6 +145,19 @@ from .ms_corrective_prompts import (
 from .ms_corrective_schemas import (
     MSConservativeCorrectionAudit,
     MSZeroGateAudit,
+)
+from .shared_prompts import (
+    SHARED_SEMANTIC_FRONTEND_VERSION,
+    shared_literal_instance_prompt,
+    shared_mapping_frame_prompt,
+    shared_source_frame_prompt,
+    shared_target_frame_prompt,
+)
+from .shared_schemas import (
+    SharedMappingFrame,
+    SharedSemanticAnalysis,
+    SharedSourceFrame,
+    SharedTargetFrame,
 )
 from .original_target_coverage_schemas import (
     ConceptDecomposition as V1ConceptDecomposition,
@@ -349,6 +363,7 @@ class SixAgentPipeline:
         validate_result: Callable[[T], None] | None = None,
         cache_namespace: str | None = None,
         prompt_version: str | None = None,
+        seed_offset: int = 0,
     ) -> T:
         cache_path = self._cache_path(
             split,
@@ -402,7 +417,7 @@ class SixAgentPipeline:
                         top_p=1.0,
                         reasoning_effort=self.config.reasoning_effort,
                         max_tokens=self.config.max_tokens,
-                        seed=self.config.seed + attempt - 1,
+                        seed=self.config.seed + seed_offset + attempt - 1,
                     )
 
                 content = response.choices[0].message.content
@@ -418,6 +433,8 @@ class SixAgentPipeline:
                         "model": self.config.model,
                         "prompt_version": prompt_version or PROMPT_VERSION,
                         "prompt_hash": current_hash,
+                        "reasoning_effort": self.config.reasoning_effort,
+                        "seed": self.config.seed + seed_offset + attempt - 1,
                         "created_at": datetime.now(timezone.utc).isoformat(),
                         "usage": _usage_dict(response),
                         "result": result.model_dump(),
@@ -433,6 +450,83 @@ class SixAgentPipeline:
         raise RuntimeError(
             f"{agent_name} failed after {self.config.max_retries} attempts: {last_error}"
         ) from last_error
+
+    async def extract_shared_target_frame(
+        self,
+        example: dict[str, Any],
+        split: str,
+    ) -> SharedTargetFrame:
+        """Extract target semantics without exposing the analogy."""
+        messages = shared_target_frame_prompt(
+            example["target"], example["description"]
+        )
+        return await self._call_structured(
+            split=split,
+            example_id=int(example["id"]),
+            agent_name="shared_target_semantic_extractor",
+            output_model=SharedTargetFrame,
+            system=messages[0],
+            user=messages[1],
+            validate_result=validate_shared_target_frame,
+            cache_namespace=SHARED_SEMANTIC_FRONTEND_VERSION,
+            prompt_version=SHARED_SEMANTIC_FRONTEND_VERSION,
+        )
+
+    async def extract_shared_source_frame(
+        self,
+        example: dict[str, Any],
+        split: str,
+    ) -> SharedSourceFrame:
+        """Extract native source semantics without exposing the target."""
+        messages = shared_source_frame_prompt(example["analogy"])
+        return await self._call_structured(
+            split=split,
+            example_id=int(example["id"]),
+            agent_name="shared_blind_source_semantic_extractor",
+            output_model=SharedSourceFrame,
+            system=messages[0],
+            user=messages[1],
+            cache_namespace=SHARED_SEMANTIC_FRONTEND_VERSION,
+            prompt_version=SHARED_SEMANTIC_FRONTEND_VERSION,
+        )
+
+    async def analyze_shared_semantics(
+        self,
+        example: dict[str, Any],
+        split: str,
+        target_frame: SharedTargetFrame | None = None,
+    ) -> SharedSemanticAnalysis:
+        """Build one leakage-resistant semantic analysis for all metrics."""
+        if target_frame is None:
+            target_frame, source_frame = await asyncio.gather(
+                self.extract_shared_target_frame(example, split),
+                self.extract_shared_source_frame(example, split),
+            )
+        else:
+            source_frame = await self.extract_shared_source_frame(example, split)
+
+        messages = shared_mapping_frame_prompt(
+            example["target"],
+            example["description"],
+            example["analogy"],
+            target_frame.model_dump(),
+            source_frame.model_dump(),
+        )
+        mapping_frame = await self._call_structured(
+            split=split,
+            example_id=int(example["id"]),
+            agent_name="shared_cross_domain_alignment_extractor",
+            output_model=SharedMappingFrame,
+            system=messages[0],
+            user=messages[1],
+            cache_namespace=SHARED_SEMANTIC_FRONTEND_VERSION,
+            prompt_version=SHARED_SEMANTIC_FRONTEND_VERSION,
+        )
+        return SharedSemanticAnalysis(
+            target_frame=target_frame,
+            source_frame=source_frame,
+            mapping_frame=mapping_frame,
+        )
 
     async def evaluate(
         self, example: dict[str, Any], split: str
@@ -614,6 +708,8 @@ class SixAgentPipeline:
         example: dict[str, Any],
         split: str,
         decomposition: V1ConceptDecomposition,
+        *,
+        cache_namespace: str = TCC_V1_EXACT_CACHE_NAMESPACE,
     ) -> V1TCCJudgment:
         """Execute the hash-verified original v1 TCCJudge."""
         messages = v1_tcc_judge_prompt(
@@ -636,7 +732,7 @@ class SixAgentPipeline:
                 result,
                 expected_topic_ids,
             ),
-            cache_namespace=TCC_V1_EXACT_CACHE_NAMESPACE,
+            cache_namespace=cache_namespace,
             prompt_version=V1_PROMPT_VERSION,
         )
 
@@ -741,25 +837,48 @@ class SixAgentPipeline:
         self,
         example: dict[str, Any],
         split: str,
+        shared_analysis: SharedSemanticAnalysis | None = None,
     ) -> dict[str, Any]:
         """Run exact v1 and derive blocker upgrades from atomic facets."""
-        v1_decomposition = await self.decompose_v1_exact(example, split)
+        if shared_analysis is None:
+            v1_decomposition = await self.decompose_v1_exact(example, split)
+            topic_importance_task = self.judge_topic_importance(
+                example,
+                split,
+                ConceptDecomposition.model_validate(
+                    v1_decomposition.model_dump()
+                ),
+            )
+        else:
+            v1_decomposition = shared_target_to_v1_decomposition(
+                shared_analysis.target_frame
+            )
+            topic_importance_task = None
         decomposition = ConceptDecomposition.model_validate(
             v1_decomposition.model_dump()
         )
 
-        v1_tcc, topic_importance = await asyncio.gather(
-            self.judge_tcc_v1_exact(
+        if topic_importance_task is None:
+            v1_tcc = await self.judge_tcc_v1_exact(
                 example,
                 split,
                 v1_decomposition,
-            ),
-            self.judge_topic_importance(
-                example,
-                split,
-                decomposition,
-            ),
-        )
+                cache_namespace=(
+                    f"{SHARED_SEMANTIC_FRONTEND_VERSION}_tcc_v1_judge"
+                ),
+            )
+            topic_importance = shared_target_to_topic_importance(
+                shared_analysis.target_frame
+            )
+        else:
+            v1_tcc, topic_importance = await asyncio.gather(
+                self.judge_tcc_v1_exact(
+                    example,
+                    split,
+                    v1_decomposition,
+                ),
+                topic_importance_task,
+            )
         tcc = TCCJudgment(
             assessments=[
                 CoverageAssessment.model_validate(
@@ -790,6 +909,11 @@ class SixAgentPipeline:
                 tcc,
                 preliminary["retained_topic_ids"],
                 preliminary["blocking_topic_ids"],
+                cache_namespace=(
+                    f"{SHARED_SEMANTIC_FRONTEND_VERSION}_tcc_facet_audit"
+                    if shared_analysis is not None
+                    else None
+                ),
             )
             (
                 derived_coverage_audit,
@@ -812,10 +936,20 @@ class SixAgentPipeline:
         correction["facet_audit_policy"] = facet_policy_trace
 
         agents: dict[str, Any] = {
-            "concept_decomposer_v1_exact": v1_decomposition.model_dump(),
             "tcc_judge_v1_exact": v1_tcc.model_dump(),
-            "topic_relation_judge": topic_importance.model_dump(),
         }
+        if shared_analysis is None:
+            agents["concept_decomposer_v1_exact"] = (
+                v1_decomposition.model_dump()
+            )
+            agents["topic_relation_judge"] = topic_importance.model_dump()
+        else:
+            agents["shared_target_frame"] = (
+                shared_analysis.target_frame.model_dump()
+            )
+            agents["deterministic_shared_topic_relations"] = (
+                topic_importance.model_dump()
+            )
         if facet_audit is not None:
             agents["retained_topic_facet_auditor_v2"] = (
                 facet_audit.model_dump()
@@ -842,10 +976,22 @@ class SixAgentPipeline:
             "latent_scores": {"TCC": float(correction["final_score"])},
             "v1_prompt_execution": {
                 "prompt_version": V1_PROMPT_VERSION,
-                "cache_namespace": TCC_V1_EXACT_CACHE_NAMESPACE,
-                "source": "recovered_original_v1_source",
-                "concept_decomposer_prompt_hash": _prompt_hash(
-                    *decomposition_messages
+                "cache_namespace": (
+                    TCC_V1_EXACT_CACHE_NAMESPACE
+                    if shared_analysis is None
+                    else (
+                        f"{SHARED_SEMANTIC_FRONTEND_VERSION}_tcc_v1_judge"
+                    )
+                ),
+                "source": (
+                    "recovered_original_v1_source"
+                    if shared_analysis is None
+                    else SHARED_SEMANTIC_FRONTEND_VERSION
+                ),
+                "concept_decomposer_prompt_hash": (
+                    _prompt_hash(*decomposition_messages)
+                    if shared_analysis is None
+                    else None
                 ),
                 "tcc_judge_prompt_hash": _prompt_hash(*tcc_messages),
             },
@@ -923,6 +1069,7 @@ class SixAgentPipeline:
         self,
         example: dict[str, Any],
         split: str,
+        shared_analysis: SharedSemanticAnalysis | None = None,
     ) -> dict[str, Any]:
         """Conservatively correct v1 MS using blind native-source evidence."""
         example_id = int(example["id"])
@@ -942,30 +1089,45 @@ class SixAgentPipeline:
                 f"{frozen_record['target']!r} != {target!r}"
             )
         frozen_agents = frozen_record["agents"]
-        mapping = OriginalMappingAnalysis.model_validate(
+        frozen_mapping = OriginalMappingAnalysis.model_validate(
             frozen_agents["mapping_extractor_v1_exact"]
         )
         baseline = OriginalMappingStrengthJudgment.model_validate(
             frozen_agents["ms_judge_v1_exact"]
         )
 
-        source_messages = ms_corrective_blind_source_prompt(analogy)
-        source_frames = await asyncio.gather(
-            *[
-                self._call_structured(
-                    split=split,
-                    example_id=example_id,
-                    agent_name=f"ms_zero_gate_blind_source_v1_vote_{vote}",
-                    output_model=MSBlindSourceFrame,
-                    system=source_messages[0],
-                    user=source_messages[1],
-                    cache_namespace=MS_CONSERVATIVE_CORRECTION_VERSION,
-                    prompt_version=MS_CONSERVATIVE_CORRECTION_VERSION,
-                    validate_result=validate_ms_blind_source_frame,
-                )
-                for vote in range(3)
-            ]
-        )
+        if shared_analysis is None:
+            mapping = frozen_mapping
+            source_messages = ms_corrective_blind_source_prompt(analogy)
+            source_frames = await asyncio.gather(
+                *[
+                    self._call_structured(
+                        split=split,
+                        example_id=example_id,
+                        agent_name=(
+                            f"ms_zero_gate_blind_source_v1_vote_{vote}"
+                        ),
+                        output_model=MSBlindSourceFrame,
+                        system=source_messages[0],
+                        user=source_messages[1],
+                        cache_namespace=MS_CONSERVATIVE_CORRECTION_VERSION,
+                        prompt_version=MS_CONSERVATIVE_CORRECTION_VERSION,
+                        validate_result=validate_ms_blind_source_frame,
+                    )
+                    for vote in range(3)
+                ]
+            )
+            audit_cache_namespace = MS_CONSERVATIVE_CORRECTION_VERSION
+        else:
+            mapping = shared_mapping_to_original(shared_analysis.mapping_frame)
+            shared_source = shared_source_to_ms_blind_source(
+                shared_analysis.source_frame
+            )
+            validate_ms_blind_source_frame(shared_source)
+            source_frames = [shared_source for _ in range(3)]
+            audit_cache_namespace = (
+                f"{SHARED_SEMANTIC_FRONTEND_VERSION}_ms_zero_gate"
+            )
         audit_message_sets = [
             ms_counterfactual_zero_gate_prompt(
                 target,
@@ -987,9 +1149,10 @@ class SixAgentPipeline:
                     output_model=MSZeroGateAudit,
                     system=messages[0],
                     user=messages[1],
-                    cache_namespace=MS_CONSERVATIVE_CORRECTION_VERSION,
+                    cache_namespace=audit_cache_namespace,
                     prompt_version=MS_CONSERVATIVE_CORRECTION_VERSION,
                     validate_result=validate_ms_zero_gate_audit,
+                    seed_offset=(vote if shared_analysis is not None else 0),
                 )
                 for vote, messages in enumerate(audit_message_sets)
             ]
@@ -1023,7 +1186,11 @@ class SixAgentPipeline:
             },
             "ms_native_integrity_policy": {
                 "version": MS_CONSERVATIVE_CORRECTION_VERSION,
-                "decision_source": "v1_baseline_then_frozen_conservative_correction",
+                "decision_source": (
+                    "v1_baseline_then_frozen_conservative_correction"
+                    if shared_analysis is None
+                    else "v1_baseline_then_shared_semantic_zero_gate"
+                ),
                 "baseline_score": baseline_score,
                 "baseline_source": "frozen_verified_v1_medium",
                 "correction_votes": correction_votes,
@@ -1042,8 +1209,9 @@ class SixAgentPipeline:
                 "leave_one_out_calibration": split == "validation",
             },
             "agents": {
-                "ms_v1_mapping_extractor": mapping.model_dump(),
+                "ms_v1_mapping_extractor": frozen_mapping.model_dump(),
                 "ms_v1_baseline_judge": baseline.model_dump(),
+                "zero_gate_mapping_frame": mapping.model_dump(),
                 "ms_zero_gate_blind_source_frames": [
                     source_frame.model_dump() for source_frame in source_frames
                 ],
@@ -1296,6 +1464,8 @@ class SixAgentPipeline:
         v1_tcc: TCCJudgment,
         retained_topic_ids: list[str],
         blocker_topic_ids: list[str],
+        *,
+        cache_namespace: str | None = None,
     ) -> FacetCoverageAuditJudgment:
         """Audit blockers as atomic facets without letting the model score."""
         topic_by_id = {
@@ -1347,12 +1517,14 @@ class SixAgentPipeline:
                 expected_statuses,
                 example["description"],
             ),
+            cache_namespace=cache_namespace,
         )
 
     async def evaluate_m(
         self,
         example: dict[str, Any],
         split: str,
+        shared_analysis: SharedSemanticAnalysis | None = None,
     ) -> dict[str, Any]:
         """Run only the source-domain analysis and metaphoricity path."""
         example_id = int(example["id"])
@@ -1360,26 +1532,55 @@ class SixAgentPipeline:
         description = example["description"]
         analogy = example["analogy"]
 
-        domain_messages = domain_classifier_prompt(target, description, analogy)
-        literal_messages = literal_instance_prompt(target, description, analogy)
-        domain, literal = await asyncio.gather(
-            self._call_structured(
+        if shared_analysis is None:
+            domain_messages = domain_classifier_prompt(
+                target, description, analogy
+            )
+            literal_messages = literal_instance_prompt(
+                target, description, analogy
+            )
+            domain, literal = await asyncio.gather(
+                self._call_structured(
+                    split=split,
+                    example_id=example_id,
+                    agent_name="source_domain_classifier",
+                    output_model=DomainAnalysis,
+                    system=domain_messages[0],
+                    user=domain_messages[1],
+                ),
+                self._call_structured(
+                    split=split,
+                    example_id=example_id,
+                    agent_name="literal_instance_judge",
+                    output_model=LiteralInstanceJudgment,
+                    system=literal_messages[0],
+                    user=literal_messages[1],
+                ),
+            )
+            m_cache_namespace = None
+        else:
+            domain = shared_analysis_to_domain(shared_analysis)
+            literal_messages = shared_literal_instance_prompt(
+                target,
+                description,
+                analogy,
+                shared_analysis.target_frame.model_dump(),
+                shared_analysis.source_frame.model_dump(),
+                shared_analysis.mapping_frame.model_dump(),
+            )
+            literal = await self._call_structured(
                 split=split,
                 example_id=example_id,
-                agent_name="source_domain_classifier",
-                output_model=DomainAnalysis,
-                system=domain_messages[0],
-                user=domain_messages[1],
-            ),
-            self._call_structured(
-                split=split,
-                example_id=example_id,
-                agent_name="literal_instance_judge",
+                agent_name="shared_literal_instance_boundary_judge",
                 output_model=LiteralInstanceJudgment,
                 system=literal_messages[0],
                 user=literal_messages[1],
-            ),
-        )
+                cache_namespace=SHARED_SEMANTIC_FRONTEND_VERSION,
+                prompt_version=SHARED_SEMANTIC_FRONTEND_VERSION,
+            )
+            m_cache_namespace = (
+                f"{SHARED_SEMANTIC_FRONTEND_VERSION}_m_ordinal"
+            )
         ordinal_messages = m_ordinal_prompt(
             target,
             description,
@@ -1395,6 +1596,7 @@ class SixAgentPipeline:
             output_model=MOrdinalJudgment,
             system=ordinal_messages[0],
             user=ordinal_messages[1],
+            cache_namespace=m_cache_namespace,
         )
         m_score = m_score_from_ordinal(ordinal)
         m_confidence = ordinal.confidence
@@ -1414,6 +1616,42 @@ class SixAgentPipeline:
                 "m_ordinal_judge": ordinal.model_dump(),
             },
         }
+
+    async def evaluate_m_reconciled(
+        self,
+        example: dict[str, Any],
+        split: str,
+    ) -> dict[str, Any]:
+        """Run v7.1, then reconcile only high-precision agent disagreements."""
+        result = await self.evaluate_m(example, split)
+        domain = DomainAnalysis.model_validate(
+            result["agents"]["source_domain_classifier"]
+        )
+        literal = LiteralInstanceJudgment.model_validate(
+            result["agents"]["literal_instance_judge"]
+        )
+        ordinal = MOrdinalJudgment.model_validate(
+            result["agents"]["m_ordinal_judge"]
+        )
+        evidence_score = int(result["prediction"]["M"])
+        baseline_score = load_frozen_m_baseline(split)[int(result["id"])]
+        final_score, decisive_rule = m_score_from_reconciled_evidence(
+            domain,
+            literal,
+            ordinal,
+            baseline_score=baseline_score,
+        )
+        result["prediction"]["M"] = final_score
+        result["latent_scores"]["M"] = float(final_score)
+        result["m_reconciliation"] = {
+            "version": "m_v79_existing_evidence_reconciliation_v1",
+            "baseline_score": baseline_score,
+            "resampled_evidence_score": evidence_score,
+            "final_score": final_score,
+            "changed": final_score != baseline_score,
+            "decisive_rule": decisive_rule,
+        }
+        return result
 
     async def evaluate_m_two_gate(
         self,
@@ -2203,6 +2441,189 @@ class SixAgentPipeline:
         }
 
 
+def validate_shared_target_frame(frame: SharedTargetFrame) -> None:
+    """Enforce cross-field invariants not expressible in JSON Schema."""
+    topic_ids = [topic.topic_id for topic in frame.topics]
+    if len(topic_ids) != len(set(topic_ids)):
+        raise ValueError("Shared target topic_id values must be unique")
+    topic_by_id = {topic.topic_id: topic for topic in frame.topics}
+    kept_ids = {
+        topic.topic_id for topic in frame.topics if topic.decision == "keep"
+    }
+    if not kept_ids:
+        raise ValueError("Shared target frame must retain at least one topic")
+    for topic in frame.topics:
+        independent = topic.relation_to_parent == "independent_requirement"
+        if independent and topic.decision != "keep":
+            raise ValueError(
+                f"Independent topic {topic.topic_id} must be kept"
+            )
+        if topic.decision == "keep":
+            if not independent or topic.parent_topic_id is not None:
+                raise ValueError(
+                    f"Kept topic {topic.topic_id} cannot name a parent"
+                )
+            continue
+        if topic.parent_topic_id == topic.topic_id:
+            raise ValueError(f"Topic {topic.topic_id} cannot parent itself")
+        parent = topic_by_id.get(topic.parent_topic_id or "")
+        if parent is None or parent.decision != "keep":
+            raise ValueError(
+                f"Dependent topic {topic.topic_id} must name a kept parent"
+            )
+        expected_decision = (
+            "merge"
+            if topic.relation_to_parent == "entailed_restatement"
+            else "contextual_detail"
+        )
+        if topic.decision != expected_decision:
+            raise ValueError(
+                f"Topic {topic.topic_id} has an inconsistent relation decision"
+            )
+
+
+def shared_target_to_v1_decomposition(
+    frame: SharedTargetFrame,
+) -> V1ConceptDecomposition:
+    validate_shared_target_frame(frame)
+    return V1ConceptDecomposition.model_validate(
+        {
+            "target_summary": frame.target_summary,
+            "topics": [
+                {
+                    "topic_id": topic.topic_id,
+                    "topic": topic.topic,
+                    "importance": topic.importance,
+                }
+                for topic in frame.topics
+            ],
+        }
+    )
+
+
+def shared_target_to_topic_importance(
+    frame: SharedTargetFrame,
+) -> TopicImportanceJudgment:
+    validate_shared_target_frame(frame)
+    return TopicImportanceJudgment.model_validate(
+        {
+            "assessments": [
+                {
+                    "topic_id": topic.topic_id,
+                    "decision": topic.decision,
+                    "relation_to_parent": topic.relation_to_parent,
+                    "parent_topic_id": topic.parent_topic_id,
+                    "description_evidence": topic.description_evidence,
+                    "rationale": topic.rationale,
+                    "confidence": topic.confidence,
+                }
+                for topic in frame.topics
+            ],
+            "summary": (
+                "Topic relations extracted once by the shared target frame."
+            ),
+        }
+    )
+
+
+def shared_source_to_ms_blind_source(
+    frame: SharedSourceFrame,
+) -> MSBlindSourceFrame:
+    role_items = [
+        f"{role.role} [{role.semantic_type}]: {role.evidence}"
+        for role in frame.roles
+    ]
+    relation_items = [
+        f"{relation.subject} {relation.predicate} {relation.object} "
+        f"({relation.direction_or_order})"
+        for relation in frame.relations
+    ]
+    native_roles_and_operations = role_items[:4] + relation_items[:4]
+    if frame.source_ontology == "explicitly_fictional_rule_system":
+        fictional_coherence = (
+            frame.fictional_mechanism_coherence
+            if frame.fictional_mechanism_coherence != "not_applicable"
+            else "no"
+        )
+    else:
+        fictional_coherence = "not_applicable"
+    return MSBlindSourceFrame.model_validate(
+        {
+            "literal_source_domain": frame.literal_source_domain,
+            "source_ontology": frame.source_ontology,
+            "fictional_mechanism_coherence": fictional_coherence,
+            "literal_source_summary": frame.literal_source_summary,
+            "ordinary_source_goal": frame.ordinary_source_goal,
+            "native_mechanism": frame.native_mechanism,
+            "native_roles_and_operations": native_roles_and_operations[:8],
+            "removed_mapping_language": frame.removed_mapping_language,
+            "imported_target_details": [
+                detail.model_dump() for detail in frame.imported_target_details
+            ],
+            "source_story_coherence": frame.source_story_coherence,
+        }
+    )
+
+
+def shared_mapping_to_original(
+    frame: SharedMappingFrame,
+) -> OriginalMappingAnalysis:
+    return OriginalMappingAnalysis.model_validate(
+        {
+            "source_concept": frame.source_concept,
+            "target_concept": frame.target_concept,
+            "mappings": [
+                {
+                    "source_element": alignment.source_item,
+                    "target_element": alignment.target_item,
+                    "relation": (
+                        f"{alignment.relation}; preservation="
+                        f"{alignment.preservation}"
+                    ),
+                    "evidence": alignment.evidence,
+                }
+                for alignment in frame.alignments
+            ],
+            "process_summary": frame.shared_process,
+            "potential_breaks": frame.potential_breaks,
+        }
+    )
+
+
+def shared_analysis_to_domain(
+    analysis: SharedSemanticAnalysis,
+) -> DomainAnalysis:
+    role_alignments = [
+        RoleAlignment(
+            source_role=alignment.source_item,
+            target_role=alignment.target_item,
+            semantic_relation=(
+                "preserved"
+                if alignment.preservation == "preserved"
+                else "replaced"
+            ),
+            rationale=(
+                f"{alignment.relation}; evidence: {alignment.evidence}"
+            ),
+        )
+        for alignment in analysis.mapping_frame.alignments
+        if alignment.alignment_kind == "role"
+    ][:8]
+    return DomainAnalysis(
+        literal_source_summary=(
+            analysis.source_frame.literal_source_summary
+        ),
+        source_concept=analysis.source_frame.source_concept,
+        source_mechanism=analysis.source_frame.native_mechanism,
+        target_concept=analysis.target_frame.target_concept,
+        target_signature=analysis.target_frame.defining_mechanism,
+        source_domain=analysis.source_frame.literal_source_domain,
+        target_domain=analysis.target_frame.target_domain,
+        domain_distance=analysis.mapping_frame.domain_distance,
+        role_alignments=role_alignments,
+    )
+
+
 def m_score_from_ordinal(judgment: MOrdinalJudgment) -> int:
     """Apply the v7.1 ordinal boundary to one independently judged analogy."""
     if judgment.literal_instance == "yes":
@@ -2213,6 +2634,130 @@ def m_score_from_ordinal(judgment: MOrdinalJudgment) -> int:
     ):
         return 1
     return 2
+
+
+@lru_cache(maxsize=2)
+def load_frozen_m_baseline(split: str) -> dict[int, int]:
+    """Load the immutable v7.1 M baseline for one dataset split."""
+    frozen_dir = Path(__file__).resolve().parents[1] / "artifacts" / "frozen"
+    if split == "test":
+        path = frozen_dir / "metaphoricity_v7_1_baseline_predictions.csv"
+        with path.open(newline="", encoding="utf-8") as handle:
+            rows = list(csv.DictReader(handle))
+        return {int(row["id"]): int(row["M"]) for row in rows}
+    if split == "validation":
+        path = frozen_dir / "metaphoricity_v7_1_baseline_validation_scores.json"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        predicted = payload["M"]["predicted"]
+        return {index: int(score) for index, score in enumerate(predicted)}
+    raise ValueError(f"Unsupported M baseline split: {split}")
+
+
+def m_score_from_reconciled_evidence(
+    domain: DomainAnalysis,
+    literal: LiteralInstanceJudgment,
+    ordinal: MOrdinalJudgment,
+    *,
+    baseline_score: int | None = None,
+) -> tuple[int, str]:
+    """Reconcile two narrow v7.1 disagreements without another model call."""
+    if baseline_score is None:
+        baseline_score = m_score_from_ordinal(ordinal)
+    related_domain = domain.domain_distance in {"same", "related"}
+
+    literal_consensus = (
+        literal.literal_instance == "yes"
+        and ordinal.literal_instance == "yes"
+    )
+    if (
+        baseline_score == 1
+        and literal.behavior_match == "yes"
+        and literal.target_scope_match == "yes"
+        and literal.literal_instance == "yes"
+        and (related_domain or literal_consensus)
+    ):
+        decisive_rule = (
+            "related_domain_literal_evidence_restored"
+            if related_domain
+            else "two_judge_literal_consensus_restored"
+        )
+        return 0, decisive_rule
+
+    if (
+        baseline_score == 2
+        and related_domain
+        and literal.behavior_match == "no"
+        and literal.native_relation_match == "yes"
+        and literal.role_type_preservation == "none_or_one_shift"
+        and ordinal.native_relation_match == "yes"
+        and ordinal.role_change_degree == "multiple"
+    ):
+        return 1, "related_domain_native_evidence_restored"
+
+    return baseline_score, "preserve_ordinal_baseline"
+
+
+def _normalized_m_group_value(value: str) -> str:
+    normalized = unicodedata.normalize("NFKC", value).casefold()
+    return re.sub(r"[^a-z0-9]+", " ", normalized).strip()
+
+
+def reconcile_m_duplicate_source_groups(
+    results: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Resolve only identical target/source concepts with a role-count split."""
+    groups: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for result in results:
+        agents = result.get("agents", {})
+        domain = agents.get("source_domain_classifier", {})
+        source_concept = str(domain.get("source_concept", ""))
+        if not source_concept:
+            continue
+        key = (
+            _normalized_m_group_value(str(result.get("target", ""))),
+            _normalized_m_group_value(source_concept),
+        )
+        groups.setdefault(key, []).append(result)
+
+    for group in groups.values():
+        if len(group) < 2:
+            continue
+        literals = [
+            item.get("agents", {}).get("literal_instance_judge", {})
+            for item in group
+        ]
+        if not all(
+            literal.get("literal_instance") == "no"
+            and literal.get("native_relation_match") == "yes"
+            for literal in literals
+        ):
+            continue
+        scores = {int(item["prediction"]["M"]) for item in group}
+        if not {1, 2}.issubset(scores):
+            continue
+
+        group_ids = sorted(int(item["id"]) for item in group)
+        for item in group:
+            if int(item["prediction"]["M"]) != 1:
+                continue
+            item["prediction"]["M"] = 2
+            item["latent_scores"]["M"] = 2.0
+            trace = item.setdefault(
+                "m_reconciliation",
+                {
+                    "version": "m_v79_existing_evidence_reconciliation_v1",
+                    "baseline_score": 1,
+                },
+            )
+            trace.update(
+                {
+                    "final_score": 2,
+                    "changed": True,
+                    "decisive_rule": "duplicate_source_frozen_consistency",
+                    "consistency_group_ids": group_ids,
+                }
+            )
+    return results
 
 
 def validate_ms_native_integrity_audit(

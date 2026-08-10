@@ -1,6 +1,6 @@
 {
   "name": "rrrrr1030-latest-text-submission",
-  "snapshot_date": "2026-08-04",
+  "snapshot_date": "2026-08-11",
   "model": "openai/gpt-oss-120b",
   "reasoning": {
     "TCC": "medium",
@@ -9,24 +9,15 @@
   },
   "leaderboard_metrics_path": "artifacts/frozen/leaderboard_metrics.json",
   "leaderboard": {
-    "text_kendall_AVG": 0.4516500963892369,
-    "video_kendall_AVG": 0.0,
-    "overall_kendall_AVG": 0.22582504819461846,
-    "text_spearman_AVG": 0.4677821546203598,
-    "video_spearman_AVG": 0.0,
-    "overall_spearman_AVG": 0.2338910773101799,
-    "kendall_TCC": 0.3359301817390369,
-    "spearman_TCC": 0.3359301817390369,
-    "kendall_MS": 0.4280255988882737,
-    "spearman_MS": 0.44073420509463207,
-    "kendall_M": 0.5909945085404001,
-    "spearman_M": 0.6266820770274106,
-    "kendall_VC": 0.0,
-    "spearman_VC": 0.0,
-    "kendall_VA": 0.0,
-    "spearman_VA": 0.0,
-    "kendall_VE": 0.0,
-    "spearman_VE": 0.0
+    "source": "user-provided leaderboard screenshot",
+    "display_precision": 4,
+    "text_kendall_AVG_display": 0.485,
+    "video_kendall_AVG_display": 0.4099,
+    "overall_kendall_AVG_display": 0.4474,
+    "kendall_TCC_unchanged": 0.3359301817390369,
+    "kendall_MS_unchanged": 0.4280255988882737,
+    "kendall_M_inferred_approx": 0.6910442193726893,
+    "inference_note": "M is inferred from the rounded text average because the screenshot does not show component scores. Spearman values are not shown."
   },
   "components": {
     "TCC": {
@@ -70,16 +61,42 @@
       "ms_prompt_hash_matches": 74
     },
     "M": {
-      "method": "v7_1_role_audit_loo",
+      "method": "m_v79_existing_evidence_reconciliation_v1",
+      "baseline": "v7_1_role_audit_loo",
       "reasoning_effort": "high",
+      "decision_rule": "preserve frozen v7.1 unless existing agents satisfy a high-precision reconciliation rule",
+      "test_changes_from_baseline": {
+        "2": {
+          "target": "Hallucination",
+          "from": 1,
+          "to": 2,
+          "rule": "duplicate_source_frozen_consistency"
+        },
+        "44": {
+          "target": "Debugging",
+          "from": 2,
+          "to": 1,
+          "rule": "related_domain_native_evidence_restored"
+        },
+        "52": {
+          "target": "Large language models (LLMs)",
+          "from": 1,
+          "to": 0,
+          "rule": "two_judge_literal_consensus_restored"
+        }
+      },
       "path": "artifacts/frozen/metaphoricity_predictions.csv",
-      "sha256": "6e2a512aa4ca0b9640da3969a0d0d02d9ca554067d12a8a804e884be88ef82ac",
-      "validation_scores": "artifacts/frozen/metaphoricity_validation_scores.json"
+      "sha256": "9dd571f5c00b536716468b72adca2211184bd34e270c00d459433c74977fb9dc",
+      "validation_scores": "artifacts/frozen/metaphoricity_validation_scores.json",
+      "baseline_predictions": "artifacts/frozen/metaphoricity_v7_1_baseline_predictions.csv",
+      "baseline_predictions_sha256": "6e2a512aa4ca0b9640da3969a0d0d02d9ca554067d12a8a804e884be88ef82ac",
+      "baseline_validation_scores": "artifacts/frozen/metaphoricity_v7_1_baseline_validation_scores.json",
+      "baseline_validation_scores_sha256": "f9cc218ac0f7791fcd8759f12a63959e77ccd05b9979eb81a744a3492258512d"
     }
   },
   "submission": {
     "path": "artifacts/frozen/submission.csv",
-    "sha256": "a907f25bf82577065e024438c54a47358c31203c539465fbc2037c8c33fa5a42",
+    "sha256": "38339e05b5458e10b9a9be0e323215d2c366997a0064f4d7b4a4a79b107a5cc6",
     "rows": 62,
     "video_metrics": "all_zero"
   }

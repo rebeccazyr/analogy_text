@@ -1,0 +1,162 @@
+{
+  "input": {
+    "id": 0,
+    "target": "Overfitting",
+    "description": "A situation in which a machine-learning model fits noise or spurious patterns in the training data, performing well on that data but generalizing poorly to new, unseen examples.",
+    "analogy": "Overfitting is Memorizing the Textbook Instead of Understanding the Concepts.:\nImagine a student who memorizes an entire textbook word-for-word before an exam. During the test, they can perfectly answer questions that come directly from the book, reciting exact passages. However, when faced with questions that ask them to apply concepts in new situations or explain ideas in their own words, they struggle completely.\n\nThe student (the model) has \"memorized\" the textbook (training data) so precisely that they've learned not just the important concepts but also irrelevant details like specific wording and examples (the noise). They've focused so much on remembering every detail that they missed the underlying principles.\n\nWhen test questions match the textbook exactly (like the training data), they excel. But for questions that require understanding and application (like new, unseen examples), they perform poorly because they've memorized rather than understood.",
+    "video": "val_videos/val_0.mp4",
+    "TCC": 2,
+    "MS": 2,
+    "M": 2,
+    "VC": 1,
+    "VA": 3,
+    "VE": 1
+  },
+  "generation": {
+    "variants": [
+      {
+        "variant_id": "P1",
+        "transformation": "prose_restructure",
+        "analogy": "Overfitting is like a student who memorizes a textbook word‑for‑word instead of grasping its concepts. The student (representing the machine‑learning model) studies the entire book so thoroughly that they retain not only the core ideas but also every incidental phrasing and example—essentially the noise in the training data. On an exam that asks questions drawn directly from the text, the student can recite exact passages and score perfectly, mirroring how an overfitted model excels on its training set. Yet, when the exam presents problems that require applying the underlying principles in novel contexts or explaining ideas in the student’s own words, the student falters completely. This failure occurs because the focus on memorizing every detail left no room for understanding the fundamental principles. Consequently, the student shines on questions that match the textbook exactly but performs poorly on new, unseen questions, just as an overfitted model does on data that differ from its training set.",
+        "preservation_notes": [
+          "Kept the mapping of model to student",
+          "Maintained the causal link between memorization and poor generalization",
+          "Retained the contrast between performance on training‑like versus novel examples",
+          "Preserved the notion of noise as irrelevant details"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P2",
+        "transformation": "lexical_paraphrase",
+        "analogy": "Overfitting resembles a pupil who rote‑learns a textbook instead of comprehending its ideas. The pupil (the model) ingests the whole text so exactly that they capture not only the essential concepts but also superfluous wording and specific instances—the noise in the training data. When the exam asks questions that are direct extracts from the book, the pupil can quote passages flawlessly and ace the test, just as an overfitted model performs well on its training data. However, when confronted with questions that demand the application of principles in fresh scenarios or articulation in the pupil’s own language, they are completely at a loss. This shortfall stems from the emphasis on memorizing every nuance, leaving no capacity for grasping the core principles. Thus, the pupil excels on textbook‑identical queries but fails on new, unseen ones, mirroring the behavior of an overfitted model.",
+        "preservation_notes": [
+          "Preserved the student‑model analogy",
+          "Kept the distinction between memorizing noise and understanding principles",
+          "Maintained the cause‑effect relationship of memorization leading to poor performance on novel data",
+          "Retained the example of exam performance on matching versus new questions"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P3",
+        "transformation": "compression_without_information_loss",
+        "analogy": "Overfitting is like a student who memorizes a textbook word‑for‑word rather than learning its concepts. The student (the model) records every detail, including irrelevant phrasing and examples—the noise in the training data. On a test that asks questions taken directly from the book, they answer perfectly, mirroring an overfitted model’s success on its training set. But when the test requires applying ideas to new situations or explaining them in the student’s own words, they fail, because the focus on exact memorization left no understanding of underlying principles. Consequently, they excel on textbook‑identical questions yet perform poorly on unseen ones, just as an overfitted model does on novel data.",
+        "preservation_notes": [
+          "Kept the student‑model mapping",
+          "Preserved the role of noise as irrelevant details",
+          "Maintained the contrast between performance on identical versus novel questions",
+          "Retained the causal link between memorization and lack of generalization"
+        ],
+        "content_added": false,
+        "content_removed": false
+      }
+    ]
+  },
+  "reviews": [
+    {
+      "assessments": [
+        {
+          "sample_id": "I002",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The candidate preserves all key description elements, retains the student‑model mapping, training‑data/noise analogy, and causal direction. No content is added, omitted, or weakened; wording changes are synonymous, so all three metrics remain equivalent."
+        },
+        {
+          "sample_id": "I003",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The analogy mirrors the original wording and structure, keeping the same roles, relations, and causal claim. Synonymous phrasing does not alter meaning, so TCC, MS, and M remain fully equivalent."
+        },
+        {
+          "sample_id": "I001",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The candidate restates the original analogy with minor lexical variations but retains all essential description content, source‑target roles, and the underlying causal relationship, resulting in no semantic drift across any metric."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "I001",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The candidate preserves the core description of overfitting: memorizing noise, excelling on training‑like questions, and failing on novel ones. The source (student/model) and target (overfitting behavior) roles, causal direction, and the mapping between textbook, exam, and data remain unchanged, so TCC, MS, and M are all equivalent."
+        },
+        {
+          "sample_id": "I003",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "This paraphrase retains all essential content of the original analogy. No new concepts are introduced, and the relationships between student, textbook, and exam (model, training data, test data) stay identical, satisfying TCC, MS, and M equivalence."
+        },
+        {
+          "sample_id": "I002",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Although the wording uses “pupil” and “rote‑learns,” the semantic roles, causal chain, and description of noise versus signal are unchanged. The analogy still covers the same description, source‑target mapping, and literal role semantics, making all three metrics equivalent."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "I001",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "The candidate preserves the core description of overfitting, retains the student‑model mapping, the noise‑in‑training‑data metaphor, and the causal contrast between training‑set performance and generalization. Minor wording differences (e.g., dropping “entire”) do not alter the covered content, relations, or role semantics, so all three metrics remain equivalent."
+        },
+        {
+          "sample_id": "I002",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "The analogy uses synonymous terms (“pupil” for student, “rote‑learns” for memorizes) but keeps the same source‑target roles, the noise metaphor, and the performance contrast. No substantive content is added or removed, so TCC, MS, and M are unchanged."
+        },
+        {
+          "sample_id": "I003",
+          "tcc_equivalent": true,
+          "ms_equivalent": true,
+          "m_equivalent": true,
+          "semantic_drift": [],
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "This version is a more concise restatement of the original analogy. It retains all essential description elements, the student‑model mapping, and the causal relationship between memorization of noise and poor generalization. No semantic shift or omission affects any of the three metrics."
+        }
+      ]
+    }
+  ]
+}

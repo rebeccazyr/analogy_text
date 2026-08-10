@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "9c175233ea863dcb774a",
+  "created_at": "2026-08-04T08:38:32.002400+00:00",
+  "usage": {
+    "completion_tokens": 1110,
+    "prompt_tokens": 1397,
+    "total_tokens": 2507,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I001",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The candidate preserves the core description of overfitting, retains the student‑model mapping, the noise‑in‑training‑data metaphor, and the causal contrast between training‑set performance and generalization. Minor wording differences (e.g., dropping “entire”) do not alter the covered content, relations, or role semantics, so all three metrics remain equivalent."
+      },
+      {
+        "sample_id": "I002",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "The analogy uses synonymous terms (“pupil” for student, “rote‑learns” for memorizes) but keeps the same source‑target roles, the noise metaphor, and the performance contrast. No substantive content is added or removed, so TCC, MS, and M are unchanged."
+      },
+      {
+        "sample_id": "I003",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "This version is a more concise restatement of the original analogy. It retains all essential description elements, the student‑model mapping, and the causal relationship between memorization of noise and poor generalization. No semantic shift or omission affects any of the three metrics."
+      }
+    ]
+  }
+}

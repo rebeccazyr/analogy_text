@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "8587b05d3002f7ade642",
+  "created_at": "2026-08-04T08:38:37.521865+00:00",
+  "usage": {
+    "completion_tokens": 676,
+    "prompt_tokens": 1532,
+    "total_tokens": 2208,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I042",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The candidate preserves all description elements, role mappings, and literal relations of the original analogy without addition, omission, or alteration."
+      },
+      {
+        "sample_id": "I043",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The wording mirrors the original closely; no semantic content, role, or mapping changes are introduced, keeping all metrics equivalent."
+      },
+      {
+        "sample_id": "I041",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The analogy restates the original concepts with synonymous phrasing, maintaining full semantic coverage, role structure, and literal mappings."
+      }
+    ]
+  }
+}

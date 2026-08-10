@@ -1,0 +1,79 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "9a732259ba73359d8f3e",
+  "created_at": "2026-08-04T08:40:54.396084+00:00",
+  "usage": {
+    "completion_tokens": 2501,
+    "prompt_tokens": 1359,
+    "total_tokens": 3860,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "R0014",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [
+          "target_terminology_injection"
+        ],
+        "confidence": 0.9,
+        "rationale": "Analogy A directly mentions cores, caches, reads, writes and propagation, covering all key description elements, while B uses traffic lights which only loosely captures coordination. A's mapping is clearer and internally consistent; B is more distant, increasing conceptual distance (M)."
+      },
+      {
+        "sample_id": "R0011",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Analogy A correctly mirrors cache‑coherence with writes causing invalidations, matching the description. Analogy B describes a broken variant that contradicts the intended mechanism, reducing both coverage and structural consistency. Both analogies stay in the same domain, so conceptual distance is equal."
+      },
+      {
+        "sample_id": "R0012",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "duplicate_content"
+        ],
+        "confidence": 0.9,
+        "rationale": "Both analogies describe autonomous drones sharing an obstacle map and broadcasting updates; they cover the same description points, have equally consistent mappings, and remain at the same conceptual distance from cache coherence."
+      },
+      {
+        "sample_id": "R0013",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [
+          "target_terminology_injection"
+        ],
+        "confidence": 0.9,
+        "rationale": "The library reservation analogy (A) stays close to the original concepts of copies, updates and flags, providing clearer coverage and a tighter structural mapping. The social‑media analogy (B) injects many target terms and shifts the domain, making it more conceptually distant, thus higher M."
+      },
+      {
+        "sample_id": "R0016",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "duplicate_content"
+        ],
+        "confidence": 0.95,
+        "rationale": "Both chef analogies convey identical ideas—shared recipe copies, instant propagation of a salt adjustment—so they equally cover the description, have equally consistent mappings, and remain at the same conceptual distance."
+      },
+      {
+        "sample_id": "R0015",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Analogy A depicts immediate notification across library branches, matching cache‑coherence behavior, while B describes a delayed, inconsistent update, reducing coverage and structural consistency. Both stay within the library domain, so M is unchanged."
+      }
+    ]
+  }
+}

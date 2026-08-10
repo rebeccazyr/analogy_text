@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import unittest
 from pathlib import Path
 
@@ -9,6 +10,12 @@ from analogy_agents.pipeline import (
     load_split,
     m_score_from_ordinal,
     ms_score_from_zero_gate,
+    shared_analysis_to_domain,
+    shared_mapping_to_original,
+    shared_source_to_ms_blind_source,
+    shared_target_to_topic_importance,
+    shared_target_to_v1_decomposition,
+    validate_shared_target_frame,
     v1_conservative_tcc_correction,
 )
 from analogy_agents.ms_corrective_schemas import MSZeroGateAudit
@@ -26,6 +33,20 @@ from analogy_agents.schemas import (
     Topic,
     TopicImportanceAssessment,
     TopicImportanceJudgment,
+)
+from analogy_agents.shared_schemas import (
+    SharedAlignment,
+    SharedMappingFrame,
+    SharedSemanticAnalysis,
+    SharedSemanticRelation,
+    SharedSemanticRole,
+    SharedSourceFrame,
+    SharedTargetFrame,
+    SharedTargetTopic,
+)
+from analogy_agents.shared_prompts import (
+    shared_source_frame_prompt,
+    shared_target_frame_prompt,
 )
 
 
@@ -263,6 +284,43 @@ class ActivePolicyTest(unittest.TestCase):
         )
         self.assertEqual(len(test_anchors), len(M_CALIBRATION_ANCHORS))
 
+    def test_shared_frontend_adapts_to_all_three_metric_contracts(self) -> None:
+        shared = self._shared_analysis()
+        decomposition = shared_target_to_v1_decomposition(
+            shared.target_frame
+        )
+        importance = shared_target_to_topic_importance(shared.target_frame)
+        source = shared_source_to_ms_blind_source(shared.source_frame)
+        mapping = shared_mapping_to_original(shared.mapping_frame)
+        domain = shared_analysis_to_domain(shared)
+
+        self.assertEqual([topic.topic_id for topic in decomposition.topics], ["T1", "T2"])
+        self.assertEqual(
+            [item.decision for item in importance.assessments],
+            ["keep", "contextual_detail"],
+        )
+        self.assertIn("worker", source.native_roles_and_operations[0])
+        self.assertEqual(mapping.mappings[0].source_element, "worker")
+        self.assertEqual(domain.role_alignments[0].semantic_relation, "preserved")
+
+    def test_shared_target_rejects_a_dependent_topic_without_kept_parent(self) -> None:
+        frame = self._shared_analysis().target_frame.model_copy(deep=True)
+        frame.topics[1].parent_topic_id = "missing"
+        with self.assertRaisesRegex(ValueError, "must name a kept parent"):
+            validate_shared_target_frame(frame)
+
+    def test_shared_frontend_visibility_firewalls(self) -> None:
+        _, target_user = shared_target_frame_prompt("Target", "Description")
+        _, source_user = shared_source_frame_prompt("Analogy")
+        self.assertEqual(
+            set(json.loads(target_user)),
+            {"target", "description"},
+        )
+        self.assertEqual(
+            set(json.loads(source_user)),
+            {"analogy"},
+        )
+
     @staticmethod
     def _m_judgment(
         *,
@@ -326,6 +384,111 @@ class ActivePolicyTest(unittest.TestCase):
         }
         values.update(overrides)
         return MSZeroGateAudit(**values)
+
+    @staticmethod
+    def _shared_analysis() -> SharedSemanticAnalysis:
+        target_role = SharedSemanticRole(
+            role_id="TR1",
+            role="processor",
+            semantic_type="computational actor",
+            necessity="defining",
+            evidence="processor transforms input",
+        )
+        source_role = SharedSemanticRole(
+            role_id="SR1",
+            role="worker",
+            semantic_type="person",
+            necessity="defining",
+            evidence="worker transforms material",
+        )
+        target_relation = SharedSemanticRelation(
+            relation_id="TRel1",
+            subject="processor",
+            predicate="transforms",
+            object="input",
+            direction_or_order="input before output",
+            necessity="defining",
+            evidence="transforms input into output",
+        )
+        source_relation = SharedSemanticRelation(
+            relation_id="SRel1",
+            subject="worker",
+            predicate="transforms",
+            object="material",
+            direction_or_order="material before product",
+            necessity="defining",
+            evidence="transforms material into a product",
+        )
+        target = SharedTargetFrame(
+            target_concept="transformation",
+            target_domain="computation",
+            target_summary="A processor transforms an input.",
+            defining_mechanism="input is transformed into output",
+            success_condition="an output is produced",
+            topics=[
+                SharedTargetTopic(
+                    topic_id="T1",
+                    topic="Transform input into output",
+                    importance="core",
+                    decision="keep",
+                    relation_to_parent="independent_requirement",
+                    description_evidence="transforms input into output",
+                    rationale="Defining mechanism.",
+                    confidence=0.95,
+                ),
+                SharedTargetTopic(
+                    topic_id="T2",
+                    topic="For example, text input",
+                    importance="supporting",
+                    decision="contextual_detail",
+                    relation_to_parent="illustrative_example",
+                    parent_topic_id="T1",
+                    description_evidence="for example, text input",
+                    rationale="Non-exhaustive example.",
+                    confidence=0.9,
+                ),
+            ],
+            roles=[target_role],
+            relations=[target_relation],
+            constraints=[],
+        )
+        source = SharedSourceFrame(
+            source_concept="craft work",
+            literal_source_domain="workshop",
+            source_ontology="ordinary_real_world",
+            fictional_mechanism_coherence="not_applicable",
+            literal_source_summary="A worker transforms material.",
+            ordinary_source_goal="Produce a finished object.",
+            native_mechanism="manual transformation",
+            roles=[source_role],
+            relations=[source_relation],
+            removed_mapping_language=[],
+            imported_target_details=[],
+            source_story_coherence="coherent",
+        )
+        mapping = SharedMappingFrame(
+            source_concept="craft work",
+            target_concept="transformation",
+            shared_process="an actor transforms an input into an output",
+            domain_distance="different",
+            alignments=[
+                SharedAlignment(
+                    source_item="worker",
+                    target_item="processor",
+                    alignment_kind="role",
+                    relation="both perform the transformation",
+                    preservation="preserved",
+                    central=True,
+                    evidence="the worker acts like the processor",
+                )
+            ],
+            potential_breaks=[],
+        )
+        return SharedSemanticAnalysis(
+            target_frame=target,
+            source_frame=source,
+            mapping_frame=mapping,
+        )
 
 
 if __name__ == "__main__":

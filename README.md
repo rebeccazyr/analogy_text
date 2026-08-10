@@ -4,24 +4,28 @@ This repository contains the current TCC, MS, and M methods, their prompts and
 fixed scoring rules, the frozen per-metric predictions, and the latest combined
 submission for `rrrrr1030`.
 
-Snapshot date: **2026-08-04**
+Snapshot date: **2026-08-11**
 
 Model: **`openai/gpt-oss-120b`**
 
 ## Latest leaderboard result
 
-| Metric | Kendall | Spearman | Reasoning effort |
-| --- | ---: | ---: | --- |
-| TCC | 0.3359301817 | 0.3359301817 | medium |
-| MS | 0.4280255989 | 0.4407342051 | medium |
-| M | 0.5909945085 | 0.6266820770 | **high** |
-| **Text average** | **0.4516500964** | **0.4677821546** | — |
-| Video average | 0 | 0 | not run |
-| **Overall average** | **0.2258250482** | **0.2338910773** | — |
+| Leaderboard column | Kendall average |
+| --- | ---: |
+| **Text** | **0.4850** |
+| Video | 0.4099 |
+| **Overall** | **0.4474** |
 
-**Only M uses high reasoning. TCC and MS use medium reasoning.** VC, VA, and VE
-are all zero; this repository covers the text pipeline only. The exact metric
-snapshot is stored in
+These are the four-decimal values shown by the leaderboard for rank 1. This
+repository contains the text pipeline; the video result came from a separate
+pipeline and the frozen CSV here deliberately leaves `VC`, `VA`, and `VE` at
+zero. TCC and MS are unchanged from the previous text submission. Given their
+known component scores, the rounded `0.4850` text average implies M Kendall is
+approximately `0.6910` (the exact component value is not exposed in the
+screenshot). Spearman values are also not shown.
+
+**Only M uses high reasoning. TCC and MS use medium reasoning.** The reported
+metric snapshot and its precision caveat are stored in
 [`artifacts/frozen/leaderboard_metrics.json`](artifacts/frozen/leaderboard_metrics.json),
 and the versioned 62-row submission is
 [`artifacts/frozen/submission.csv`](artifacts/frozen/submission.csv).
@@ -32,7 +36,7 @@ and the versioned 62-row submission is
 | --- | --- | --- |
 | TCC | `tcc_v1_facet_conservative_v1` | `0: 0, 1: 32, 2: 30` |
 | MS | `ms_v3_counterfactual_zero_gate_v8` over the verified v1 baseline | `0: 2, 1: 10, 2: 50` |
-| M | `v7_1_role_audit_loo`, run with high reasoning | `0: 8, 1: 6, 2: 48` |
+| M | `m_v79_existing_evidence_reconciliation_v1` over v7.1 | `0: 9, 1: 5, 2: 48` |
 
 Every row contains `TARGET`, `DESCRIPTION`, and `ANALOGY`. TCC, MS, and M are
 predicted independently and combined by ID. No active scoring branch contains
@@ -120,8 +124,23 @@ otherwise                                             -> 2
 ```
 
 Validation uses leave-one-out calibration anchors. Test inference uses all 12
-validation anchors. The active M v7.1 run is the **only component run with high
+validation anchors. The active M run is the **only component run with high
 reasoning**.
+
+The v79 reconciliation layer reuses the three v7.1 evidence agents and keeps
+the frozen v7.1 label unless their structured outputs meet a narrow,
+sample-independent rule. It does not make another model call. Three test rows
+change:
+
+| ID | Target | v7.1 | v79 | Evidence rule |
+| ---: | --- | ---: | ---: | --- |
+| 2 | Hallucination | 1 | 2 | identical target/source group resolves a role-count inconsistency |
+| 44 | Debugging | 2 | 1 | related-domain native relation with at most one central role shift |
+| 52 | Large language models (LLMs) | 1 | 0 | two judges agree it is a literal in-scope instance |
+
+This improved validation M Kendall from `0.7454` to `0.8666`. The old v7.1
+test and validation vectors remain tracked as immutable baselines under
+`artifacts/frozen/`.
 
 ## Install and test
 
@@ -157,6 +176,69 @@ The original-v1 MS prompt/evidence chain can be verified independently:
 .venv/bin/python scripts/verify_mapping_strength_archive.py
 ```
 
+## Zero-loss integrated champion
+
+Before changing any shared semantic extraction, rebuild the current champion
+from its frozen TCC, MS, and M components and require byte-identical parity:
+
+```bash
+make integrated-best
+```
+
+This writes:
+
+- `runs/integrated-best/submission.csv`;
+- `runs/integrated-best/parity_audit.json`.
+
+The builder verifies every component hash and the complete `id=0..61` set,
+combines the components with fixed LF line endings, and fails unless the result
+is byte-for-byte identical to `artifacts/frozen/submission.csv`. The expected
+champion SHA256 is
+`38339e05b5458e10b9a9be0e323215d2c366997a0064f4d7b4a4a79b107a5cc6`.
+This is the immutable control for all subsequent shared-extraction challengers.
+
+## Shared semantic front end (validation candidate)
+
+The three metrics can also run from one reusable semantic analysis instead of
+performing separate topic, concept, source, role, and relation extraction. The
+shared front end preserves two information firewalls:
+
+1. `target_frame` sees only `TARGET + DESCRIPTION` and extracts topics,
+   concepts, roles, relations, and constraints;
+2. `source_frame` sees only `ANALOGY` and reconstructs the literal native
+   source concept, roles, operations, and relations;
+3. `mapping_frame` receives both blind frames and extracts cross-domain
+   alignments.
+
+TCC, MS, and M then run concurrently from this one structure. TCC and MS use
+medium reasoning; M uses high reasoning. Identical `TARGET + DESCRIPTION`
+groups share one target frame. On the 62-row test split there are 47 such
+groups. Excluding conditional facet-audit calls, this changes the planned model
+call count from about 744 to 543 (201 fewer, approximately 27%).
+
+```bash
+SPLIT=validation bash scripts/run_shared_agents.sh
+```
+
+Or run a small smoke test directly:
+
+```bash
+.venv/bin/python run_text_agents.py \
+  --mode shared-active \
+  --split validation \
+  --ids 0 \
+  --max-retries 8 \
+  --reasoning-effort medium \
+  --m-reasoning-effort high \
+  --shared-max-tokens 5000 \
+  --output-dir runs/shared-smoke
+```
+
+This is a validation candidate, not the frozen leaderboard method. It reuses
+the active deterministic score boundaries but changes their upstream evidence,
+so it must match or improve validation and public results before replacing the
+three independently run active components.
+
 ## Repository guide
 
 - `artifacts/frozen/submission.csv`: latest versioned 62-row submission.
@@ -168,6 +250,14 @@ The original-v1 MS prompt/evidence chain can be verified independently:
   rules.
 - `run_text_agents.py`: CLI entry point for individual modes.
 - `scripts/run_agents.sh`: active end-to-end reasoning configuration.
+- `scripts/run_integrated_best.py`: zero-loss frozen champion rebuild and
+  parity proof.
+- `scripts/run_shared_agents.sh`: candidate end-to-end shared-front-end run.
+- `scripts/generate_augmentation_data.py`: label-safe rewrite and relative-pair
+  augmentation with three-reviewer acceptance gates.
+- `data_augmentation/`: augmentation inputs, pilot evidence, accepted rows, and
+  quality report; the pilot accepted all nine invariant rewrites and rejected
+  all 18 counterfactual pairs rather than assigning unsafe pseudo-labels.
 - `scripts/combine_recomputed_metrics.py`: strict ID-based result combiner.
 - `docs/METHOD.md`: compact method snapshot.
 - `docs/GENERALIZATION.md`: leakage and generalization limitations.

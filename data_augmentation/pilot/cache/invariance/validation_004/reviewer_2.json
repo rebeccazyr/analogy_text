@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "c6742a344811eed4b777",
+  "created_at": "2026-08-04T08:38:41.292036+00:00",
+  "usage": {
+    "completion_tokens": 950,
+    "prompt_tokens": 1529,
+    "total_tokens": 2479,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I042",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The candidate retains every core element of the original description—exact‑measurement chef metaphor, mapping of chef to symbolic computation system, symbols π and √2, and the simplification example—without adding, removing, or altering any role, relation, or operation. Only superficial wording changes occur, which do not affect the covered semantics, so TCC, MS, and M remain equivalent."
+      },
+      {
+        "sample_id": "I041",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "All essential content of the original analogy is present: the precise‑chef metaphor, the mapping of chef to symbolic computation, the treatment of π, √2, and polynomial simplification. No new claims or omissions appear, and the source‑target roles and causal direction are unchanged, preserving TCC, MS, and M equivalence."
+      },
+      {
+        "sample_id": "I043",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.96,
+        "rationale": "The third candidate mirrors the original wording and structure, keeping the same metaphor, role mappings, and illustrative examples. No semantic drift, omission, or addition is introduced, so the description coverage, source/target relations, and central role semantics remain fully equivalent."
+      }
+    ]
+  }
+}

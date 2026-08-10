@@ -1,0 +1,47 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "8b3a295c130e0708d213",
+  "created_at": "2026-08-04T08:38:49.272954+00:00",
+  "usage": {
+    "completion_tokens": 1121,
+    "prompt_tokens": 1482,
+    "total_tokens": 2603,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "I012",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "The candidate preserves every element of the original description – basic scales, chord progressions, note/finger/tempo knowledge, the classical piece, accelerated learning, feature‑adaptation, and domain relatedness – without adding, omitting or altering any role, relation or causal direction. Synonymous wording (hand posture for finger positioning, tempo for rhythm) does not constitute a semantic shift, so all three metrics remain equivalent."
+      },
+      {
+        "sample_id": "I011",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.94,
+        "rationale": "All core content of the original analogy is retained. The source (basic piano drills) and target (new classical piece) roles, their causal link to faster learning, and the mapping to transfer‑learning concepts are unchanged. Minor lexical variations (note locations, rhythmic timing) are synonymous and do not affect the semantics, keeping TCC, MS and M equivalent."
+      },
+      {
+        "sample_id": "I013",
+        "tcc_equivalent": true,
+        "ms_equivalent": true,
+        "m_equivalent": true,
+        "semantic_drift": [],
+        "artifact_flags": [],
+        "confidence": 0.93,
+        "rationale": "The concise restatement still includes every descriptive element, role, and relational mapping of the original analogy. No information is lost or added, and the central concepts (basic skills, new task, accelerated mastery, feature bridging, shared domain) remain identical, so the three metrics are equivalent."
+      }
+    ]
+  }
+}

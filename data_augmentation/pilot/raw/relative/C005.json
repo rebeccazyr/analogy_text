@@ -1,0 +1,282 @@
+{
+  "input": {
+    "concept_id": "C005",
+    "split": "train",
+    "domain": "biology",
+    "target": "homeostasis",
+    "description": "The regulation of internal conditions around a viable range through sensing, feedback, and corrective responses despite changes in the external environment."
+  },
+  "generation": {
+    "core_facets": [
+      "set point",
+      "sensor detection",
+      "feedback loop",
+      "corrective response",
+      "external perturbation handling"
+    ],
+    "pairs": [
+      {
+        "pair_id": "TCC_CORE_DELETION",
+        "metric": "TCC",
+        "expected_relation": "a_higher",
+        "analogy_a": "Imagine a household thermostat that keeps a room at a comfortable 22 °C. The thermostat has a temperature sensor (sensor detection) that constantly measures the air temperature and compares it to a preset set point. When the temperature drops below the set point, the thermostat signals the furnace to turn on (corrective response); when it rises above, it triggers the air‑conditioner to cool (feedback loop). The system also anticipates sudden drafts from an open window or a sunny afternoon (external perturbation handling) and adjusts heating or cooling intensity accordingly, ensuring the indoor climate stays within a viable range despite outside weather changes. This closed loop mirrors biological homeostasis, where cells sense internal conditions, compare them to optimal levels, and launch corrective actions while buffering external fluctuations.",
+        "analogy_b": "Imagine a household thermostat that keeps a room at a comfortable 22 °C. The thermostat has a temperature sensor (sensor detection) that constantly measures the air temperature and compares it to a preset set point. When the temperature drops below the set point, the thermostat signals the furnace to turn on (corrective response); when it rises above, it triggers the air‑conditioner to cool (feedback loop). This closed loop mirrors biological homeostasis, where cells sense internal conditions, compare them to optimal levels, and launch corrective actions to keep the internal environment stable.",
+        "controlled_operation": "B removes the explicit mention of handling external perturbations such as drafts or sunlight, thereby omitting one core facet while preserving the rest of the mapping.",
+        "non_target_invariance": [
+          "MS invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "TCC_SURFACE_INVARIANCE",
+        "metric": "TCC",
+        "expected_relation": "same",
+        "analogy_a": "A city’s water supply system works like a living organism’s homeostasis. Sensors placed throughout the network detect pressure and flow rates (sensor detection) and compare them to a desired set point. If pressure falls, pumps are activated (corrective response) to raise it; if it spikes, valves open to release excess water (feedback loop). The system also compensates for sudden demand spikes, like a stadium event, by rerouting water from storage tanks (external perturbation handling), keeping the overall supply within safe limits despite fluctuating usage.",
+        "analogy_b": "A city’s water supply system mirrors biological homeostasis. Sensors throughout the network monitor pressure and flow (sensor detection) against a target set point. When pressure drops, pumps kick in (corrective response); when it rises, valves release water (feedback loop). The network also adapts to sudden demand spikes, such as a stadium event, by drawing from storage tanks (external perturbation handling), ensuring the supply stays within safe limits despite variable usage.",
+        "controlled_operation": "B is a paraphrase of A, altering wording but preserving every facet, mapping strength, and conceptual distance.",
+        "non_target_invariance": [
+          "MS invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "MS_ROLE_MISMATCH",
+        "metric": "MS",
+        "expected_relation": "a_higher",
+        "analogy_a": "Consider a smartphone’s battery‑management system as an analogy for homeostasis. The device constantly reads voltage (sensor detection) and compares it to an optimal charge level (set point). When the charge falls, the OS reduces background activity and boosts charging speed (corrective response). When the battery overheats, the system throttles CPU performance (feedback loop) to prevent damage, while also adjusting brightness in response to ambient light changes (external perturbation handling). All components work together to keep the phone operating within safe limits.",
+        "analogy_b": "Consider a smartphone’s battery‑management system as an analogy for homeostasis. The device constantly reads voltage (sensor detection) and compares it to an optimal charge level (set point). When the charge falls, the OS reduces background activity and boosts charging speed (corrective response). When the battery overheats, the system simply displays a warning message (feedback loop) instead of throttling CPU performance, while also adjusting brightness in response to ambient light changes (external perturbation handling). This mismatch in the role of the overheating response weakens the mapping.",
+        "controlled_operation": "B swaps the functional role of the overheating response from an active throttling mechanism to a passive warning, introducing a single central role mismatch while keeping coverage and literal distance unchanged.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "MS_SURFACE_INVARIANCE",
+        "metric": "MS",
+        "expected_relation": "same",
+        "analogy_a": "A greenhouse uses an automated climate controller that mirrors homeostatic regulation. Sensors detect temperature and humidity (sensor detection) and compare them to desired set points. If temperature drops, heaters fire (corrective response); if humidity climbs, vents open (feedback loop). The controller also reacts to sudden external weather shifts, like a cold front, by adjusting both heating and ventilation to keep the internal environment stable for the plants.",
+        "analogy_b": "An automated climate controller in a greenhouse exemplifies homeostatic regulation. Sensors monitor temperature and humidity (sensor detection) against target set points. When temperature falls, heaters activate (corrective response); when humidity rises, vents open (feedback loop). The system also compensates for abrupt external weather changes, such as a cold front, by fine‑tuning heating and ventilation to maintain a stable internal environment for the crops.",
+        "controlled_operation": "B rephrases A without altering any structural mapping elements, preserving identical mapping strength.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "M_LITERAL_TO_ADJACENT",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "Human body temperature regulation is a literal instance of homeostasis. Thermoreceptors in the skin and brain (sensor detection) constantly monitor core temperature and compare it to the 37 °C set point. If the body cools, shivering muscles generate heat (corrective response) and blood vessels constrict (feedback loop). If it overheats, sweat glands release moisture and vessels dilate, dissipating heat. External factors like ambient temperature or wind are sensed and compensated for, keeping internal temperature within a narrow viable range.",
+        "analogy_b": "City traffic flow management resembles homeostasis in an adjacent way. Sensors at intersections detect vehicle density (sensor detection) and compare it to an optimal flow set point. When congestion builds, traffic lights extend green phases on busy streets (corrective response) and adjust timing across the network (feedback loop). The system also reacts to sudden events such as accidents or weather changes (external perturbation handling) to keep overall traffic moving smoothly, though the relation is adjacent rather than literal.",
+        "controlled_operation": "B replaces the literal physiological example with an adjacent urban‑planning example, preserving full coverage and sound mapping while increasing conceptual distance.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "MS invariant"
+        ]
+      },
+      {
+        "pair_id": "M_ADJACENT_TO_CROSS_DOMAIN",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "A car’s cruise control system offers an adjacent analogy to homeostasis. Speed sensors (sensor detection) read the vehicle’s velocity and compare it to the driver‑set speed (set point). If the car slows, the throttle is opened (corrective response); if it speeds up, the throttle is reduced (feedback loop). The system also compensates for hills or wind (external perturbation handling) by adjusting throttle pressure, preserving the same type of carrier—mechanical force—throughout.",
+        "analogy_b": "Financial portfolio rebalancing provides a cross‑domain projection of homeostasis. Market monitors track asset performance (sensor detection) against a target risk‑return profile (set point). When equities outperform, the system sells a portion and buys bonds (corrective response); when bonds lag, it does the opposite (feedback loop). External shocks like economic news or geopolitical events (external perturbation handling) trigger multiple simultaneous adjustments across asset classes, currencies, and derivatives, shifting the carrier type from mechanical force to monetary value and involving several central type changes.",
+        "controlled_operation": "B shifts the analogy from an adjacent mechanical domain (cruise control) to a cross‑domain financial domain, introducing multiple carrier/type changes while keeping coverage and mapping sound.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "MS invariant"
+        ]
+      }
+    ]
+  },
+  "reviews": [
+    {
+      "assessments": [
+        {
+          "sample_id": "R0054",
+          "tcc_relation": "same",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A and B both mention sensor detection, set point, corrective response, feedback loop and external perturbations, so content coverage is equivalent. The literal biological example in A aligns more tightly with the description, giving it a stronger structural mapping, while B is a cross‑domain traffic analogy, making its conceptual distance larger."
+        },
+        {
+          "sample_id": "R0056",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.97,
+          "rationale": "Both analogies describe the same water‑supply system with identical components and wording, so they are equal on content, structural consistency and conceptual distance. The near‑identical phrasing suggests a template reuse."
+        },
+        {
+          "sample_id": "R0052",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.97,
+          "rationale": "The two greenhouse analogies are paraphrases of each other, containing the same sensors, set points, corrective actions and external‑weather handling, leading to equal scores on all three metrics. Their similarity indicates a templated construction."
+        },
+        {
+          "sample_id": "R0055",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [
+            "content_omission"
+          ],
+          "confidence": 0.94,
+          "rationale": "Analogy A includes explicit handling of sudden drafts and sunny afternoons, covering the external‑perturbation aspect of the description, which B omits; therefore A has higher content coverage and a tighter structural mapping. Both remain in the same thermostat domain, so conceptual distance is unchanged."
+        },
+        {
+          "sample_id": "R0053",
+          "tcc_relation": "same",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "carrier_type_change"
+          ],
+          "confidence": 0.96,
+          "rationale": "Both analogies address the five core elements, so content coverage is comparable. The cruise‑control example stays within a single mechanical carrier, preserving structural consistency, whereas the financial portfolio analogy switches to monetary carriers and adds multiple type changes, weakening its mapping. Consequently the financial analogy is conceptually farther from the biological target."
+        },
+        {
+          "sample_id": "R0051",
+          "tcc_relation": "same",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [
+            "feedback_mismatch"
+          ],
+          "confidence": 0.95,
+          "rationale": "The two battery‑management analogies list the same sensors, set points and corrective actions, giving equal content coverage. The first analogy correctly maps overheating to CPU throttling, while the second replaces this with a mere warning, reducing structural consistency. Both stay within the smartphone domain, so conceptual distance is the same."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "R0054",
+          "tcc_relation": "same",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.9,
+          "rationale": "Both analogies mention sensor detection, set point, corrective response, feedback loop and external perturbations, so content coverage is equivalent. The literal body‑temperature example maps more directly and consistently to homeostasis than the traffic‑flow example, giving it a stronger structural mapping. The traffic analogy is farther from the biological domain, increasing conceptual distance."
+        },
+        {
+          "sample_id": "R0055",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A includes handling of external drafts and weather changes, which the trimmed Analogy B omits, giving A higher coverage of the description. The full set of mechanisms in A also yields a more internally consistent mapping. Both analogies stay within the same thermostat domain, so their conceptual distance is equal."
+        },
+        {
+          "sample_id": "R0056",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.9,
+          "rationale": "Each version describes sensors, set points, corrective actions, feedback loops and external demand spikes, so coverage and structural consistency are equivalent. Both remain in the city‑water‑supply domain, resulting in identical conceptual distance."
+        },
+        {
+          "sample_id": "R0051",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A contains a proper feedback loop (CPU throttling) whereas Analogy B replaces it with a simple warning, reducing coverage of the description and weakening the mapping. Both analogies are in the same smartphone‑battery domain, so their conceptual distance does not differ."
+        },
+        {
+          "sample_id": "R0052",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.9,
+          "rationale": "The two greenhouse descriptions are paraphrases of each other; they each cover sensors, set points, corrective actions, feedback loops and external weather handling equally, and they map consistently within the same agricultural‑control domain, yielding identical conceptual distance."
+        },
+        {
+          "sample_id": "R0053",
+          "tcc_relation": "same",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.9,
+          "rationale": "Both analogies address all elements of the description, so content coverage is comparable. The cruise‑control example provides a tighter, mechanically consistent mapping than the financial‑portfolio example, which introduces multiple type changes and thus a weaker structural mapping. The portfolio analogy is far more distant from the biological concept, raising its M score."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "R0051",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.96,
+          "rationale": "Analogy A includes the overheating feedback loop (CPU throttling) which matches the description's feedback component, while Analogy B replaces it with a mere warning, reducing content coverage and structural consistency. Both analogies stay within the same technological domain, so conceptual distance is equal."
+        },
+        {
+          "sample_id": "R0055",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A mentions anticipation of drafts and sunny afternoons, covering the description's external‑perturbation handling, whereas Analogy B omits that clause. This makes A richer in content and more internally coherent, while both remain in the thermostat domain, yielding equal conceptual distance."
+        },
+        {
+          "sample_id": "R0052",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.9,
+          "rationale": "Both analogies describe the same greenhouse controller with identical sensor, set‑point, corrective, feedback, and external‑weather handling elements, resulting in identical coverage, structural mapping, and domain distance. Their near‑identical wording suggests a templated reuse."
+        },
+        {
+          "sample_id": "R0056",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.9,
+          "rationale": "The two descriptions of the city water supply system are virtually interchangeable, containing the same components and phrasing. Consequently, content coverage, mapping consistency, and conceptual distance are indistinguishable, and the similarity points to a template artifact."
+        },
+        {
+          "sample_id": "R0054",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A directly mirrors physiological temperature regulation, covering all description elements with literal biological mechanisms, giving it higher content coverage and a tighter structural mapping than Analogy B, which uses a traffic system as an adjacent metaphor. The traffic analogy is farther from the biological target, raising its conceptual distance."
+        },
+        {
+          "sample_id": "R0053",
+          "tcc_relation": "same",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Both analogies contain sensing, set‑point comparison, corrective response, feedback, and external‑perturbation handling, so content coverage is equal. The cruise‑control analogy stays within a single mechanical carrier type, making its structural mapping more internally consistent than the financial portfolio analogy, which shifts carriers and adds complexity. The financial analogy is therefore more conceptually distant."
+        }
+      ]
+    }
+  ]
+}

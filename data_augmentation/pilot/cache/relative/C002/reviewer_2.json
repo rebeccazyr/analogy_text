@@ -1,0 +1,73 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "9c3525e80a1eb46f9901",
+  "created_at": "2026-08-04T08:40:19.066282+00:00",
+  "usage": {
+    "completion_tokens": 2542,
+    "prompt_tokens": 1750,
+    "total_tokens": 4292,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "R0023",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.94,
+        "rationale": "Analogy A directly mirrors the core process of identifying unreachable objects and reclaiming them, covering the description’s key points, while B adds extra domains and steps that dilute coverage. A’s mapping is straightforward and internally consistent; B’s multi‑step mapping is weaker. B translates the concept across more domains, giving it higher conceptual distance."
+      },
+      {
+        "sample_id": "R0022",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.98,
+        "rationale": "Both analogies are virtually identical, using the same river metaphor and wording, so they cover the description equally, have the same structural consistency, and involve the same conceptual shift."
+      },
+      {
+        "sample_id": "R0024",
+        "tcc_relation": "a_higher",
+        "ms_relation": "b_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.91,
+        "rationale": "Analogy A stays within the programming domain and mentions specific mechanisms (free(), delete, leaks), thus covering more of the description’s details. B uses a garden compost metaphor, which, while internally consistent, is a farther domain shift, giving it stronger structural mapping but higher conceptual distance. Therefore A has higher TCC, B higher MS and M."
+      },
+      {
+        "sample_id": "R0025",
+        "tcc_relation": "a_higher",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "target_terminology_injection"
+        ],
+        "confidence": 0.93,
+        "rationale": "Analogy A includes the explicit claim that the service prevents street overflow, directly matching the description’s emphasis on avoiding memory leaks, giving it higher TCC. Both analogies share the same city‑waste structure, so MS is the same, and they involve the same domain shift, so M is the same. B injects the term “memory leaks” into the analogy, which is an artifact."
+      },
+      {
+        "sample_id": "R0021",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.94,
+        "rationale": "Analogy A correctly maps garbage collection to removal of unreachable desks, matching the description, while B changes the role to creation, reducing coverage and structural consistency. Both analogies involve a maintenance‑type domain, but B’s builder scenario is a more distant conceptual shift, giving it higher M."
+      },
+      {
+        "sample_id": "R0026",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.97,
+        "rationale": "The two analogies are paraphrases of the same librarian scenario, using identical mapping steps and covering the same description content, resulting in equal TCC, MS, and M."
+      }
+    ]
+  }
+}

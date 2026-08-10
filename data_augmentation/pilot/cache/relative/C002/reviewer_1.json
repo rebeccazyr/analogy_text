@@ -1,0 +1,83 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "c307d943e3f48c18c861",
+  "created_at": "2026-08-04T08:40:18.861414+00:00",
+  "usage": {
+    "completion_tokens": 2521,
+    "prompt_tokens": 1746,
+    "total_tokens": 4267,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "R0024",
+        "tcc_relation": "same",
+        "ms_relation": "b_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [
+          "target_terminology_injection"
+        ],
+        "confidence": 0.95,
+        "rationale": "Both analogies mention automatic identification of unreachable items and reclamation without programmer action, so coverage is equivalent. The garden compost analogy provides a clearer, consistent mapping (dead leaves → unreachable objects, compost → reclaimed memory) than the literal Java description, giving it higher structural consistency. The garden domain is farther from memory management, so it has greater conceptual distance."
+      },
+      {
+        "sample_id": "R0025",
+        "tcc_relation": "a_higher",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "missing_key_detail"
+        ],
+        "confidence": 0.9,
+        "rationale": "Analogy A includes the explicit claim that the service prevents street overflow, mirroring the memory‑leak prevention aspect of garbage collection; Analogy B omits this, giving A higher coverage. Both analogies share the same structural pattern of nightly scanning and automatic removal, so their mapping consistency is equivalent. Neither shifts domains beyond the city‑waste metaphor, so conceptual distance is the same."
+      },
+      {
+        "sample_id": "R0021",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [
+          "semantic_misalignment"
+        ],
+        "confidence": 0.95,
+        "rationale": "The janitor analogy (A) correctly captures identification of unreachable desks and their removal, matching the description, while the builder analogy (B) describes creation rather than reclamation, reducing its coverage. A also maintains a consistent removal‑oriented mapping, whereas B’s mapping conflicts with the core function, giving A higher structural consistency. Because B changes the role from removal to creation, it is conceptually farther from garbage collection, resulting in higher M for B."
+      },
+      {
+        "sample_id": "R0026",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.9,
+        "rationale": "Both librarian analogies describe automatic detection of unreachable books and their removal, covering all description points equally. Their structural mappings are identical and internally consistent. Neither introduces a new domain beyond the library metaphor, so conceptual distance is identical."
+      },
+      {
+        "sample_id": "R0022",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [
+          "template_artifact"
+        ],
+        "confidence": 0.9,
+        "rationale": "The two river analogies are virtually identical, each covering automatic sweeping of detached debris and freeing space, thus having equal coverage. Their structural correspondences are the same, and both remain within the natural river‑valley domain, yielding equal conceptual distance."
+      },
+      {
+        "sample_id": "R0023",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [
+          "excessive_type_translation"
+        ],
+        "confidence": 0.95,
+        "rationale": "The recycling‑center analogy (A) directly mirrors automatic reclamation of memory, covering the description more precisely than the multi‑step chef scenario (B), which adds unrelated culinary and energy domains. A also offers a single, clear structural mapping, whereas B’s layered transformations reduce mapping consistency. However, B traverses several domains (culinary → agricultural → energy), making it conceptually farther from the original memory‑management concept, thus higher M."
+      }
+    ]
+  }
+}

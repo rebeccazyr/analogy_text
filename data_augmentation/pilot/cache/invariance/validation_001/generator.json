@@ -1,0 +1,50 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "invariance_generator",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "7d43a6f6cf9e331cc764",
+  "created_at": "2026-08-04T08:38:34.992833+00:00",
+  "usage": {
+    "completion_tokens": 2811,
+    "prompt_tokens": 813,
+    "total_tokens": 3624,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "variants": [
+      {
+        "variant_id": "P1",
+        "transformation": "prose_restructure",
+        "analogy": "Think of transfer learning as the way a pianist builds skill. At first the student concentrates on elementary scales and chord sequences rather than diving straight into a demanding classical composition. Those elementary exercises give the learner knowledge of note locations, finger placement, and rhythmic timing. When the student finally tackles the classical piece, they are not beginning from a blank slate; they bring forward the earlier acquired piano fundamentals. The new piece differs from the practice material, yet the pre‑learned skills let the student master it more quickly and with greater effectiveness. In the analogy, the elementary piano skills correspond to the knowledge obtained from the initial training task, the classical composition stands for the new, related task, the speedier acquisition mirrors accelerated learning, the linking of familiar patterns to novel ones mirrors how a model adapts pre‑learned features, and the shared piano domain reflects the necessity that both tasks be related for transfer to succeed. Just as a pianist does not have to relearn music notation for each piece, a model does not have to relearn basic patterns when using transfer learning.",
+        "preservation_notes": [
+          "All source concepts and mappings retained",
+          "Causal direction and degree of coverage preserved"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P2",
+        "transformation": "lexical_paraphrase",
+        "analogy": "Transfer Learning resembles a piano study routine. Picture yourself acquiring piano ability. Rather than confronting an intricate classical work immediately, you first perfect simple scales and chord progressions. Those rudimentary drills endow you with awareness of pitch placement, hand posture, and tempo. When you eventually confront the classical work, you are not commencing from nothing—you apply the earlier mastered piano basics. The composition differs from the drills, yet the pre‑existing competence enables you to learn it far more swiftly and efficiently. In this comparison, the simple piano drills symbolize the insight gathered from the first training assignment, the classical work symbolizes the fresh, related assignment, the hastened mastery symbolizes accelerated learning, the bridging of known motifs to unfamiliar ones symbolizes how a model adjusts inherited features, and the common piano context underscores that both assignments must share a domain for transfer to be effective. Just as a pianist need not relearn sheet‑music reading for each new piece, a model employing transfer learning need not relearn elementary patterns it has already mastered.",
+        "preservation_notes": [
+          "All literal source concepts preserved",
+          "Mapping and causal relationships unchanged"
+        ],
+        "content_added": false,
+        "content_removed": false
+      },
+      {
+        "variant_id": "P3",
+        "transformation": "compression_without_information_loss",
+        "analogy": "Transfer Learning is like piano practice. A student first learns basic scales and chords, gaining knowledge of notes, finger placement, and rhythm. When the student later attempts a complex classical piece, they do not start from zero; they apply those foundational skills, allowing faster, more effective learning. In the analogy: basic piano skills = knowledge from the initial training task; the classical piece = the new, related task; quicker mastery = accelerated learning; linking familiar patterns to new ones = how a model adapts pre‑learned features; the shared piano domain = the requirement that both tasks be related for transfer to succeed. Just as a pianist does not need to relearn music reading for each piece, a model using transfer learning does not need to relearn basic patterns it has already mastered.",
+        "preservation_notes": [
+          "Redundant phrasing removed without loss of meaning",
+          "Core claims, mappings, and causal direction fully retained"
+        ],
+        "content_added": false,
+        "content_removed": false
+      }
+    ]
+  }
+}

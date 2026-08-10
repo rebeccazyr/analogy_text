@@ -1,0 +1,98 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_generator",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "dc49fc90a513528be2d9",
+  "created_at": "2026-08-04T08:39:22.241513+00:00",
+  "usage": {
+    "completion_tokens": 3132,
+    "prompt_tokens": 1112,
+    "total_tokens": 4244,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "core_facets": [
+      "multiple caches",
+      "shared memory",
+      "read/write consistency",
+      "invalidation or update protocol"
+    ],
+    "pairs": [
+      {
+        "pair_id": "TCC_CORE_DELETION",
+        "metric": "TCC",
+        "expected_relation": "a_higher",
+        "analogy_a": "Imagine a library where several branches keep copies of the same catalog. When one branch updates a book’s availability, an instant notification propagates to all other branches, ensuring every branch sees the same up‑to‑date status across the system.",
+        "analogy_b": "Imagine a library where several branches keep copies of the same catalog. When one branch updates a book’s availability, the change is recorded locally, but other branches are not immediately notified, so they may still show the old status, creating a temporary mismatch.",
+        "controlled_operation": "Removed the instant notification (invalidation) step from B, leaving all other elements unchanged.",
+        "non_target_invariance": [
+          "mapping_structure",
+          "conceptual_distance",
+          "role_translation"
+        ]
+      },
+      {
+        "pair_id": "TCC_SURFACE_INVARIANCE",
+        "metric": "TCC",
+        "expected_relation": "same",
+        "analogy_a": "Think of a team of chefs each holding a copy of the same recipe book. If one chef tweaks the amount of salt in a dish, the revised recipe is instantly shared with the others, so every chef cooks with the same seasoning.",
+        "analogy_b": "Consider several chefs each possessing the identical recipe notebook. When one chef adjusts the salt quantity for a dish, the updated instruction is promptly distributed to the rest, guaranteeing uniform seasoning across all kitchens.",
+        "controlled_operation": "Rephrased the sentences without altering any content or the underlying mapping.",
+        "non_target_invariance": [
+          "content",
+          "mapping_structure",
+          "conceptual_distance"
+        ]
+      },
+      {
+        "pair_id": "MS_ROLE_MISMATCH",
+        "metric": "MS",
+        "expected_relation": "a_higher",
+        "analogy_a": "In a distributed database, each node acts as both reader and writer; when a node writes a new record, all other nodes receive an invalidation message, preventing stale reads and keeping the data consistent.",
+        "analogy_b": "In a distributed database, each node acts as both reader and writer; when a node reads a record, it sends an invalidation message to other nodes, mistakenly blocking future writes and breaking consistency.",
+        "controlled_operation": "Swapped the writer‑triggered invalidation with a reader‑triggered invalidation, creating a central role mismatch.",
+        "non_target_invariance": [
+          "coverage_of_core_facets",
+          "conceptual_distance"
+        ]
+      },
+      {
+        "pair_id": "MS_SURFACE_INVARIANCE",
+        "metric": "MS",
+        "expected_relation": "same",
+        "analogy_a": "Picture a fleet of autonomous drones sharing a map of obstacles. When one drone detects a new obstacle, it broadcasts the update, and all drones instantly adjust their flight paths to avoid the hazard.",
+        "analogy_b": "Envision a squad of self‑piloting drones that maintain a common obstacle map. If any drone spots a fresh barrier, it immediately transmits the information, causing every drone to re‑plan its route accordingly.",
+        "controlled_operation": "Reworded the description while preserving the same mapping strength and structure.",
+        "non_target_invariance": [
+          "mapping_strength",
+          "coverage",
+          "conceptual_distance"
+        ]
+      },
+      {
+        "pair_id": "M_LITERAL_TO_ADJACENT",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "Cache coherence in a multicore processor ensures that when core 0 writes the value 42 to address 0x1000, any subsequent read of that address by core 1 returns 42, because the coherence protocol propagates the update across the private L1 caches.",
+        "analogy_b": "City traffic lights operate like a coherence system: when one intersection turns green for east‑west traffic, neighboring intersections adjust their signals to prevent conflicting flows, keeping the overall traffic state consistent.",
+        "controlled_operation": "Replaced the concrete CPU‑cache example with a traffic‑light coordination analogy, moving to an adjacent but non‑literal relation.",
+        "non_target_invariance": [
+          "coverage_of_core_facets",
+          "mapping_soundness"
+        ]
+      },
+      {
+        "pair_id": "M_ADJACENT_TO_CROSS_DOMAIN",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "A library’s reservation system mirrors cache coherence: each branch holds a copy of the catalog, and when a patron reserves a book at one branch, the system updates the availability flag in all branches, shifting only the carrier from ‘memory line’ to ‘catalog entry’.",
+        "analogy_b": "Social‑media platforms enforce a coherence‑like rule: when a user likes a post, the platform propagates that reaction across friends’ feeds, converting the notion of ‘cache line’ to ‘user interaction’, ‘invalidations’ to ‘notification suppression’, and ‘read/write’ to ‘view/engage’, involving several type changes.",
+        "controlled_operation": "Switched from a library‑catalog analogy to a social‑media interaction analogy, introducing multiple domain‑type transformations beyond a single carrier shift.",
+        "non_target_invariance": [
+          "coverage_of_core_facets",
+          "mapping_soundness"
+        ]
+      }
+    ]
+  }
+}

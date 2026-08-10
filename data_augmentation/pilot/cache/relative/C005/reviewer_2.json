@@ -1,0 +1,71 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "agent": "relative_pair_reviewer",
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "prompt_hash": "ec3c1e3c18e58cf2c268",
+  "created_at": "2026-08-04T08:40:01.522689+00:00",
+  "usage": {
+    "completion_tokens": 1912,
+    "prompt_tokens": 2048,
+    "total_tokens": 3960,
+    "reasoning_tokens": 0
+  },
+  "result": {
+    "assessments": [
+      {
+        "sample_id": "R0054",
+        "tcc_relation": "same",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.9,
+        "rationale": "Both analogies mention sensor detection, set point, corrective response, feedback loop and external perturbations, so content coverage is equivalent. The literal body‑temperature example maps more directly and consistently to homeostasis than the traffic‑flow example, giving it a stronger structural mapping. The traffic analogy is farther from the biological domain, increasing conceptual distance."
+      },
+      {
+        "sample_id": "R0055",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Analogy A includes handling of external drafts and weather changes, which the trimmed Analogy B omits, giving A higher coverage of the description. The full set of mechanisms in A also yields a more internally consistent mapping. Both analogies stay within the same thermostat domain, so their conceptual distance is equal."
+      },
+      {
+        "sample_id": "R0056",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.9,
+        "rationale": "Each version describes sensors, set points, corrective actions, feedback loops and external demand spikes, so coverage and structural consistency are equivalent. Both remain in the city‑water‑supply domain, resulting in identical conceptual distance."
+      },
+      {
+        "sample_id": "R0051",
+        "tcc_relation": "a_higher",
+        "ms_relation": "a_higher",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.95,
+        "rationale": "Analogy A contains a proper feedback loop (CPU throttling) whereas Analogy B replaces it with a simple warning, reducing coverage of the description and weakening the mapping. Both analogies are in the same smartphone‑battery domain, so their conceptual distance does not differ."
+      },
+      {
+        "sample_id": "R0052",
+        "tcc_relation": "same",
+        "ms_relation": "same",
+        "m_relation": "same",
+        "artifact_flags": [],
+        "confidence": 0.9,
+        "rationale": "The two greenhouse descriptions are paraphrases of each other; they each cover sensors, set points, corrective actions, feedback loops and external weather handling equally, and they map consistently within the same agricultural‑control domain, yielding identical conceptual distance."
+      },
+      {
+        "sample_id": "R0053",
+        "tcc_relation": "same",
+        "ms_relation": "a_higher",
+        "m_relation": "b_higher",
+        "artifact_flags": [],
+        "confidence": 0.9,
+        "rationale": "Both analogies address all elements of the description, so content coverage is comparable. The cruise‑control example provides a tighter, mechanically consistent mapping than the financial‑portfolio example, which introduces multiple type changes and thus a weaker structural mapping. The portfolio analogy is far more distant from the biological concept, raising its M score."
+      }
+    ]
+  }
+}

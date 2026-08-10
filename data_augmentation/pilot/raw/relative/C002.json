@@ -1,0 +1,286 @@
+{
+  "input": {
+    "concept_id": "C002",
+    "split": "train",
+    "domain": "programming_languages",
+    "target": "garbage collection",
+    "description": "Automatic memory management that identifies objects a program can no longer reach and reclaims their storage without requiring explicit deallocation by the programmer."
+  },
+  "generation": {
+    "core_facets": [
+      "identifies objects that are no longer reachable",
+      "automatically reclaims their memory",
+      "requires no explicit deallocation by the programmer",
+      "prevents memory leaks by freeing unused space",
+      "runs periodically or on demand"
+    ],
+    "pairs": [
+      {
+        "pair_id": "TCC_CORE_DELETION",
+        "metric": "TCC",
+        "expected_relation": "a_higher",
+        "analogy_a": "Think of a city’s waste‑management department as a perfect analogue for garbage collection.  Every night the department scans the streets, spots abandoned trash bins, old furniture left on sidewalks, and broken appliances that no resident can reach or use.  It then dispatches trucks that automatically haul these items away, recycles what they can, and frees up space for new construction.  The system never asks citizens to call for pickup; it runs on a schedule and prevents the streets from becoming clogged, thereby avoiding the kind of overflow that would otherwise cause health hazards.  In this way the city’s service mirrors all core facets of automatic memory management.",
+        "analogy_b": "Imagine a city’s waste‑management department that, each night, scans the streets, spots abandoned trash bins, old furniture left on sidewalks, and broken appliances that no resident can reach or use.  It then dispatches trucks that automatically haul these items away, recycles what they can, and frees up space for new construction.  The system never asks citizens to call for pickup; it runs on a schedule and frees unused space.  This description mirrors most aspects of automatic memory management but omits the explicit claim that the service prevents street overflow, a key facet of preventing memory leaks.",
+        "controlled_operation": "Omit exactly one core facet (the prevention of memory leaks) from the B analogy while keeping mapping and literal distance unchanged.",
+        "non_target_invariance": [
+          "MS invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "TCC_SURFACE_INVARIANCE",
+        "metric": "TCC",
+        "expected_relation": "same",
+        "analogy_a": "Garbage collection works like a librarian who constantly checks the shelves for books that no patron has checked out.  When a book has been left untouched for a long time and no one can reach it, the librarian quietly removes it, freeing shelf space for new titles.  The process happens automatically, without the librarian having to be asked, and it keeps the library from becoming over‑crowded.",
+        "analogy_b": "Think of garbage collection as a librarian who clears away books that nobody is borrowing.  The librarian scans the shelves, spots titles that have been left untouched and are no longer reachable by any reader, and then quietly removes them, making room for fresh acquisitions.  This happens automatically, without any explicit request, and prevents the library from becoming cluttered.",
+        "controlled_operation": "Rephrase the surface wording of the analogy while preserving all underlying content and mapping strength.",
+        "non_target_invariance": [
+          "MS invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "MS_ROLE_MISMATCH",
+        "metric": "MS",
+        "expected_relation": "a_higher",
+        "analogy_a": "Garbage collection is like a janitor who roams a large office building, identifies desks that are abandoned because no employee can reach them, and empties those desks, returning the space to the building’s pool of usable area.  The janitor never adds new furniture; he only removes what is no longer needed, keeping the office tidy and efficient.",
+        "analogy_b": "Garbage collection is like a builder who walks through a huge office building, spots desks that are abandoned because no employee can reach them, and then adds new shelves to those empty spots.  Instead of removing the unused desks, the builder expands the workspace, changing the role from removal to creation, which misaligns the core function of garbage collection.",
+        "controlled_operation": "Introduce a single central role mismatch by swapping the removal function with an addition function in the B analogy.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "MS_SURFACE_INVARIANCE",
+        "metric": "MS",
+        "expected_relation": "same",
+        "analogy_a": "Garbage collection resembles a river that flows through a valley, constantly sweeping away loose stones and debris that have become detached from the banks.  The water carries these orphaned pieces downstream, freeing the valley floor for new growth without any manual intervention.",
+        "analogy_b": "Think of garbage collection as a river that runs through a valley, continuously gathering loose stones and debris that have drifted away from the banks.  The current transports these orphaned fragments downstream, clearing the valley floor for fresh development without any need for human direction.",
+        "controlled_operation": "Rephrase the surface description of the river analogy while keeping the underlying mapping unchanged.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "M invariant"
+        ]
+      },
+      {
+        "pair_id": "M_LITERAL_TO_ADJACENT",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "In Java, the garbage collector periodically scans the heap, finds objects that no live thread can reference, and reclaims their memory automatically.  Programmers never need to call free() or delete; the runtime safely returns that space to the pool for future object allocation, preventing leaks and keeping the application responsive.",
+        "analogy_b": "Consider a garden compost bin that gathers dead leaves, wilted flowers, and fallen fruit—materials that the plants can no longer use.  The bin automatically breaks down this organic matter, turning it into nutrient‑rich soil that the garden can reuse.  Gardeners never have to manually dig up each dead piece; the composting process recycles the waste, keeping the garden healthy and free of clutter.",
+        "controlled_operation": "Replace the literal programming instance with an adjacent natural‑process metaphor while preserving full coverage and sound mapping.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "MS invariant"
+        ]
+      },
+      {
+        "pair_id": "M_ADJACENT_TO_CROSS_DOMAIN",
+        "metric": "M",
+        "expected_relation": "b_higher",
+        "analogy_a": "Garbage collection can be likened to a recycling center that receives discarded plastic bottles, glass jars, and paper.  The center sorts each item, processes it into reusable material, and returns the reclaimed resources to manufacturers.  This analogy shifts the domain once—from memory to physical waste—while preserving the core relation of automatic reclamation.",
+        "analogy_b": "Imagine a chef who takes leftover food, transforms it into a new dish, then turns the scraps from that dish into compost, and finally uses the compost to power a bio‑fuel generator that lights the kitchen.  The chef’s process moves the concept of reclamation across several domains—culinary, agricultural, and energy—introducing multiple central type changes before the original waste is finally repurposed.  This cross‑domain projection stretches the analogy far beyond the single‑shift recycling‑center model.",
+        "controlled_operation": "Introduce multiple domain shifts in the B analogy, moving from culinary to agricultural to energy domains, whereas the A analogy stays within a single adjacent domain shift.",
+        "non_target_invariance": [
+          "TCC invariant",
+          "MS invariant"
+        ]
+      }
+    ]
+  },
+  "reviews": [
+    {
+      "assessments": [
+        {
+          "sample_id": "R0024",
+          "tcc_relation": "same",
+          "ms_relation": "b_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "target_terminology_injection"
+          ],
+          "confidence": 0.95,
+          "rationale": "Both analogies mention automatic identification of unreachable items and reclamation without programmer action, so coverage is equivalent. The garden compost analogy provides a clearer, consistent mapping (dead leaves → unreachable objects, compost → reclaimed memory) than the literal Java description, giving it higher structural consistency. The garden domain is farther from memory management, so it has greater conceptual distance."
+        },
+        {
+          "sample_id": "R0025",
+          "tcc_relation": "a_higher",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "missing_key_detail"
+          ],
+          "confidence": 0.9,
+          "rationale": "Analogy A includes the explicit claim that the service prevents street overflow, mirroring the memory‑leak prevention aspect of garbage collection; Analogy B omits this, giving A higher coverage. Both analogies share the same structural pattern of nightly scanning and automatic removal, so their mapping consistency is equivalent. Neither shifts domains beyond the city‑waste metaphor, so conceptual distance is the same."
+        },
+        {
+          "sample_id": "R0021",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "semantic_misalignment"
+          ],
+          "confidence": 0.95,
+          "rationale": "The janitor analogy (A) correctly captures identification of unreachable desks and their removal, matching the description, while the builder analogy (B) describes creation rather than reclamation, reducing its coverage. A also maintains a consistent removal‑oriented mapping, whereas B’s mapping conflicts with the core function, giving A higher structural consistency. Because B changes the role from removal to creation, it is conceptually farther from garbage collection, resulting in higher M for B."
+        },
+        {
+          "sample_id": "R0026",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.9,
+          "rationale": "Both librarian analogies describe automatic detection of unreachable books and their removal, covering all description points equally. Their structural mappings are identical and internally consistent. Neither introduces a new domain beyond the library metaphor, so conceptual distance is identical."
+        },
+        {
+          "sample_id": "R0022",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.9,
+          "rationale": "The two river analogies are virtually identical, each covering automatic sweeping of detached debris and freeing space, thus having equal coverage. Their structural correspondences are the same, and both remain within the natural river‑valley domain, yielding equal conceptual distance."
+        },
+        {
+          "sample_id": "R0023",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [
+            "excessive_type_translation"
+          ],
+          "confidence": 0.95,
+          "rationale": "The recycling‑center analogy (A) directly mirrors automatic reclamation of memory, covering the description more precisely than the multi‑step chef scenario (B), which adds unrelated culinary and energy domains. A also offers a single, clear structural mapping, whereas B’s layered transformations reduce mapping consistency. However, B traverses several domains (culinary → agricultural → energy), making it conceptually farther from the original memory‑management concept, thus higher M."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "R0023",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.94,
+          "rationale": "Analogy A directly mirrors the core process of identifying unreachable objects and reclaiming them, covering the description’s key points, while B adds extra domains and steps that dilute coverage. A’s mapping is straightforward and internally consistent; B’s multi‑step mapping is weaker. B translates the concept across more domains, giving it higher conceptual distance."
+        },
+        {
+          "sample_id": "R0022",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.98,
+          "rationale": "Both analogies are virtually identical, using the same river metaphor and wording, so they cover the description equally, have the same structural consistency, and involve the same conceptual shift."
+        },
+        {
+          "sample_id": "R0024",
+          "tcc_relation": "a_higher",
+          "ms_relation": "b_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.91,
+          "rationale": "Analogy A stays within the programming domain and mentions specific mechanisms (free(), delete, leaks), thus covering more of the description’s details. B uses a garden compost metaphor, which, while internally consistent, is a farther domain shift, giving it stronger structural mapping but higher conceptual distance. Therefore A has higher TCC, B higher MS and M."
+        },
+        {
+          "sample_id": "R0025",
+          "tcc_relation": "a_higher",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "target_terminology_injection"
+          ],
+          "confidence": 0.93,
+          "rationale": "Analogy A includes the explicit claim that the service prevents street overflow, directly matching the description’s emphasis on avoiding memory leaks, giving it higher TCC. Both analogies share the same city‑waste structure, so MS is the same, and they involve the same domain shift, so M is the same. B injects the term “memory leaks” into the analogy, which is an artifact."
+        },
+        {
+          "sample_id": "R0021",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.94,
+          "rationale": "Analogy A correctly maps garbage collection to removal of unreachable desks, matching the description, while B changes the role to creation, reducing coverage and structural consistency. Both analogies involve a maintenance‑type domain, but B’s builder scenario is a more distant conceptual shift, giving it higher M."
+        },
+        {
+          "sample_id": "R0026",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.97,
+          "rationale": "The two analogies are paraphrases of the same librarian scenario, using identical mapping steps and covering the same description content, resulting in equal TCC, MS, and M."
+        }
+      ]
+    },
+    {
+      "assessments": [
+        {
+          "sample_id": "R0023",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A directly maps unreachable objects to discarded items processed by a recycling centre, covering the description’s core ideas of identification and reclamation. Analogy B adds several intermediate domains (culinary, agricultural, energy), diluting coverage and structural consistency, while increasing conceptual distance."
+        },
+        {
+          "sample_id": "R0022",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.98,
+          "rationale": "Both analogies are virtually identical sentences describing a river that sweeps debris automatically; they provide equal coverage, structural mapping, and conceptual distance, indicating no meaningful difference."
+        },
+        {
+          "sample_id": "R0024",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "b_higher",
+          "artifact_flags": [],
+          "confidence": 0.94,
+          "rationale": "Analogy A uses a programming‑level description (heap scan, no free()), matching the target description closely. Analogy B uses a garden compost metaphor, which is consistent but less specific, making A higher on coverage and mapping, while B is farther from the memory domain, raising its M score."
+        },
+        {
+          "sample_id": "R0021",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.93,
+          "rationale": "The janitor analogy (A) correctly mirrors automatic removal of unreachable objects, whereas the builder analogy (B) changes the core operation to creation, reducing coverage and mapping quality. Both analogies stay within the office‑building domain, so their conceptual distance is comparable."
+        },
+        {
+          "sample_id": "R0026",
+          "tcc_relation": "same",
+          "ms_relation": "same",
+          "m_relation": "same",
+          "artifact_flags": [
+            "template_artifact"
+          ],
+          "confidence": 0.97,
+          "rationale": "The two librarian analogies are paraphrases of each other, offering identical coverage of automatic removal, identical structural consistency, and identical distance from the memory domain."
+        },
+        {
+          "sample_id": "R0025",
+          "tcc_relation": "a_higher",
+          "ms_relation": "a_higher",
+          "m_relation": "same",
+          "artifact_flags": [],
+          "confidence": 0.95,
+          "rationale": "Analogy A includes the crucial claim that the city service prevents street overflow, mirroring the memory‑leak prevention aspect of garbage collection. Analogy B omits this, lowering its coverage and mapping strength, while both remain equally distant in domain."
+        }
+      ]
+    }
+  ]
+}

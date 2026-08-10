@@ -47,7 +47,7 @@ fi
   "${EXTRA_ARGS[@]}"
 
 "${PYTHON_BIN}" run_text_agents.py \
-  --mode metaphoricity \
+  --mode m-evidence-reconciled \
   --split test \
   --sample-concurrency 12 \
   --max-concurrency 12 \

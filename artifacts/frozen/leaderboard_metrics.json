@@ -1,20 +1,24 @@
 {
-  "text_kendall_AVG": 0.4516500963892369,
-  "video_kendall_AVG": 0.0,
-  "overall_kendall_AVG": 0.22582504819461846,
-  "text_spearman_AVG": 0.4677821546203598,
-  "video_spearman_AVG": 0.0,
-  "overall_spearman_AVG": 0.2338910773101799,
-  "kendall_TCC": 0.3359301817390369,
-  "spearman_TCC": 0.3359301817390369,
-  "kendall_MS": 0.4280255988882737,
-  "spearman_MS": 0.44073420509463207,
-  "kendall_M": 0.5909945085404001,
-  "spearman_M": 0.6266820770274106,
-  "kendall_VC": 0.0,
-  "spearman_VC": 0.0,
-  "kendall_VA": 0.0,
-  "spearman_VA": 0.0,
-  "kendall_VE": 0.0,
-  "spearman_VE": 0.0
+  "reported_date": "2026-08-11",
+  "source": "user-provided leaderboard screenshot",
+  "display_precision": 4,
+  "as_displayed": {
+    "rank": 1,
+    "id": "rrrrr1030",
+    "text_kendall_AVG": 0.485,
+    "video_kendall_AVG": 0.4099,
+    "overall_kendall_AVG": 0.4474
+  },
+  "text_component_context": {
+    "kendall_TCC_unchanged": 0.3359301817390369,
+    "kendall_MS_unchanged": 0.4280255988882737,
+    "kendall_M_inferred_approx": 0.6910442193726893,
+    "note": "The M value is inferred from the rounded text average. The screenshot does not expose exact component or Spearman values."
+  },
+  "previous_text_snapshot": {
+    "text_kendall_AVG": 0.4516500963892369,
+    "text_spearman_AVG": 0.4677821546203598,
+    "kendall_M": 0.5909945085404001,
+    "spearman_M": 0.6266820770274106
+  }
 }

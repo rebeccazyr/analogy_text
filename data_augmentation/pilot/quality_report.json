@@ -1,0 +1,32 @@
+{
+  "prompt_version": "augmentation_relative_constraints_v1",
+  "created_at": "2026-08-04T08:40:54.407517+00:00",
+  "policy": {
+    "new_absolute_pseudo_labels": false,
+    "invariance_acceptance": "all reviewers preserve TCC/MS/M, no artifacts, mean confidence >= 0.80",
+    "relative_acceptance": "all reviewers confirm target direction and both non-target invariants, no artifacts, mean confidence >= 0.75"
+  },
+  "invariance": {
+    "total": 9,
+    "status": {
+      "accepted": 9
+    }
+  },
+  "relative": {
+    "total": 18,
+    "status": {
+      "rejected": 18
+    },
+    "by_metric": {
+      "TCC": {
+        "rejected": 6
+      },
+      "MS": {
+        "rejected": 6
+      },
+      "M": {
+        "rejected": 6
+      }
+    }
+  }
+}
